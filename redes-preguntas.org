@@ -1,0 +1,411 @@
+# -*- org -*-
+#+Latex_class: report
+#+Title: Examenes de Redes resueltos
+
+* 2007. JUNIO
+
+** Ejercicio 1: Unimos dos puntos mediante un enlace de cable UTP, con un amplificador intermedio de ganancia 2. Consideramos que el cable está libre de ruido blanco, pero en recepción un equipo defectuoso está introduciendo un ruido de intermodulación de valor 0,1 microW / Hz. Se pretende que la BER sea menor que 10 ^ -5 (Eb/N0 = 10 dB). Si la tasa de bits es de 10 Mbps, determina la distancia máxima del enlace en función de la potencia transmitida para: (a) UTP categoria 3 (atenuación: 13,1 dB / 100 m); (b) UTP categoria 5 (atenuación: 8,2 dB / 100 m)
+
+El enunciado pide encontrar una expresión que relacione la distancia máxima (d) con la potencia transmitida ($P_{transmit}$).
+
+La potencia recibida es igual a la potencia transmitida, más la ganancia del amplificador intermedio, menos la atenuación (función de la distancia).
+
+$P_{recib} = P_{transmit} + ganancia - atenuac*d +/- ruido_{intermod}*R$
+
+$d = \frac{ P_{transmit} - P_{recib} + ganancia +/- ruido_{intermod}*R }{ atenuacion }$
+
+Eb/N0, R y N0 (que es la densidad espectral de ruido de intermodulación) permiten obtener S, la cual será la potencia recibida.
+
+$Eb/N0 = S/(kTR)$
+
+Trabajando sin decibelios sería:
+
+$S= (Eb/N0)*k*T*R = 10 * 1.38*10^{-23} J/K * 293 K * 10+10^6 bps$
+
+Una vez conocida S podemos obtener la potencia recibida en decibelios para sustituirla en la fórmula anterior y obtener así "d" en función de "$P_{transmit}$"
+
+$P_{recibida} = 10*log(S) = -123.93$
+
+$d = \frac{ P_{transmit} + 123.93 + 2 +/- 0.1*10^9*R }{ atenuacion }$
+
+R (tasa de bits) y la atenuación dependen de la categoría del cable UTP (con 3 son 16MHz y 0.131dB/m; y con 5 son 100MHz y 0.082dB/m).
+
+** Ejercicio 2: En un enlace inalámbrico en un entorno ruidoso (BER = 10^{-2}), se transmite a una velocidad de 10 Mbps. Las tramas son de 100 bytes. Determina la eficiencia en función de la distancia para: (a) Parada y espera. (b) Vuelta atrás N.
+
+Se calcula el valor de "a" (tiempo de propagación normalizado) en función de "d" (distancia).
+$a= \frac{ T_{prop} }{ T_{trama} } = \frac{ d/3*10^8 }{ 800/10+10^6 }$
+
+La probabilidad de que la trama falle (P) será igual a la BER.
+
+a) ARQ con parada y espera
+$U = (1-P) / (1+2a)$
+
+b) ARQ con vuelta atrás N
+En este caso dependerá del tamaño de la ventana que se elija.
+
+- $U = \frac{ 1-P }{ 1+2aP }$
+- $U = \frac{ W(1-P) }{ (1+2a)(1-P+WP) }$
+
+* 2007. DICIEMBRE
+** Ejercicio 1: Considera una transmisión con una SNR de 15 dB. El ancho de banda es de 3000 Hz y la atenuación de 5 dB/Km. Se usará una codificación AMI con R=32bps. Calcula la distancia máxima a la que puede transmitir con una probabilidad de error de bit menor que 10^7
+
+De la tabla de SNR respecto a Eb/N0 que se adjunta se obtiene un valor para AMI de $(Eb/N0)_{db}=14.5 dB$ aproximadamente (mejor pasarse ya que el BER debe ser menor, nunca mayor).
+
+Sabiendo que se cumple la relación
+
+$Eb/N_0 = S_{recibida} / KTB$
+
+$S_{recibida} = Eb/N_0 * KTB$
+
+Que pasado a decibelios sería
+
+$S_{dB-recibida} = (Eb/N0)_{dB} + 10*log(K*T*B) = 14.5 + 10*log((1.38*10^23)*293*3000)$
+
+$S_{dB-recibida} = S_{dB-transmitida} - atenuacion*d$
+
+$d = ( S_{dB-transmitida} - S{dB-recibida} )/atenuacion$
+
+** Ejercicio 2: Considera un enlace de 1Km. La velocidad de propagación es de 200000 km/s. La velocidad de transmisión es de 100 Mbps para tramas de 100 bytes. La probabilidad de error de trama es de $10^{-3}$. Determina la eficiencia de: (a) ARQ con parada y espera. (b) ARQ con vuelta atrás N de ventana de 7.
+
+
+$a= \frac{ T_{prop} }{ T_{trama} } =  \frac{  1/200000 s}{ (100*8 b)/(100*10^6 bps) }$
+
+a) ARQ con parada y espera
+
+$U = (1-P)/(1+2aP)$
+
+b) ARQ con vuelta atrás N, W=7
+
+Como W > 1+2a: 
+$U = \frac{ W(1-P) }{ (1+2a)(1-P+WP) }
+
+** Ejercicio 3: El acceso a un bus de 300 metros de longitud se organiza mediante CSMA/CD. La velocidad de transmisión es de 200000 km/s. Determina el tamaño mínimo de trama para una velocidad de transmisión de 1 Gbps
+
+$T_{prop} = 300 m / (2*10^8 m/s) = 1.5*10^{-6} s$
+
+En CSMA/CD las ranuras de contención representarán el tamaño mínimo de trama. Estas ranuras tienen una duración del doble del tiempo de propagación máximo de la red (thau). Suponiendo que el T_{prop} obtenido es el máximo entre dos estaciones (ya que es el de la longitud total del bus), tendremos que la trama mínima vendría dada por:
+
+$T_{trama-min} = 2*T_{prop-max} = 3*10^{-6} s$
+
+$L_{trama-min} = R*T_{trama-min} = (1*10^9)*(3*10^{-6}) = 3*10^3 b = 3 Kbits$
+
+* 2008. JUNIO
+
+** 1) En un área rural con baja densidad de población, se ha instalado un sistema de comunicaciones que sigue el estándar IEEE 802.16 (Wimax). El servicio va a ser suministrado por medio de una torre LOS con una portadora de 30 GHz y un ancho de banda de 25 MHz. El reparto de capacidad se va a realizar mediante multitramas de 20 ms, en las que el 70 % será para el canal descendente, el 20 % para el ascendente y el 10 % restante serán bandas de guarda. La multitrama se divide en ranuras de 0,2 ms. Cada usuario sólo puede emplear una ranura en cada multitrama.
+*** a) ¿ A cuántos abonados se puede dar servicio en cada enlace?
+
+Si las tramas son de 20 ms, lo primero que creo que habría que hacer
+sería calcular los ms de cada enlace y luego ver cuantas ranuras se podrían
+asignar.
+Enlace descendente: 70 % de 20 ms => 14 ms. (70 ranuras).
+Enlace ascendente: 20 % de 20 ms => 4 ms. (20 ranuras).
+Por tanto, en el enlace descendente se podrá dar servicio a 70 usuarios,
+mientras que en el ascendente, se dará servicio solamente a 20.
+
+*** b) En función de la distancia a la que esté el abonado, Wimax usa tres esquemas de modulación diferente (QAM-64, QAM-16, QPSK). Determina el número de bytes que podrá transmitir un usuario durante una ranura para cada uno de esos tres esquemas.
+
+- Esquema QAM-64 (son 150 Mbps con 25 MHz): La ranura es de 0,2 ms, luego transmite 150 Mbps * 0,2 * 10 ^-3 = 30000 bits, que son 3750 bytes. (realmente habría que separarlos para cada enlace, ascendente y descendente, y tener también en cuenta el tiempo de guarda).
+
+- Esquema QAM-16 (son 100 Mbps): La ranura es de 0,2 ms, luego transmite 100 Mbps * 0,2 * 10 ^-3 = 20000 bits, que son 2500 bytes. (realmente habría que separarlos para cada enlace, ascendente y descendente, y tener también en cuenta el tiempo de guarda).
+
+- Esquema QPSK (son 50 Mbps): La ranura es de 0,2 ms, luego transmite 50 Mbps * 0,2 * 10 ^-3 = 10000 bits, que son 1250 bytes. (realmente habría que separarlos para cada enlace, ascendente y descendente, y tener también en cuenta el tiempo de guarda).
+
+*** c) Sabiendo que en cada ranura se transmiten 64 bits de información de control, determina cuanto se tarda en enviar un fichero de 1 Mbyte en cada esquema de modulación. 
+
+Realmente aquí habría que tener en cuenta que los bits calculados anteriormente se deberán dividir para cada enlace. Como es "enviar" un fichero, lo he interpretado como subir un fichero (enlace ascendente).
+
+1 Mbyte = 8000000 bits.
+- Esquema QAM-64: ranuras = (8000000 / (30000 - 64)) = 268 ranuras
+
+Como el usuario utiliza solamente 1 ranura por cada multitrama (esto es 1 ranura por cada 20 ms), entonces el tiempo sería el siguiente: 
+268 ranuras * 20 ms = 5.360 segundos.
+
+- Esquema QAM-16: ranuras = (8000000 / (20000 - 64)) = 400 ranuras
+
+Como el usuario utiliza solamente 1 ranura por cada multitrama (esto es 1 ranura por cada 20 ms), entonces el tiempo sería el siguiente: 
+400 ranuras * 20 ms = 8.000 segundos.
+
+- Esquema QPSK: ranuras = (8000000 / (10000 - 64)) =  796 ranuras
+
+Como el usuario utiliza solamente 1 ranura por cada multitrama (esto es 1 ranura por cada 20 ms), entonces el tiempo sería el siguiente: 
+796 ranuras * 20 ms = 15.920 segundos.
+
+*** d) Indica la señal que se envía por el medio de transmisión al transmitir el octeto "10110001", suponiendo que se transmiten de izquierda a derecha, usando modulación QPSK.
+
++ Profesor:
+En este apartado hay que dibujar la señal modulada QPSK, de manera similar a como se hace en el ejercicio 12 del boletín 3 (apartados d y e.ii).
+Sin embargo, en este caso hay que utilizar señales senoidales con fase 45º, 135º, 225º y 315º.
+
+*** e) Determina la atenuación que afectará a la señal para un usuario que se encuentre a 2 km de la torre.
+
+Para calcular la atenuación, primero calculamos la longitud de onda, que
+como sabemos es la velocidad de la onda entre la frecuencia: la velocidad la
+supondremos c (la de la luz).
+λ = (3 * 10 ^ 8) / (30 * 10 ^ 9) = 0,01 m
+La atenuación será por tanto:
+L = 10 log ((4 * π * d) / λ)^2 = 128 dB
+
+*** f) El usuario más alejado no recibe la señal correctamente, por encontrarse en una zona rodeada de colinas que imposibilitan la visibilidad de la torre. ¿Qué solución propones para este abonado?
+
+Yo propondría colocar otra antena, aunque sería muy caro para un solo
+abonado, aunque el abonado podría ponerse una antena más alta. (esto último
+es una tontería, pero no se me ocurre realmente como solucionarlo).
+
++ Profesor:
+Como no es rentable una antena que dé servicio a un solo abonado, deberá ser el abonado el que disponga de una antena más alta.
+
+*** g) Un abonado quiere contratar un servicio de tasa de bit constante para voz descomprimida (conversaciones telefónicas). Sabiendo que el abonado tiene un modulador PCM de 8 bits y que, excepcionalmente puede emplear más de una ranura por trama, ¿es posible dar este servicio?
+
+
+Lo primero es aclarar que si se trata de una conversación telefónica (dúplex) hay que habilitar ranuras en ambos sentidos de la comunicación. En cualquier caso, basta con estudiar uno de los dos sentidos para resolver el apartado.
+
+Consideramos una frecuencia máxima de la voz de 4 kHz, con lo que por el teorema de Nyquist, para muestrearla se usaría una frecuencia de muestreo de 8 kHz. Esto son 8000 muestras por segundo. Como se usa un PCM de 8 bits (8 bits por muestra) entonces son 64000 bits por segundo (64Kbps), que serían los necesarios para que pudiera tenerse una conversación telefónica.
+
+Suponiendo "x" ranuras, en un segundo podemos tener (1000/20)x = 50x ranuras de 20 ms
+
+Por lo que los bps de cada canal serán:
+- QAM-64: 50x ranuras * (30000 - 64) = 1496800*x bps
+- QAM-16: 50x ranuras * (20000 - 64) =  996800*x bps
+- QPSK:   50x ranuras * (10000 - 64) =  496800*x bps
+
+En todos los casos, basta un x=1 (usar una sola ranura por cada multitrama) para obtener una velocidad mayor de 64000 bps (los necesarios para muestrear la voz).
+
+*** Añadidas por profesor)
+Os planteo dos cuestiones para completar el apartado:
+**** Si el abonado es una empresa, ¿de cuántas líneas telefónicas (es decir, llamadas simultáneas) podrá disponer?
+**** ¿Cómo se transmitirán esas llamadas simultáneas por el mismo canal (misma ranura)?
+** 2) Determina la eficiencia del protocolo de parada y espera en un enlace de 10 Mbps en el que se utilizan tramas de información de 1500 bits. Las tramas de confirmación son de 150 bits. El enlace tiene una longitud de 10 km y la velocidad de propagación es c=300000 km/s. El tiempo de proceso en recepción es de 10 s. ¿Qué propones para mejorar esta eficiencia?
+
+
+$U = \frac{ T_{trama}  }{ T_{trama} + T_{ACK} + 2*T_{prop} + T_{proc} }$
+
+No podría usarse la fórmula:
+
+$U = 1/(1+2a) = 1/(1 + 2 \frac{ T_{prop} }{ T_{trama} }$
+
+Sería errónea debido a que en ella se desprecia el tiempo de proceso.
+
+Se podría mejorar la eficiencia aumentando la cantidad de datos por trama, o bien usando un protocolo con ventana deslizante que reduzca el número de confirmaciones requeridas.
+
+* 2008. DICIEMBRE
+** Ejercicio 1: Considera una red inalámbrica ad-hoc, formada por cuatro estaciones (A, B, C, D). El control de acceso al medio se realiza mediante MACAW. Cada estación transmite "D" MB de datos a la estación siguiente (A a B, B a C y así sucesivamente). Supón que las cabeceras de las tramas de datos y de control son 60 bytes. Supón que las estaciones se encuentran en los vértices de un cuadrado de lado "d" metros.
+
+*** a) Calcula el tiempo total de todo el proceso, suponiendo que la longitud del campo de datos es "L", siendo (D / L = numero entero). Es decir, el fichero se transmitirá en varias tramas, no siendo nunca L = D. R = 11 Mbps
+
+Aquí lo que hay que hacer es calcular Tf, dejándolo parametrizado para el número de tramas que se enviarán.
+
+$T_{RTS} = T_{CTS} = T_{ACK} = 60*8/(11*10^6)$
+$T_{trama} = (L+(60*8))/(11*10^6)$
+$T_{prop} = d / (3*10^8)$
+
+$T_f = T_{RTS} + T_{CTS} + n*T_{trama} + n*T_{ACK} + n*T_{prop}$
+
+*** b) Determina la longitud de trama de datos que maximiza el rendimiento. 
+
+En este apartado, lo que nos piden es calcular la longitud del campo de datos (puesto que la longitud de los campos de control será siempre 60 bytes), dentro de la trama de información, de forma tal que se maximice el rendimiento. Lo que no tengo claro es como proceder. He pensado en plantear la ecuación de la eficiencia y derivar respecto a la longitud del campo de datos, aunque a lo mejor es una tontería muy grande y hay alguna otra forma de proceder. Aún así, tampoco me queda muy claro hacerlo así, porque recuerdo que una vez Juan comentó algo de esto en clase, pero no recuerdo exactamente como lo hizo él.
+
++ Profesor:
+b) El tiempo total del apartado (a) es una función de la longitud L. Los máximos y los mínimos de una función se encuentran igualando a 0 la primera derivada
+
+** Ejercicio 2: Supón un enlace con una SNR = 10dB y un ancho de 10 kHz. Determina la máxima capacidad del canal y el número de niveles de señalización según Nyquist. Propón algún esquema de codificación o modulación con el que se pueda alcanzar esa capacidad
+
+Usando el teorema de Shannon podemos obtener la máxima capacidad para ese nivel de ruido.
+
+$SNR = 10^{ SNR_dB / 10 } = 10^1 = 10$
+
+$C= B * log_2(1+SNR) = 10*10^3 * log_2(1+10) = 34594.32 bps$
+
+Ahora usando Nyquist podemos hayar el valor de M al que esta capacidad se correspondería.
+
+$C = 2B*log_2(M)$
+$M= 2^{ C/(2B)  } = 2^{ 34594.32 / (2*10*10^3)} = 53.7$ -> 54 niveles
+
+* 2009. JUNIO
+** Ejercicio 1: Un sistema de transmisión utiliza modulación QPSK a 120000 baudios y espectro expandido por salto de frecuencias.
+*** b) Determina la velocidad de transmisión
+$R = D * log_2(M) = 12000 simbolos/seg * 2 (bits/simbolo) = 24000 bps = 24 kbps$
+*** c) ¿Cuánto tiempo tardará en ser transmitido un mensaje de voz de 10 segundos de duración? Considera codificación PCM de 8 bits
+
+La voz tiene una frecuencia máxima de 4kHz, y según Nyquist la frecuencia de muestreo deberá ser el doble:
+
+$f_m = 2*f_c = 2*4000 = 8000 muestras/seg$
+
+$8000 muestras/seg * 8 bits/muestra * 10 seg = 640000 b = 640kb$
+
+$Tiempo = 640kb / 24 kbps = 26.6 s$
+
+*** d) Representa la señal transmitida para el conjunto de bits 1000011111000110, sabiendo que la primera mitad se transmite a f y la segunda a 2f
+** Ejercicio 2: (ver ejercicio 2 de Junio de 2010)
+* 2009. DICIEMBRE
+** La figura muestra una red doméstica en la que se emplea un router inalámbrico ADSL. Éste está formado internamente por los tres elementos que se encuentran dentro de la linea discontinua (punto de acceso wifi, switcher y modem ADSL conectados por 802.3). Cuanod el router es arrancado asigna direcciones IP privadas a los equipos de la red. Asímismo, recibirá una IP pública desde la WAN con la que intercambia tramas PPP.
+*** a) 
+*** b) 
+*** c) 
+*** d) 
+*** e) 
+*** f) 
+*** g) 
+*** h) 
+* 2010. JUNIO
+** Problema 1: Considera un sistema de transmisión digital a 100 kbps que emplea un ancho de banda de 20 kHz.
+*** a) ¿Qué tipo de modulación se debe utilizar?
+
+Creo que la modulación que habría que utilizar sería PSK o bien una QAM.
+Para saber el número de puntos en el diagrama de constelación (es decir el valor de M, los símbolos posibles), la expresión sería:
+
+B_T = ((1 + r) / (log_2 M)) * R.
+
+El ancho de banda no podría pasarse de 20 khz, por lo que me sale que M debería de ser 32, lo cual creo que no es correcto.
+
++ Profesor: 
+El tipo de modulación podría ser una MPSK o una QAM (que utiliza la misma expresión para el ancho de banda).
+Si r = 0, M = 32.
+Si r = 1, M = 1024.
+
+*** b) ¿Cuál sería la velocidad de modulación?
+
+D = R / log_2 M = 100 kbps / 5 = 20 kbaudios.
+
+*** c) ¿Sería posible transmitir un concierto de clarinete (frecuencias hasta 10khz) a través de este sistema usando modulación PCM?
+
+No sería posible ya que se muestrea al doble de la frecuencia y por cada muestra en PCM se utilizan 8 bits, por lo que 10 kHz * 2 * 8 bits = 160 kbps, nos pasaríamos del tope establecido por la velocidad de transmisión del sistema.
+
+Por otro lado, sí se podría transmitir si en lugar de 8 se utilizan 4 bits por muestra, aunque la relación señal a ruido bajaría bastante (lo cual es muy malo). Ahora se calcula el ruido de cuantización:
+
+SNR_{dB} = 6,02 n + 1,76 dB
+
+Aquí, el valor de n son el número de bits que se utilizan (4 en nuestro caso, puesto que no se puede utilizar 8).
+
+** Problema 2: Una red ad-hoc inalámbrica formada por 4 equipos, utiliza el estándar 802.11b. Los cuatro equipos se encuentran en los vértices de un cuadrado de lado 10 metros. Disponen de una antena omnidireccional con un alcance de 10 metros. Considera tramas de 1000 Bytes de datos y 64 Bytes de cabecera, y tramas de control y de confirmación de 64 Bytes.
+*** a) Si una estación envía una trama a otra, que esté a su alcance, ¿cuál será la velocidad de transmisión efectiva, considerando el proceso completo desde que solicita el envío hasta que tiene confirmación de la entrega?
+
+En este caso hay que considerar todos los tiempos posibles, los datos que no se tengan, los podemos dejar indicados en la ecuación.
+
+Dado que es una red ad-hoc, el estándar 802.11b estará funcionando en modo de funcionamiento DCF (distributed coordination function). Esto implica que se empleará por tanto CSMA/CA, el cual es una variante de MACAW que posee señales RTS y CTS antes de iniciar la comunicación y confirma cada trama con un ACK.
+
+--------------RTS--------------->
+( T_{RTS} + T_{prop} + T_{proc} )
+
+<--------------CTS---------------
+( T_{CTS} + T_{prop} + T_{proc} )
+
+--------------Trama--------------->
+( T_{trama} + T_{prop} + T_{proc} )
+
+<--------------ACK---------------
+( T_{ACK} + T_{prop} + T_{proc} )
+
+El tiempo de propagación se define como d/V_{prop}, cuyos datos conocemos (la distancia es 10 metros y V_{prop} sería 2/3 de la velocidad de la luz). Por tanto, es el mismo tiempo de propagación para cada trama que se envíe. Solamente habría que calcularlo.
+
+T_{prop} = \frac{10m}{ 2/3 * 3 * 10^8 m/s } = 5*10^{-8}s
+
+Los tiempo de la tramas RTS, CTS y ACK (T_{RTS}, T_{CTS}, T_{ACK}) son los mismos (es realmente el mismo tiempo) puesto que son tramas de de control y confirmación. Éstas tienen el mismo tiempo, pero habrá que dejarlo en función de R, cuyo dato no es proporcionado en el ejercicio.
+
+T_{RTS} = T_{CTS} = T_{ACK} = \frac{64∗8 bits} {R bits / segundo}
+
+Por su parte, el tiempo de trama (la trama de datos en sí), habría que calcularlo sumándole también la información de la cabecera (no se puede olvidar). Esto quedaría así:
+
+$T_{trama}= \frac{(1000+64)∗8 bits} {R bits / segundo}$
+
+Finalmente, el T_{proc} (tiempo de procesamiento), también lo he considerado, aunque no lo especifique ni lo den en el problema. De esta forma, se tiene T_f (que sería el tiempo completo):
+
+T_f = T_{RTS] + T_{CTS} + T_{trama} + T_{ACK} + 4*T_{prop} + 4*T_{proc}
+
+De todas formas, el enunciado dice "velocidad de transmisión efectiva", por lo que no se exactamente como seguir o si se refiere solamente a esto y ya está.
+
++ Profesor:
+802.11b tiene una tasa máxima de bit de 11 Mbps. Éste es el valor que se debe utilizar como R.
+
+La velocidad de transmisión efectiva (R_{ef}) es la velocidad en bps a la que se transmiten los datos, contemplando que parte de lo que se transmite es información de control. La información de control (RTS, CTS, ACK, cabeceras) debe transmitirse para hacer funcionar el protocolo, pero hace caer la "efectividad" de esos 11 Mbps. Por eso, sería:
+
+R_{ef} = (Bits de datos transmitidos) / Tiempo total = (1000 * 8) / Tf
+
+No es necesario contemplar los tiempos de procesamiento, cuando el enunciado no los da.
+
+*** b) En un ambiente ruidoso se utilizará una ráfaga de fragmentos. Repite el apartado anterior para 10 fragmentos (la trama se divide en 10 fragmentos).
+
+Lo único que habría que hacer es considerar el comienzo igual (el RTS y CTS) y luego considerar que la trama se divide en 10 fragmentos (teniendo en cuenta todos los tiempos de trama, los de propagación y procesamiento, y sus correspondientes confirmaciones). Lo que se tendría que hacer es considerar que ahora la trama en lugar de tener 1000 bytes de datos tiene solamente 100, pero sigue teniendo los 64 bytes de cabecera.
+
+$T_{trama} = (100+64)*8 / 10*10^6$
+
+Al hacer el cálculo, no olvidar que cada fragmento debe ser confirmado individualmente, por lo que el nuevo tiempo total sería:
+
+$T_f = T_{RTS} + T_{CTS} + 10*T_{trama} + 10*T_{ACK} + 22*T_{prop}$
+
+*** c) ¿Qué consecuencias tendría para la velocidad efectiva que la distancia entre las estaciones, y consecuentemente el alcance de las antenas se incrementara?
+
+Al aumentar la distancia, aumentará el tiempo de propagación y, en consecuencia, el tiempo total (Tf). Por esto, la velocidad Ref disminurá.
+
+Por completarla, añadiré que el estándar 802.11b implementa la selección adaptativa de velocidad, que puede hacer que la tasa de bit baje a 5.5, 2 ó 1 Mbps, en función del nivel de señal. Si la distancia aumenta, el nivel de señal recibido bajará (debido a la mayor atenuación), por lo que podría ser que la tasa de bit bajara. Típicamente, la velocidad de 11 Mbps se mantendrá hasta una distancia de 30 m en un entorno cerrado.
+
+*** d) Si dentro de las tramas MAC van PDUs de LLC que implementan un servicio no orientado a conexión con confirmación ¿qué velocidad efectiva tendrán los datos de LLC?
+** Problema 3: El siguiente esquema representa una red con 5 puentes y 7 segmentos de red.
+
+#+begin_Ditta
+ 1 --2--LAN1-A--- | 2 |
+ |                  |      \  
+ |                  |
+ 3 -------------- | 4  | ---- | 5 | ---
+#+end_Ditta
+
+*** a) aplica el algoritmo del árbol de expansión y muestra los puertos raíz, designados y bloqueantes. 
+
+Se toma, arbitrariamente, el puente 1 como el puente raiz, y a partir de este se construye un árbol con las rutas más cortas desde la raiz a cada puente y LAN. Este es el árbol de expansión.
+
+#+begin_Ditta
+raiz
+ 1 des----------raiz | 2 |      bloq
+ |raiz                 bloq         \  
+ |des                  |des          raiz
+ 3 des----------raiz | 4  | des-- bloq| 5 | des---
+#+end_Ditta
+
+Si durante el funcionamiento de la red fallase algún puerto o puente se recalcularía el árbol. El resultado de éste algoritmo es que se establece una ruta única hasta la raiz, y por tanto a todas las demás LANs, no necesariamente están presentes todos los puentes del árbol (para evitar ciclos).
+
+*** b) ¿Cuál será el contenido de las tablas de encaminamiento de los 5 puentes después de la siguiente secuencia de envíos?: A envía a B, B envía a D, D envía a A, C envía a E, E envía a C.
+
+| Puente 1 |   |
+|----------+---|
+| LAN1-A   | 1 |
+| LAN2-B   | 2 |
+| LAN4-D   | 2 |
+| LAN3-C   | 2 |
+| LAN5-E   | 1 |
+
+| Puente 2 |   |
+|----------+---|
+| LAN1-A   | 1 |
+| LAN2-B   | 1 |
+| LAN4-D   | 1 |
+| LAN3-C   | 2 |
+| LAN5-E   | 2 |
+
+| Puente 3 |   |
+|----------+---|
+| LAN1-A   | 1 |
+| LAN2-B   | 1 |
+| LAN4-D   | 2 |
+| LAN3-C   | 2 |
+| LAN5-E   | 1 |
+
+| Puente 4 |   |
+|----------+---|
+| LAN1-A   | 1 |
+| LAN2-B   | 1 |
+| LAN4-D   | 3 |
+| LAN3-C   | 1 |
+| LAN5-E   | 1 |
+
+| Puente 5 |   |
+|----------+---|
+| LAN1-A   | 1 |
+| LAN2-B   | 1 |
+| LAN4-D   | 1 |
+| LAN3-C   | 1 |
+| LAN5-E   | 1 |
+
+*** c) ¿Qué ocurrirá en la red si el puente 4 se apaga inesperadamente?
+
+En una red con puentes, el algoritmo del árbol de expansión se ejecuta periódicamente. Después de que un puente se apague, el árbol tendrá que ser definido de nuevo, pudiendo cambiar los puertos designados y bloqueado.
+
+Esto se podrá hacer en una red con redundancia, es decir, bucles, para poder encontrar caminos alternativos si hay un fallo en una parte de la red.

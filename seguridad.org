@@ -1,0 +1,267 @@
+# -*- org -*-
+
+** Criptografía
+Shannon's maxim "the enemy knows the system"
+Kerckhoff's assumption "Un buen sistema debe ser seguro aún siendo público todo excepto la clave"
+*** Symetric algorithms
+**** Stream ciphers
++ con un buen generador de números aleatorios puede ser tan seguro como block cipher
++ _Problema:_ no se pueden reutilizar las claves, la XOR de dos ciphertext sería igual a la XOR de los dos plaintext y podría descubrirse
+**** Block ciphers
+***** Ideal block cipher (Feistel, 1973)
+- inpracticable, aproximar usando una clave menor
++ Aplica ideas de Shannon (1949)
+  - _Difusión:_ cada dígito plaintext afecta muchos  ciphertext (efecto avalancha, evita patrones)
+  - _Confusión:_ oculta la relación plaintext-ciphertext (desplazamientos circulares, sustituciones, sumas, XOR..)
+***** DES (1977, modificación de LUCIFER Feister)
+***** 1999 Se aconseja usar 3DES
++ Encript: E_k3(D_k2(E_k1(M)))
++ Decript: D_k1(E_k2(D_k3(C)))
++ Ventajas: compatibilidad, gran seguridad (muy escrutado)
++ Problemas: lento, bloques sólo de 64b
+***** AES (2001, belgas Rijmen y Daemen)
++ bloque y clave pueden ser múltiplos de 32b (128-256b)
++ Mecanismo (por cada bloque de datos)
+  1. Suma con la subclave 1
+  2. Repite 9 veces el proceso:
+	- Sustitución con S-boxes
+	- Shifts
+	- Mezcla columnas
+	- Suma con la subclave i
+  3. Último round (10º)
+	- Sustitución con S-boxes
+	- Shifts
+	- Suma con la subclave 11	 
+***** IDEA
+propietario (expira en 2011) basado en operaciones matemáticas
+***** Blowfish (1993, Schneier)
++ Feistel structure. 64b bloque, 448b clave
++ Ventajas: Eficiente y muy seguro, dominio publico
++ Desventajas: 64b de bloque es poco
+***** Twofish (Schneier et al.)
++ Feistel. 128b bloque, 256b clave
++ Relacionado con blowfish, finalista a AES
+***** Camellia cipher (2000 Mitsubishi)
++ Feistel. 128b bloque, hasta 256b clave (como AES)
++ muy usado en Europa y Japon
+**** Modos de operación del cifrado de bloques
+***** Electronic CodeBook (ECB)
+- Cada bloque Pi se cifra con la misma clave k correspondiendose a un único Ci
+  E_k(P_i)= C_i
+- Podría obtenerse los pares P/C si presentan regularidades
+***** Cipher Block Chaining (CBC)
+- Antes de cifrar, se hace XOR con el bloque anterior cifrado
+  $E_k( P_i XOR C_{i-1}) = C_i$
+- Evita que se presenten regularidades (+ difusión)
+***** Cipher FeedBack (CFB)
+- usa los 8 primeros b de C_{i-1} y le inserta Ci desplazando 8b
+- convierte block cipher en stream cipher
+***** Output FeedBack (OFB)
+***** Counter (CTR)
+- Se usa un contador de tamaño igual al bloque que se incrementa en cada bloque
+  E_k(Contador XOR Pi) = Ci
+**** Uso de encriptación simétrica
+***** End-to-end encryption (sólo en los extremos)
+Sólo puede encriptar datos de usuario y no las cabeceras tcp/ip (enrutado vulnerable)
+***** Link encryption (en todo el canal)
+Cada nodo de la comunicación desencripta/encripta. Se encriptan todas las cabeceras, hasta el nivel de enlace.
+- _Problemas:_ cada nodo es vulnerable, en cada enlace hace falta establecer una clave secreta
+**** Key-Distribution
++ envío físico (C es Key Distribution Center)
+  - A envía la clave a B
+  - C envía la clave a A y B
++ A envía a B nueva clave encriptada con clave antigua
++ C envía clave encriptada a A y B
+*** Asimetric algorithms
++ clave pública
++ Más lentos, necesitan mayor tamaño de clave
+**** RSA (1978, Rivest-Shamir-Adleman)
++ 1024-2048b de clave
++ algoritmo más ampliamente usado y testeado
+**** Elliptic Curve Cryptography (ECC)
++ 128-256b de clave
++ más rápido que RSA y igual de seguro, pero no tan testeado
+**** ElGamal (1984)
++ 1024b o más
++ Basado en Diffie-Hellman
+*** Key Distribution
++ Public announcement: un atacante puede mentirnos
++ Publicly available directory: vulnerable, entradas falsas
++ Public-Key Authority: más seguro, pero lento
++ Public-key certificates: seguro y rápido
+**** Claves secretas
++ Usando claves públicas
++ Diffie-Hellman (1976)
+** Autenticación
++ Protege de ataques activos, garantizando *integridad de los datos*
+*** Encriptación simétrica
++ Si sólo la otra persona sabe la clave, el mensaje sólo puede venir de ella
+  - No hay verificación de los datos
+  - Pueden reordenarse los bloques y que el mensaje tenga sentido (en ECB)
+*** Message Authentication Code (MAC)
++ Autentica sin encriptar (no hay confidencialidad)
++ verifican la integridad del mensaje
+*** Funciones hash
++ No autentican, pero aseguran la integridad
+- tamaño variable --> tamaño fijo bloque
+- imposible hayar x a partir de h(x)
+- imposible hayar un par x,y h(x)=h(y)
+**** MD5 (1991) Usado como checksum de ficheros
+- Produce bloques de 128b
+- Vulnerabilidades
+**** SHA (1993)
+SHA-0/1: 160b
+SHA-2 (2002): de hasta 512b
+*** HMAC (usar funciones hash para hacer MAC)
+- hash son más rápidas que algoritmos de encriptación
+*** Firma digital
++ rápido, facil distribución de claves, simple
++ claves públicas + funciones hash
+**** Esquemas de firma digital
++ RSA tiene su propio esquema
++ DSS (propuesto por NIST)
+  - requiere SHA y usa variante de ElGamal
+** Seguridad perimetral
+*** Tecnología Firewall
+**** Filtro de paquetes
+- Operaciones simples y rápidas sobre paquetes: filtrado
+- Permiten filtrar paquetes mal formados o bloquear ciertos paquetes
++ Filtrado básico
++ Filtrado dinámico (stateful, condicional)
+  - aumenta la carga
+**** Proxy
+- Operaciones detalladas con seguimiento prolongado: proxy
+**** NAT
++ router intermedio oculta las IPs internas y usa una única IP con distinto puerto de cara al exterior
+- Oculta la estructura interna, pero aumenta la carga y conflicto con otros software
+**** VPN
+Tunel encriptado por donde circulan los datos de forma segura por una red insegura
++ capa por encima asegura cualquier protocolo, pero extiende la red que se debe proteger (una vez ganado acceso se tiene para todo)
+*** Arquitecturas firewall
+1. _Sólo un screening router_
+   - Single box arquitecture (económica, usable)
+   - No muy flexible, pocas capacidades firewall
+   - No hay Defense in Depth (hay que securizar cada host)
+2. _Dual-Homed Host_ (computador con dos interfaces de red)
+   - Single box arquitecture
+   - firewall más funcional
+   - No hay Defense in Depth (hay que securizar cada host)
+   - No es adecuado para mucho tráfico, vulnerable
+3. _Screened host_ (screening router+bastion host)
+   - Bastion hsot actua como proxy con el resto
+   - No se permite salir directamnete, alta seguridad
+   - Lento si hay mucho tráfico
+4. _Screened subnet_ (router>>bastionHost>>router>>pcs) (DMZ)
+   - Aisla el bastion para no comprometer la red interna en caso de caida
+   - Aumenta Defense in Depth, router interior más rigido
+   - Apropiada para la mayoría de casos
+5. _Multiple bastion hosts_ (router>>bHosts>>router>>pcs)
+   - aumenta performance, redundancia y balanceo
+6. _Un sólo router como exterior/interior_
+   - Es una red perimetral (screened subnet) un único router capaz y flexible, sencillez sin perder seguridad
+7. _Un bastion como router exterior_
+   - screened subnet con bastion host como exterior, esta bien pero no admite mucho tráfico
+8. _Un bastion como router interior_
+   - Trafico no protegido de sniffers
+   - *NO recomendable*
+9. _Múltiples routers internos_
+   - Dos sitios por donde salir
+   - trafico no protegido de sniffers
+   - *NO recomendable*
+10. _Múltiples redes internas_
+	- Organización interna de deptos, sin mezclar tráfico
+	- Puede haber múltiples routers dentro de la red interna, no perimetrales, sin comprometer seguridad
+11. _Multiples routers externos_
+	- Permite acceso a múltiples redes (una para internet otra para colaboradores, etc)
+12. _Multiples redes perimetrales_
+	- redes independientes, si cae el bastión de una se puede acceder a la otra
+13. _Firewalls internos_
+	- Redes internas más seguras que otras, alta seguridad
+*** Intrusion Detection Systems (IDS)
++ Alarma antirobo: intruders, network tresspass
+  - Dificultad de detección (tecnicas IA, Honeypots)
+*** Intrusion Prevention Systems (IPS)
++ Anticiparse a que se produzca el mal
+  - más ventajoso que ID
++ Tipos:
+  - Host-based (descarta tráfico de entrada sospechoso)
+  - Network-based (monitorea y envía instrucciones al firewall para el bloqueo)
+  - Función añadida al Firewall
+
+** Legislación
+
+*** 1978 Constitución Española. Art. 18.4 
+Garantiza el derecho de las personas al honor y la intimidad personal y familiar
+*** 1992 Ley Orgánica de Protección de tratamiento Automatizado de los Datos (LORTAD)
+*** 1999 Ley Orgánica de Protección de Datos (LOPD) 
+/Garantizar y proteger, en lo concerniente al tratamiento de los datos personales, las libertades públicas y los derechos fundamentales de las personas físicas y especialmente de su honor e intimidad personal/
+
+Dato de caracter personal: /Cualquier información concerniente a personas físicas identificables/
+
+Fichero: /todo conjunto organizado de datos de caracter personal/ (no sólo automatizados distinto de LORTAD)
+
++ Consentimiento informado del afectado
++ Derecho a conocer existencia de ficheros de datos personales (inscritos en un registro general de protección de datos)
++ Derecho a acceder, rectificar y cancelar
++ 
+
+**** Fuentes accesibles
+Ficheros que pueden ser consultados por cualquiera sin necesitar consentimiento
++ por ejemplo: censo promocional
+  - nombre, apellidos, domicilio, dni, etc
+  - puede exigirse gratuitamente que se eliminen sus datos del censo
++ otros: teléfonos, listas de grupos profesionales, diarios..
+
+**** Agencia Española de Protección de Datos (AEPD)
+Misión: Velar por el respeto al sistema de protección de datos
+
++ Infracciones
+  + Leves (600-60k €)
+	- no informar
+	- incumplir el deber de secreto, etc
+  + Graves (60k-300k €)
+	- obstruir información/inspección
+	- mantener ficheros sin medidas de seguridad
+	- usar el fichero para otra finalidad
+  + Muy graves (300k-600k €)
+	- recogida de datos engañosa  
+	- reincidencia / no cese de infracciones graves.
+
+**** Principios de protección de datos
+- Calidad de los datos
+- Información en la recogida
+- Consentimiento del interesado
+- Cuidado de los datos
+- Especial cuidado con los datos especialmente protegidos
+
+*** 2002 Ley de Servicios de la Sociedad de la Información (LSSI)
+*** 2007 RLOPD
+
+*** Niveles de seguridad
++ medidas básicas
+  - ficheros de caracter personal
++ medidas basicas + medias
+  - datos de personalidad del individuo
+  - hacienda, servicios financieros
++ medidas medias + altas
+  - ideología, creencias, religión
+  - origen racial, salud, vida sexual
+  - fines policiales recabados sin consentimiento
+*** Registro general de Protección de Datos (RGPD)
+Antes de crear el fichero, inscribirlo en el RGPD de la AEPD
+** Seguridad física
+Prevención de daños de la infraestructura que hospeda los sistemas
+*** Amenazas
++ Desastres naturales (daños materiales, cortes, caídas)
++ Ambientales (temperatura 10-32ºC y humedad 40-60%)
+  - thermal shocks al encendido si Temp muy baja
+  - humedad: corrosión; sequedad: elecricidad estática
++ Técnicos (Ruidos e interferencias electromagnéticas)
++ Humanos
+*** Prevención
++ UPS/SAI: protección eléctrica y suministro de emergencia
++ Controlar acceso al edificio/habitaciones
++ Recuperación (redundancia, copias de seguridad)
++ integración con la seguridad lógica software
+*** Política de seguridad
++ Debe incluirse seguridad física (estandar ISO/IEC 2700-series)

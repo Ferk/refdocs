@@ -1,0 +1,4 @@
+Pequeña recopilación de hojas de referencia y esquemas.
+
+Se encuentran en el formato de outline que ofrece el org-mode de emacs, y están pensados para ser exportados en formato latex con una plantilla especial para generar hojas de referencia rápida. 
+No obstante, se pueden visualizar como ficheros de texto.

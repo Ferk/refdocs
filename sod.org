@@ -1,0 +1,781 @@
+# -*- org -*-
+#+LaTeX_CLASS: refcard
+#+OPTIONS: toc:nil title:nil
+
+#+TITLE: Resumen de Sistemas Operativos Distribuidos
+#+AUTHOR: Fernando Carmona Varo
+
+* Modelos de arquitecturas para la comunicación en red
+** Cliente-Servidor
+*** Definición
+- Los procesos *servidores* _ofrecen servicios_ a los procesos *clientes*.
+- Los servidores a su vez pueden ser clientes de otros servicios
++ Primitivas: send y receive
+ - usan un módulo de comunicaciones, en el que nada les impice ejecutarse en la misma máquina
+*** Configuraciones alternativas
+- *Replicar servidores* para mejorar prestaciones
+- *Caché:* almacenar objetos recientemente usados
+- *Código móbil:* el servidor envía el código que se ejecuta en el cliente (applets).
+- *Agentes móbiles:* programa en movimiento procesa info en cada cliente (reduce comunicacion pero riesgo worms)
+- *Cliente ligero* entorno centralizado
+*** Análisis
+
+**** Modo de funcionamiento (como se implementa la cooperacion)
+  - Sin estado: cada operación se atiende de manera independiente
+  - Con estado: se mantiene secuencia lógica de estados en las operaciones de un cliente (problema si falla cliente)
+**** Protocolo de comunicación
+  - Estandar (TCP/IP, ISO/OSI)
+	Muchas capas de seguridad pero demasiadas cabeceras (desperdicia ancho)
+  - Específico
+	Más eficiente, pero menos estandar
+
+**** Identificación del proceso servidor
+
+1. IP + PID (cambia con reinicio)
+2. IP + identificador (si cambia la IP del servidor podemos usar DNS)
+3. identificador (como aseguras que es único en toda la red?)
+4. identificador propio de rango amplio (necesita broadcasts de localización)
+5. servidor de nombres de servicio (elemento centralizado)
+6. tarjeta de red específica que mantiene listas proceso-servicio (broadcast de localización)
+
+**** Paso de mensajes
++ Tipos
+  - Con bloqueo (primitivas síncronas send/receive)
+  - Sin bloqueo (buffer de salida inmodificable, interrupción del SO al terminar recepción/envío)
+***** ¿Si llega el send antes de hacer receive?
+- Descartar mensaje
+- Guardarlo con timeout
+- Usar buffer
+Mandar mensaje: "intenta de nuevo más tarde"
+***** Fiabilidad
++ No fiables (UDP) no garantiza que el mensaje llega
++ Fiables (TCP) transparencia frente a fallos
+|-----+------------------------------------------------|
+|     | Programa                                       |
+|-----+------------------------------------------------|
+| REQ | Request (from client)                          |
+| REP | Reply (from server)                            |
+| AYA | Are you alive?                                 |
+| IAA | I am alive                                     |
+|-----+------------------------------------------------|
+|     | Sistema Operativo                              |
+|-----+------------------------------------------------|
+| ACK | Acknowledgement (llegó correctamente)          |
+| AU  | Address Unknown (no era pa mi)                 |
+| TA  | Try again (servidor ocupado o su buffer lleno) |
+|-----+------------------------------------------------|
+***** División del mensaje en paquetes
+- Un ACK por cada paquete (más tráfico, mejor control)
+- Un ACK al final de mensaje (menos tráfico, peor control)
+**** Formato de los datos
+- No se ponen de acuerdo en el formato (ej. los enteros en complemento a 2, 1, msb..)
+  - Estándar de representación necesario (evitar demasiadas conversiones)
+** Peer-To-Peer
++ Necesita una lógica de coordinación entre los procesos
+- Descentralización
+- Escalabilidad
+- Robustez
+* Remote Procedure Call (RPC)
+** Características
++ La linea de ejecución salta de una máquina a otra
+  - más transparencia para el programador que con send/receive
+  - el módulo de comunicación intermedio (stub) sí suele ser cliente/servidor
+*** Transferencia de argumentos
++ Por valor
++ Por referencia (no es posible en un SODistribuido)
+  - para listas puede usarse un stub especial que recoja los fallos por segmentacion y envie una solicitud del dato al cliente
++ Por copia/restauración (se pasa por valor y al terminar se modifica el valor original del cliente como si fuera por referencia)
+  - aumenta tamaño de los mensajes a enviar
+*** Conexión dinámica
+**** _¿Qué hace el Cliente?_
+1. *Importar la interfaz*
+  1. Comprobar si accedió antes (SO devuelve la direc y el opcode desde cache)
+  2. Si no, manda un mensaje al binder solicitando servicio y versión
+  3. binder devuelve el id de la máquina de ese servicio y el opcode
+**** _¿Qué hace el Servidor?_
+1. *Exportar la interfaz* y *registrarse*
+  - El server registra en un binder (server que mantiene lista de servicios disponibles y donde están).
+  - Se hará una petición de registro del servicio y si ya hay un servidor con el mismo servicio el binder lo rechaza
+2. Esperar petición de un cliente con un =opcode=
+3. Si =opcode= corresponde con programa de servicio soportado, devolver respuesta
+4. Esperar un nuevo cliente
+**** Ventajas
+- Multiples servidores (conversion distinta)
+- Pueden mantenerse varias versiones anteriores
+- Vinculador puede permitir varios servers con la misma version para repartir la carga
+**** Problemas
+- Coste de exportar/importar interfaces
+- Dificil escalabilidad (vinculador débil)
+*** Tratamiento de fallos
+**** Se pierde el mensaje de petición
+  - reintentar un numero de veces y pedir nuevo server al binder
+**** Se pierde el mensaje de respuesta
+  - reintentar varias veces (cuidado con servicios no idempotentes, numerar peticiones)
+**** El cliente no encuentra al servidor
+- ~err=read(...);~ err<0 si hay error (y valores devueltos negativos?)
+- ó con excepciones, dejando que el cliente maneje los errores (falta transparencia)
+**** Fallo/Caida del servidor
+- respuesta puede darse ninguna o varias veces -> El stub del server deberá controlar número de respuestas
+**** Fallo del cliente
+- provoca desperdicio en el servidor (y en la red al intentar responder)
+- si "con estado" consume recursos de memoria en el servidor
+- al reiniciar producirá confusión recibir respuestas antiguas
++ Soluciones (de Nelson)
+  - *Exterminación* (al reiniciar se ignoran las respuestas a peticiones pasadas guardadas en disco)
+  - *Reencarnación* (al reiniciar se manda un mensaje con la epoca, y el servidor ignora la epoca anterior)
+ - *Expiración* (tiempo límite para respuesta, prorrogable si el cliente lo permite)
+** Aspectos de realización
+*** Acuses de recibo
++ Parada y espera (ACK tras cada paquete)
++ Protocolo stream (ventana con rechazo selectivo)
+*** Camino Crítico
+1. cliente llama a su stub
+2. Stub prepara, traduce el mensaje
+3. SO copia el mensaje de memoria al nucleo, completa cabeceras, empaqueta y envía con timeout
+4. Transmisión de la tarjeta de red cliente a la del servidor
+5. SO del servidor procesa la interrupción, valida el mensaje y cambia el contexto al stub
+6. Stub extrae parametros, traduce y salta al subprograma
+7. El subprograma se ejecuta y obtiene una salida
+8. Se repite el proceso a la inversa para devolver la salida.
+**** Copiado de datos (8 veces! -> lento)
+- usar tarjetas de red especiales que usen punteros a memoria en lugar de copiar
+*** Gestión de temporización (timeout)
+- alarm(timeout) generará SIGALRM cuando transcurra el tiempo
+- consume un tiempo no subestimable
+** Dificultades
+- Variables globales
+- Tipado débil (que longitud tiene la matriz dinamica?)
+- Tuberías Unix (¿quien es el cliente, el que lee o el que ofrece el archivo?)
+** El RPC de Sun
++ *Lenguaje de interfaz XDR* (eXternal Data Representation)
+  - Poco flexible frente a otros lenguajes, como IDL de Corba
+  - Sólo se permite un argumento de entrada y un solo resultado
+  - Los nombres de metodos se basan en numeros de version y ids numericos
++ *Compilador rpcgen* para generar en C
+  - el main (f_client.c) y stub (f_clnt.c) del cliente.
+  - el main (f_server.c) y stub (f_svr.c) del servidor.
+  - procedimientos de empaquetado y desempaquetado para el binder y stubs
++ *Port mapper*, asigna un puerto a cada metodo
+  - el cliente manda su petición al puerto asignado al servidor, previamente localizado por el binder
++ *Autenticación* (en un segundo argumento se envían credenciales de acceso)
+  - Estilo Unix (uid, gid)
+  - Clave compartida para firmar
+  - Estilo Kerberos
+** CORBA (Common Object Request Broker Architecture)
+Estandar libre propuesto por la OMG para la construcción de sistemas interoperables.
++ ORB (Object Request Broker): Bus por el que circula la información
+*** Lenguaje IDL (Interface Definition Language)
+#+BEGIN_SRC java
+module ejemplo {
+  interface Calc {
+    exception DivisionPorCero {string mensaje;};
+    long sumar(in long a, in long b);
+    long dividir(in long a, in long b)
+	   raises (DivisionPorCero);
+	readonly attribute long numOperaciones;
+  }
+}
+#+END_SRC
+
+**** Archivos generados
++ En ambos lados
+  - ~CalcOperations.java~: interfaz idl en java
+  - ~Calc.java~: interfaz que extiende de Operations para usarla como objeto remoto
++ En lado cliente
+  - ~CalcStub.java~: sólo necesaria para compilar
+  - ~CalcHolder.java~: Envoltura para interfaz IDL (parametros in/out)
+  - ~CalcHelper.java~: Ofrece métodos como ~narrow()~ que convierte ~CORBA.Object~ en una interfaz IDL
++ En lado servidor
+  - herencia: ~CalcPOA.java~: esqueleto del servidor (se creará ~CalcImpl.java~ con la implementación).
+  - delegación: ~CalcPOA.java~ y ~CalcPOATie.java~: la Tie hereda de la POA 
+**** Generar Servidor
+1. Generar con idlj
+2. Para cada interfaz escribir el servidor
+   - *herencia:* escribir clase ~InterfazImpl.java~ (hereda de ~InterfazPOA.java~)
+	 Sólo puede implementar una interfaz, ya que no hay herencia múltiple
+   - *delegación:* escribir una clase que implemente ~InterfazOperations.java~
+	 Tiene la ventaja de poder implementar distintas interfaces
+3. Usar la clase ~InterfazImpl~ creada
+   1. Inicializar el ORB y el POA.
+   2. Crear el ~InterfazImpl~
+   3. Hacer llegar una referencia del objeto a los clientes (3 maneras)
+		- IOR "cadenificada"
+		- Servidor de nombres
+		- usando un FactoryObject
+
+***** ~CalcServer.java~ 
+#+BEGIN_SRC java
+ORB orb = ORB.init(args,null); // crear y iniciar ORB
+POA rootpoa = POAHelper.narrow(orb.resolve.initial_references("RootPOA"));
+rootpoa.the_POAManager().activate(); // activar POA raiz
+CalcImpl calcImpl = new CalcImpl(); // crear sirviente
+#+END_SRC
++ Referencia POA del sirviente: por *herencia*
+#+BEGIN_SRC java
+org.omg.CORBA.Object ref = rootpoa.servant_to_reference(calcImpl);
+#+END_SRC
++ Referencia POA del sirviente: por *delegación*
+#+BEGIN_SRC java
+CalcPOATie pseudoSrvte = new CalcPOATie(calcImpl);
+org.omg.CORBA.Object ref = rootpoa.servant_to_reference(pseudoSrvte);
+#+END_SRC
++ Exportar referencia: con *servidor de nombres*
+#+BEGIN_SRC java
+Calc cref = CalcHelper.narrow(ref);
+NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+NameComponent path[] = ncRef.to_name("Calculadora");
+ncRef.rebind(path,cref);
+#+END_SRC
++ Exportar referencia: con *IOR cadenificada*
+#+BEGIN_SRC java
+PrintWriter ps = new PrintWriter(new FileOutputStream(new File("server.ior")));
+ps.println(orb.object_to_string(ref));
+ps.close()
+#+END_SRC
++ Esperar invocaciones de los clientes
+#+BEGIN_SRC java
+orb.run();
+#+END_SRC
+
+**** Generar cliente
+#+BEGIN_SRC java
+ORB orb = ORB.init(args,null); // inicializar ORB
+#+END_SRC
++ Obtener referencia al objeto: con *servidor de nombres*
+#+BEGIN_SRC java
+org.omg.CORBA.Object obj = orb.resolve_initial_references("NameServer");
+NamingContextExt ncRef = NamingContextExtHelper.narrow(obj);
+calcImpl = CalcHelper.narrow(ncRef.resolve_str("Calculadora"));
+#+END_SRC
++ Obtener referencia al objeto: con *IOR cadenificada*
+#+BEGIN_SRC java
+LineNumberReader input = new LineNumberReader(new FileReader("server.ior"));
+org.omg.CORBA.Object obj = orb.string_to_object( input.readLine() );
+Calc calcImpl = CalcHelper.narrow(obj);
+#+END_SRC
++ Usar la interfaz
+#+BEGIN_SRC java
+resultado= calcImpl.sumar(2, 2); // devuelve 4
+#+END_SRC
+
+**** Ejecución
+1. Lanzar el servidor de nombres:
+   : tnameserv --ORBInitialPort 2000
+2. Lanzar el servidor: 
+   : java package.CalcServer --ORBInitialPort 2000
+3. Lanzar el cliente:
+   : java package.CalcCliente --ORBInitialPort 2000
+* Comunicación en grupo
+** Aspectos de diseño
+*** Tipos de grupos
++ envios externos
+  - Cerrados (sólo miembros del grupo pueden hacer multicast a este) 
+  - Abiertos
++ coordinacion
+  - Jerarquicos (coordinador central)
+  - grupos de compañeros (logica de coordinacion entre si)
+*** Pertenencia a un grupo
++ Servidor central de grupos
++ Lista de miembros distribuida (coordinador pa sincronizar)
+*** Dificultades
+- Fallo de un miembro del grupo (proceso vigilante, notificar al resto)
+- Caida grande de miembros de un grupo (proceso vigilante, reiniciar grupo)
+- Sincronización (numerar los mensajes para saber cuando se da de alta/baja)
+*** Todos los miembros deben recibirlo
+- no transparente: cada proceso tiene una tabla con todas las direcciones de miembros
+- transparente: asociar el grupo a una dirección hardware común
+**** Inundación
+- Todos los miembros del grupo reenvian el mensaje al resto de miembros
+- Al recibirlo se contesta con ACK y se ignora si ya se tiene (numerar)
+*** Envío de una respuesta externa común
+*** Orden de los mensajes
+C puede que vea el mensaje de B antes que el de A (aunque se enviase al reves)
+ - numerar los mensajes
++ Grupos Traslapados
+*** Escalabilidad
++ A nivel hardware puede ser un problema
+** Casos de estudio
+*** ISIS
+3 primitivas para comunicación en grupo:
+ + *ABCAST* y *GBCAST* (maneja pertenencia a grupos) son vagamente síncronos, pero costoso
+   1. el emisor asigna a cada mensaje enviado su numero de secuencia
+   2. Cada receptor devuelve un ACK con el número propio de secuencia del receptor
+   3. El emisor recibe los números de secuencia y envía a todos el número mayor.
+ + *CBCAST* es virtualmente síncrono
+   1. cada proceso tiene un vector (0,0,..0) tantos elementos como procesos
+   2. al enviar un mensaje incrementa su elemento del vector y lo envía en el mensaje
+   3. Al recibir un mensaje compara el vector con el suyo 
+	  - Si alguno de los elementos recibidos es mayor de lo esperado (salvo el del emisor que sería +1), retiene el mensaje a la espera de que llegue lo que falta.
+ 
+*** PVM (Parallel Virtual Machine): grupos dinámicos
+- pvm\_joingroup(char* grupo) pvm\_lvgroup(char* grupo) 
+- pvm\_gettid(char* grupo, int idmember) pvm\_gsize(char* grupo)
+- pvm\_barrier(char* group, int count) pvm\_bcast(char* grupo, int msgtag)
+* Seguridad
+** Conceptos
++ Política de seguridad
++ Amenazas de seguridad
+  - Fuga (atenta a la privacidad)
+  - Alteración (atenta a la integridad)
+  - Vandalismo (atenta a la disponibilidad)
++ Tipos de ataques
+  - Fisgar
+  - Suplantar
+  - Alterar mensajes
+  - Reenviar mensajes interceptados
+  - Denegación de servicio
++ *Criptografía:* codificación de un mensaje para ocultar su contenido
+*** Escenarios
+**** Comunicación con clave secreta compartida
++ Mecanismo
+  - *A->B:* $( M_{i} )_{K_{AB}}$
++ Problemas
+  - Intercambio de clave
+  - ataques de reenvío
+**** Comunicación autenticada con servidor
++ Mecanismo
+  - Alice pide solicitud de comunicarse con Bob a Sara
+    - *A->S:* $id_{A} + id_{B}$
+  - Sara le da una clave a Alice para hablar con Bob, incluyendo un mensaje para Bob
+    - *S->A:* $( (K_{AB}+id_{A})_{K_{B}} + K_{AB} )_{K_{A}}$
+  - Alice reenvía a Bob el mensaje que le dio Sara para él, el cual incluye la clave
+	- *A->B:* $(K_{AB}+id_{A})_{K_{B}} + id_{A} + REQ.servicio$
+  - Bob ya puede responder a Alice usando la clave K_{AB} desencriptada
++ Problemas
+  - Requiere que Sara conozca K_{A} y K_{B} por un canal seguro.
+**** Comunicación autenticada con claves públicas
++ Mecanismo
+  - Alice pide al servicio de distribución de claves la clave pública de Bob
+  - Alice genera una clave compartida y la manda a Bob encriptada
+     - *A->B:* $( K_{AB} )_{PubK_{B}}$
+  - Bob ya puede responder a Alice usando la clave K_{AB} desencriptada
++ Problemas
+  - suplantación del servicio de distribución de claves (necesita ser autoridad)
+**** Firmas digitales con una función de resumen segura
++ Mecanismo
+  - *A->B:* $M + ( resumen(M) )_{pK_{A}}$
+  - Bob desencripta con PK_{A} y si resumen(M) se corresponde con M, Alice es la autora
+**** Empleo de certificados
++ Mecanismo
+  - Alice pide un certificado de su nº de cuenta a Bob (Banco)
+    - *B->A:* $id_{A} + nº + id_{B} + (resumen(nº+id_{B}))_{pK_{B}}$
+  - Alice puede usar el mensaje de Bob para certificarse ante Carol (al usar pK_{B} Carol sabe que es de Bob)
+  - Carol necesita asegurar que pK_{B} no la falsificó Alice, preguntando a una autoridad superior Fred
+    - *F->C:* $id_{B} + PK_{B} + id_{F} + (resumen(PK_{B}+id_{F}))_{pK_{F}}$
+  - Pero ¿necesitaría certificar a Fred?
+	- romper recursión con autoridad totalmente segura (PK_{Z} por canal seguro)
+	- se necesita formato estándar y consenso en la cadena de autoridades
+** Control de Acceso
+_Controla los recursos a los que puede acceder un usuario autenticado_
++ Petición de servicio =<op,id,recurso>=: comprueba *autenticidad* y *credenciales* -> aplica control de acceso
+*** Dominios de protección
+entorno compartido por varios usuarios con una lista =<recurso,derechos>=
+**** Habilitaciones (operaciones permitidas sobre un recurso)
++ Las peticiones al servidor son =<op,id,habilitacion>=
+  1. Id.recurso
+  2. Operación (mapa de bits)
+  3. código autenticación (firma digital que asegura que la habilitación no es falsa)
++ Son una _clave de acceso autocontenida_ (es una llave para el recurso)
+  - Parecidas a los certificados, pero con operaciones en lugar de identidades
++ *Inconvenientes*
+  - La habilitación puede usarse por manos equivocadas
+  - Podría usarse habilitaciones antiguas aunque se expulsase al usuario
+**** Listas de control de acceso (lista de operaciones por cada dominio)
+- El servidor autentica al solicitante y si la operación le está permitida
++ *Credenciales* (evidencias presentadas por el solicitante del recurso)
+  - En lugar de autenticación estándar se usa una credencial (ej. certificado firmado)
+  - Por cada petición comprueba identidad y si la operación está en la lista
+** Cortafuegos
+Filtrado de mensajes entrada/salida de la red LAN.
++ *Inconvenientes*
+  - No protege de ataques dentro de la propia red LAN
+  - No dispone de mecanismos de grano fino con acceso más flexible
+** Algoritmos criptográficos
+*** División de mensajes
+**** Cifrado de bloque
+_Mensaje dividido en bloques encriptados separadamente_
+- Si todos con la misma clave, ataques de busqueda de patrones repetidos
++ *Cipher Block Chaining*
+  - función idempotente combina bloque con el anterior cifrado y cifra el resultado
+  - El primer bloque se combina con un vector de inicialización conocido (que cambie con la clave)
+  - Sólo se puede usar si no se pierden mensajes
+**** Cifrado de flujo
++ Generador de flujo de clave (función que genera una secuencia de bits)
+  - Se va combinando el flujo de la clave con el de datos (usando buffers)
+  - La clave debe generarse tan rápida como el flujo de datos
+*** Principios de ocultación de información (Shannon)
++ *Confusión:* modificar datos sin destruir información.
++ *Difusión:* desordenar bloques para mitigar los patrones repetidos.
+*** Algoritmos Simétricos
+**** TEA (Tiny Encription Algorithm)
++ Operaciones
+  - Confusión: a x b (XOR)
+  - Difusión:  a>>n y a<<n (desplazamiento de bits) también delta difunde
++ Encriptar(4 claves): repetir por cada 64b (M0M1)
+  - sum += delta
+  - M0 += ((M1<<4)+k0) x (M1+sum) x ((M1>>5)+k1)
+  - M1 += ((M0<<4)+k2) x (M0+sum) x ((M0>>5)+k3)
++ Desencriptar:
+  - M1 -= ((M0<<4)+k2) x (M0+sum) x ((M0>>5)+k3)  
+  - M0 -= ((M1<<4)+k0) x (M1+sum) x ((M1>>5)+k1)
+  - sum -= delta
++ Rápido (optimizable hw) y seguro (32x4= 128b)
+  - Debilidad: hay claves equivalentes (las dos sirven para mismo cifrado)
+**** DES (Data Encryption Standard)
++ *Inconvenientes*
+  - costoso computacionalmente
+  - longitud de clave (56b) rota en 1997 por fuerza bruta
+***** TDES
+Aplicar DES 3 veces con claves distintas (mayor clave pero muy lento)
++ 3TDES: 56*3= 168b
+  - *Encript:* $E_{K_1,K_2,K_3}(M) = E_{K3}( D_{K2}( E_{K1}(M) ) )$
+  - *Decript:* $D_{K_1,K_2,K_3}(M) = D_{K1}( E_{K2}( D_{K3}(M) ) )$
++ 2TDES: 56*2= 112b
+  - *Encript:* $E_{K_1,K_2}(M) =E_{K1}( D_{K2}( E_{K1}(M) ) )$
+  - *Decript:* $D_{K_1,K_2}(M) = D_{K1}( E_{K2}( D_{K1}(M) ) )$
+**** IDEA (International Data Encryption Algorithm)
+bloques de 64b con claves de 128b. Mucho más rápido que DES.
+**** AES (Advanced Encryption Standard)
+bloques de 128b con claves de 128/152/256b. Opera con matrices, XOR y combinaciones.
+*** Algoritmos Asimétricos
+**** RSA (Rivest, Shamir y Adelman en 1978)
+- Sean P y Q primos mayores de 10^{100}: $N=P*Q$
+- $Z=(P-1)*(Q-1)$
++ _Cálculo de d y e:_
+  - d se escoge como primo relativo de Z
+  - e es el inverso de d en módulo Z:  $e*d= [ 1 ]_{Z} \longrightarrow e=Z/d$
++ _Funciones criptográficas (M < N, trocear si necesario)_
+  - *Decript:* $D_{d,N}(C) = C^{d} mod N$
+  - *Encript:* $E_{e,N}(M) = M^{e} mod N$ 
+***** Criptoanálisis
++ para obtener d tendríamos que conocer P y Q
+  - habría que factorizar N (difícil, $N > 10^{200}$)
+  - además pueden usarse valores N más grandes si necesario
+*** Algoritmos Híbridos
+- Se emplean claves públicas para autenticar y intercambiar una clave secreta
+- El resto de mensajes se intercambian usando la clave secreta (más rápida)
+** Firmas digitales
+Garantizan mensajes *auténticos*, *infalsificables*, y *no repudiables*.
+*** Usando claves públicas: $M + (resumen(M))_{privK}$
+*** Usando claves secretas: $M + MAC_{K}(M)$
++ *Inconvenientes*
+  - Debe transmitirse la clave secreta al verificador
+  - Se necesitan conocer todos los verificadores
+  - Repudio (el verificador puede firmar también)
++ *Ventaja:* Más eficiente
+*** Funciones resumen seguras
+**** Ataque del cumpleaños
+1. Bob quiere firmar "M"
+2. Alice obtiene múltiples versiones de M y M' haciendo cambios sutiles hasta que tengan el mismo hash (más probable que 2 coincidan a buscar un coincidente de M)
+3. Bob firma el M modificado y al tener el mismo hash Alice puede usar la firma con M' 
+**** MD5 (message digest v5)
+Bloques 512b -> Funciones no lineales a segmentos de 32b -> resumen de 128b
+**** SHA (secure hash algorithm)
+Parecido, pero se pueden obtener resumenes de 160/224/256/384/512 bits
+**** Usar un algoritmo de encriptación simétrico
+** Kerberos
++ Es un Key Distribution Center (KDC) con 2 servicios
+  - AS (Authentication Service)
+  - TGS (Ticket Granting Service)
++ 3 objetos:
+  - *Ticket:* palabra para su presentación a un servidor, verificando que el emisor se autenticó
+  - *Autenticación:* palabra enviada por el cliente al server con su identidad y vigencia de comunicación $auth(cl)$
+  - *Clave de sesión:* clave secreta generada por Kerberos para la comunicación cliente-servidor $K_{clsrv}$
+*** Protocolo
+El cliente pide un ticket TGS al AS, y con él pide al TGS un ticket para comunicarse con el servidor. \\
+La *ocasión* (n) protege de repetición de mensajes y reutilización de tickets ya expirados.
+1. _Solicitud del ticket TGS al AS_
+  - *cl->AS:* $id_{cl} + id_{srv} + n$
+2. _Ticket TGS devuelto_
+  - *AS->cl:* $(K_{clT} + n)_{K_{cl}} + (ticketCT)_{K_{T}}$
+3. _Solicitud del ticket servidor al TGS_
+  - *cl->TGS:* $(auth(cl))_{K_{clT}} + (ticketCT)_{K_{T}} + id_{srv} + n$
+4. _Ticket servidor devuelto_
+  - *TGS->cl:* $(K_{clsrv} + n)_{K_{clT}} + (ticketCS)_{K_{srv}}$
+5. _Solicitud de servicio_
+  - *cl->svr:* $(auth(cl))_{K_{clsrv}} + (ticketCS)_{K_{srv}} + REQ + n$
+6. _Autenticar el servidor_
+  - *svr->cl:* $(n)_{K_{clsrv}}$
+*** Escalabilidad
+- realms: dominios o esferas de autoridades de autenticación, cada una con un kerberos
+- El TGS se registra en todos los realms, los servicios sólo en una
+- Puede haber varios AS por realm, existiendo una base de datos maestra que actualiza las demás bases de las claves privadas.
+*** Ventajas
++ Transparencia (automatización del inicio de sesión)
++ Facil uso (sólo hay que autenticarse 1 vez en Kerberos para los demás servicios del srv)
++ Eficiencia (reutiliza información de autenticación para acceder a recursos del mismo srv)
++ Coste (soft libre, incluido en UNIX)
+*** Críticas
++ Requiere modificación de todas las aplicaciones para usar un ticket kerberos
++ Centralización
++ Sincronización (las marcas de tiempo obligan a sincronizar)
++ Validez de los tickets (hay que ajustar un tiempo de vida)
+** OpenSSH
+- Ofrece versiones seguras de telnet (ssh/rlogin), ftp (sftp), rcp (scp).
+- Permite hacer tuneles seguros cifrados (redirecciona puertos TCP/IP por canales seguros)
+- Permite distintos mecanismos de autenticacion (clave publica, password, kerberos)
+** SSL/TLS
++ Capa de comunicación segura por debajo de otros protocolos (https -> http) orientado a autenticar servidores
++ Usa un esquema hibrido, pero su autenticación confía en certificados digitales
++ Cada sesión puede ser reutilizada (caché) usando el identificador
+*** Protocolo Handshake
+1. Decide la versión SSL a usar
+2. *Protocolo Cambio de especificaciones*
+  - Negocia el algoritmo criptográfico a usar
+3. Autentica cliente/servidor mediante intercambio de certificados
+  - *Protocolo de Alerta*: comunica posibles problemas 
+4. Genera la clave secreta compartida
+
+*** Record Protocol: implementa el canal seguro
+1. Divide los mensajes en paquetes
+2. Comprime los paquetes si se ha pactado
+3. Genera un resumen para cada paquete
+4. Encripta el conjunto paquete+resumen
+
+*** Implementación Java
+**** Servidor
+#+BEGIN_SRC java
+SSLServerSocketFactory srvFact = SSLServerSocketFact.getDefault();
+SSLServerSocket srv =  srvFact.createServerSocket(port);
+SSLSocket cl = srv.accept();
+OutputStream out = cl.getOutputStream();
+InputStream in = cl.getInputStream();
+#+END_SRC
+**** Cliente
+#+BEGIN_SRC java
+SSLServerSocketFactory srvFact = SSLServerSocketFact.getDefault();
+SSLSocket srv = srvFact.createSocket(hostname,port);
+OutputStream out = srv.getOutputStream();
+InputStream in = srv.getInputStream();
+#+END_SRC
+* Sistemas de archivos (SA)
+** Estructura del sistema de archivos
++ *Partición:* porción de disco a la que se manipula como entidad lógica independiente
++ *Bloque:* conjunto de sectores físicos, unidad de transferencia mínima que usa el SA
+  - bloque grande: más fragmentación pero menos accesos al disco
+  - se distinguen bloques de datos y bloques especiales (directorios, bloques índice)
++ *Superbloque:* características del SA (posición de elementos, tamaño..)
+  - al arrancar, los superbloques de todos los SA son cargados en memoria
+** Servidor de archivos
+Componente organizado en capas, que gestiona el acceso a archivos 
+*** VFS, Servidor de archivos virtual (capa más abstracta)
++ Interfaz con los procesos de usuario
++ Estructura común a todos los SA (nodos virtuales, nodos-v)
+  - Gestión de nombres y manejo de directorios
+  - Puntero al descriptor de archivo particular (nodo-i o registro)
+  - Punteros a funciones que realizan operaciones genéricas y propias del SA
+*** Módulo de organización de archivos
++ Dependiente de cada SA, basado en los nodos-i
+  - inodos contienen los atributos del archivo (salvo nombre y apuntador abierto)
++ Relaciona la imagen lógica (contigua) del archivo con la física (dispersa)
+*** Servidor de bloques
++ Emite mandatos para leer y escribir bloques al manejador de disposivo
++ Realiza la caché de los bloques
+*** Driver, manejador de dispositivos (capa menos abstracta)
++ Específico para el SA
++ Traducen ordenes de E/S a un formato que entienda el hardware
+** Gestión de archivos
+*** Creación de un archivo
+1. VFS: crea el nodo-v con la información necesaria.
+2. el modulo de organización crea el descriptor y actualiza el bloque del directorio donde esté el archivo.
+
+*** Manejo de ficheros abiertos
+El SO tiene una tabla de nodos-v actualmente abiertos, con el apuntador de la última posición accedida.
++ Para que varios procesos operen simultáneamente, cada uno tiene una tabla de archivos abiertos con el nodo y el apuntador. Incluida en el Process Control Block.
++ En UNIX siempre hay 3 archivos abiertos en cada proceso: stdin, stdout, stderr
++ Dos procesos pueden compartir apuntador usando una tabla intermedia.
+** Aspectos avanzados
+*** Asignación de bloques (físicos - lógicos)
+**** Asignación en bloques contiguos 
+- necesario saber el tamaño al crear el archivo
+- hay que mover el archivo para añadirle datos
+- fragmentación del disco (deja huecos)
+**** Asignación en bloques discontinuos
+- Necesario traducir el número de bloque lógico al bloque físico -> listas ó indices
+***** Listas enlazadas (cada bloque apunta al siguiente)
+- el descriptor sólo apunta al primer bloque, acceso secuencial rápido
+- Acceso aleatorio lento, si un bloque se pierde se pierde todo el archivo
+- Gasta espacio en el bloque, complicando el cálculo de espacio libre
+***** Tabla de asignación de archivos (variante de listas enlazadas)
+- los punteros se almacenan en una tabla independiente (File Allocation Table, FAT)
+- Mejora el acceso aleatorio (se guarda en caché) y ocupa un espacio prefijado
+***** Índices
+- Cada archivo tiene un bloque indice que contiene los punteros a los inodos.
+- Acceso aleatorio bueno, sin fragmentación
++ problemas de tamaño para el bloque índice
+  - índice multinivel, puede apuntar a otros bloques índice (gasto de espacio)
+  - UNIX: híbrido. Incluye en el inodo los 10 primeros bloques, y bloques índice de 1er nivel, 2o nivel, etc (más niveles cuanto más grande el archivo)
+*** Gestión de espacio libre
+**** Mapas de bits
+Se incluye un bit por recurso, 0 si vacio, 1 si lleno
+- fragmentación, gasta espacio
+**** Listas de recursos libres
+Lista que apunta al espacio libre
+- lento cuando hay mucho espacio libre (solución: agrupar bloques consecutivos libres con un número)
+*** Incremento de prestaciones
+**** Cache de nombres (lista nombres-inodo)
+**** Cache de bloques (bloques accedidos recientemente)
++ Políticas de reemplazo FIFO, MRU o LRU (el más común)
++ Sincronizado (mantener coherencia)
+ - Escritura inmediata (write-through)
+ - Escritura diferida (write-back)
+ - Escritura periódica (delayed-write)
+*** Montado de sistemas de archivos
+**** Montaje
+- Un superuser asocia una ruta a la raiz de la partición de un FS
+- Se trae el superbloque del FS a memoria, metiéndole dos punteros a inodo: directorio de montaje y raiz del FS
+- Se indica en el inodo de montaje que tiene un FS, apuntando al superbloque anterior
+**** Acceso
+- El mecanismo de interpretación de nombres debe tener en cuenta los punteros a superbloques que indican montado de FS.
+- Si se llega a un punto de montaje se accede a los inodos dados por el superbloque.
+**** Desmontado
+- Se desconectan los punteros del superbloque del FS y del punto de montaje
+- Se elimina el superbloque de la tabla de superbloques en memoria
+* Sistemas de archivos Distribuidos (SAD)
+** Requisitos
+1. Transparencia de acceso y ubicación
+2. Escalabilidad
+3. Control de concurrencia
+4. Replicación de archivos (descentralizar)
+5. Tolerancia a fallos
+6. Consistencia (poco retardo en la sincronización)
+7. Seguridad
+** Modelo del servicio de archivos
+*** Arquitectura (división x componentes -> extensibilidad & configurabilidad)
+**** Cliente: Módulo cliente
+- Interpreta las llamadas al servicio de los procesos y genera peticiones (RPC)
+- Gestiona la caché local de archivos
+**** Server: Servicio de nombres (o servicio de directorios)
+- Transforma los nombres de texto a UFIDs
+- Permite añadir nombres a la jerarquía
+**** Server: Servicio de archivos planos
+- Mantiene archivos y directorios, junto con sus atributos
+- Identifica cada archivo con un UFID (Unique File ID)
+*** Identificación de ficheros (UFIDs)
++ Generados por el servicio de archivos plano: ~</dir/f, S, F, R>~
+  - S: servidor donde está el fichero
+  - F: fichero dentro del servidor
+  - R: derechos de acceso sobre el fichero
+*** Interfaz del servicio de archivos plano
++ Tanto para cliente como serv.nombres
+  - ~Datos lee(ufid,indice,tamaño)~ ; ~void escribe(ufid,indice,Datos)~
+  - ~ufid crea()~ ; ~void elimina(ufid)~
++ Normalte sólo para serv.nombres
+  - ~Atrib getAtributos(ufid)~ ; ~void setAtributos(ufid, Atrib)~
+Excepción si no tiene permisos, posición inválida o duplicado al crear
+**** Diferencias UNIX
+- UNIX: secuencial, con estado, operaciones no idempotentes
+- UNIX: recuerda permisos desde apertura ; s.a.plano: comprueba en cada RPC 
+- el modulo cliente se encargaría de traducir UNIX <-> SAD
+*** Interfaz del servicio de directorio
+- ~ufic busca(ufid.dir,fname)~ ; ~fnames dameNombres(ufid.dir,patronRE)~
+- ~void añadeNombre(ufid.dir,fname,file)~
+- ~void desNombra(ufid.dir,fname)~
+Excepción si no tiene permisos, posición inválida o duplicado al añadir
+*** Aspectos adicionales
+**** Sistema de archivos jerárquico
++ En forma de árbol (no estricto, links) raíz de ufid conocido, llamadas sucesivas
+  - Directorios como dominios, la navegación puede ser:
+	- Iterativa (el server resuelve su parte y el cliente pide al siguiente server)
+	- Iterativa controlada por servidor (el server hace todas las otras peticiones)
+	- Recursiva (el server solicita al server correspondiente el resto de la ruta)
+**** Agrupaciones (grupos de archivos alojados en un detdo servidor
+- pueden moverse de un servidor a otro
+- el UFID incluye un ID de grupo (único en el sistema, ej: IP+Fecha)
+** NFS (Network File System) 1984
+*** Arquitectura
+- Modulo cliente y módulo servidor (pueden estar los dos en cada computador)
+- se pueden tener tb servidores dedicados (mejora prestaciones)
+- estandarizado y multiplataforma
++ Pila de protocolos en niveles:
+  - Red: IP
+  - Transporte: TCP o UDP
+  - Sesión: Sun RPC con credenciales (firmado y encriptado)
+  - Presentación: XDR
+  - Aplicación: protocolo NFS (Virtual File System)
+	- ~<id.FS + inodo + generación >~ (generación pq reutiliza inodos borrados)
+	  - *local:* referencia inodo; *remoto:* referencia rnodo (usado por RPC)
+**** Interfaz RPC del servidor NFS
+- ~NULL()~ ping al servidor
+- ~manejador LOOKUP(dir,fname)~
+- ~RENAME(manejador,fname)~
+- ~CREATE()~ ; ~REMOVE(manejador)~
+- ~Atributos GETATTR(manejador)~ ; ~SETATTR(manejador, Atributos)~
+- ~FSSTAT~ devuelve metainformación del SA de un fichero
+- ~Datos READ(manejador)~ ; ~WRITE(manejador,Datos)~
+- ~COMMIT(manejador)~ confirma escritura de un archivo de caché
+- ~LINK~ ; ~SYMLINK~ ; ~READLINK~ (resuelve un symlink)
+- ~MKDIR~ ; ~RMDIR~ ; ~READDIR~
+**** Módulo cliente (similar al módulo de organización de archivos)
++ Se integra en UNIX emulando primitivas POSIX
+  - transparencia, no hay que reprogramar programas
+  - un único cliente sirve a todos los procesos, usando cache compartida
+  - puede almacenarse la clave de encriptación en el kernel
+*** Servicio de montado
+- ~/etc/exports~: lista de directorios disponibles para clientes remotos, con control de acceso
+- clientes usan un mount especial que pregunta por servidor:dir y donde montar
+  - obtienen (de un mountd en el server) el manejador para usar en el VFS cliente
+  - se pasa el manejador al kernel, que lo almacena para su uso
+**** Tipos de montado
+- rígido (hardmounted): las RPC se hacen con bloqueo, reintentando
+- flexible (softmounted): RPCs sin bloqueo
+**** Traducción de rutas a inodos
++ Es iterativa por el cliente (cada parte de un nombre puede estar en != servers)
+  - Se usa LOOKUP, guardando manejadores en caché
+Si el VFS recibe una petición a un NFS la envía al cliente NFS que usa RPC/XDR para comunicarse con el servidor NFS (fuera del kernel) el cual devuelve la petición a su VFS local.
+**** Automontador
+Lista puntos de montado y referencias a servers NFS para cada punto
+- cuando el cliente NFS intenta resolver una ruta en un punto de esos, se llama al automontador local
+- crea un symlink hasta ruta auxiliar para no necesitar repetir el automontado
+*** Mantenimiento de Caché
++ En servidor (write-through tras un COMMIT)
++ En cliente (delayed-write, espera sync del VFS)
+  - Problemas concurrencia
+	- válida si $(T-T_{lastquery})<intervalo$
+	  - se calcula desde el cliente
+      - $intervalo$ 3-30s: si grande cache inconsistente, si pequeño sube tráfico
+	- ó también si $T_{modif.cl} = T_{modif.srv}$
+	  - requiere GETATTR para obtener $T_{modif.srv}$ (reducir peticiones enviando varios en un sólo mensaje)
+*** Control de Acceso y Autenticación
+*** Otros aspectos
+** AFS (Andrew File System)
+
+- Precursor de CODA y DCE/DFS
+- acceso transparente usando primitivas UNIX, buscando escalabilidad
+
+*** Venus (módulo cliente)
++ Intercepta llamadas ~open()~ / ~close()~ de archivos compartidos
+  - Administra una partición con la cache de archivos compartidos
+  - traduce las rutas UNIX a identificadores IDAs (como los UFIDs)
+*** Vice (módulo servidor)
+- Similar al servidor de archivos plano del modelo arquitectónico (operaciones sobre archivos usando IDAs).
+- Cada servidor mantiene una copia de una base de datos distribuida de ubicaciones para traducir nombres de archivo
+*** Mecanismo
+1. _los archivos de transmiten completos svr->cl al hacer ~open()~_
+   - Venus mira antes si están en cache o si la copia cache está invalidada
+   - Vice devuelve el archivo y registra *promesa de callback*
+2. _el cliente trabaja con la copia de los archivos en caché persistente_
+3. _Si se cambió el fichero, se actualiza el servidor al hacer ~close()~, manteniendo copia caché_
+   - Si Vice tiene promesa de callback y se ha modificado el archivo, enviará un callback que invalidará la copia caché del archivo.
+
+** LDAP (Lightweight Directory Access Protocol)
+- protocolo de acceso a directorios para autenticar usuarios o buscar información
+- funciona sobre TCP/IP y soporta TLS/SSL
++ Autenticación que usa el protocolo emplea:
+  - Pluggable Authentication Modules (PAM): interfaz de programación para autenticación
+  - Name Service Switch (NSS): servidor de nombres para los servicios
+- LDAP+NSS+PAM: separa usuarios del SO de los usuarios de servicios que se ejecutan
+*** Directorios LDAP
+**** Protocolo
+- Bind/Unbind, Search, Update, StartTLS, Abandon
+**** Organización
++ árboles de información (rutas DN = base + rama(s) + RDN)
+**** Representación
++ LDAP Data Interchange Format (LDIF) 
+*** Diseño del directorio
++ se almacenarán
+  - ficheros ~/etc~: passwd, aliases, group...
+  - rama de usuarios y grupos de aplicaciones web y servicios
++ espacio de nombres
+  - típicos: ou=People,dc=uco,dc=net (/etc/passwd)
+	

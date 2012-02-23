@@ -1,0 +1,308 @@
+#+TITLE: Soluciones a las preguntas de examen. Sistemas Operativos Distribuidos.
+#+AUTHOR: 
+#+LANGUAGE: spanish
+#+OPTIONS: toc:nil
+
+#+LATEX_HEADER: \usepackage{savetrees}
+#+LATEX_HEADER: \usepackage{indentfirst}
+#+LATEX_HEADER: \setcounter{secnumdepth}{0}
+
+* Preguntas de teoría
+** A. Tickets Kerberos
+#+LATEX: \label{A}
+La estructura de los tickets sigue la forma:
++ $(ticket(C,S))_{K_{S}}} = (C,S,t_1,t_2,K_{CS})_{K_{S}}$
+  - C: id del cliente
+  - S: id del servidor
+  - $t_1$: tiempo inicio de validez
+  - $t_2$: tiempo fin de validez
+  - $K_{CS}$: clave secreta compartida Cliente-Servidor
+  - $K_{S}$: Clave secreta compartida entre Servidor y AS
+
+Cada ticket tiene un periodo de validez fijo entre t_1 y t_2 tras el cual este expirará, siendo necesario la solicitud de un nuevo ticket.
++
+** B. v-nodos vs i-nodos
+#+LATEX: \label{B}
+Los *v-nodos o nodos virtuales* son elementos de información empleados por el sistema de archivos virtual para almacenar información genérica de un archivo regular, directorio o cualquier objeto que pueda contener el sistema de ficheros. esta información incluye:
+- Atributos del archivo
+- Puntero al descriptor físico del archivo particular (i-nodo, registro o r-nodo en una máquina remota)
+- Punteros a funciones genéricas
+- Punteros a funciones específicas del sistema de archivos particular
+
+En cambio, los *i-nodos* son descriptores de los archivos físicos, conteniendo punteros a los bloques los cuales poseen los datos del archivo. También contienen la estructura y tamaño del archivo con carácterísticas dependientes del sistema de archivos.
+
+** C. NFS
+
+El servidor NFS ofrece un servicio remoto mediante la exportación de una interfaz Sun RPC con operaciones de acceso y manipulación de ficheros, permitiendo el montado del sistema de ficheros en el cliente de forma transparente, como si se tratase de un sistema local.
+
++ Ejemplos de operaciones del servidor:
+ - CREATE: crea un nuevo archivo
+ - REMOVE: elimina un archivo
+ - READ: lee desde un archivo
+ - WRITE: escribe en un archivo
+ ...
+
+** D. Transparencia
+
+El usuario percibe el sistema como un todo, sin la necesidad de tener en cuenta que dicho sistema está compuesto por varias máquinas coordinadas.
+
+Por ejemplo: internet.
+
+** E. Tickets Kerberos
+
+Ticket: palabra obtenida de un servidor para ser presentada a un tercero, verificando que el emisor se autenticó en el servidor indicado. Dicha palabra contiene la identificación del usuario y una clave secreta compartida para la sesión de comunicación con dicho tercero.
+
+Para el ejemplo ver [[#A][Pregunta A]]
+
+** F. Caché
+
+- *Write-through:* escritura inmediata al disco cuando se modifica un fichero almacenado en la cache.
+- *Write-back:* los ficheros en cache que son modificados se marcan para ser escritos en disco justo antes de que se vayan a eliminar de la cache.
+
+** G. NFS
+
+#+CAPTION: Diagrama de la arquitectura NFS
+#+ATTR_LaTeX: width=0.75\textwidth
+[[file:NFS.png]]
+
+el cliente posee un *sistema de ficheros virtual (VFS)*, el cual representa una capa de abstracción para comunicarse con distintos sistemas de archivos. El *módulo cliente de NFS* sería la capa siguiente, la cual emplearía las *librerías RPC/XDR* para importar las funciones de servidores NFS remotos.
+
+** H. Pasos CORBA server
+
+1. Escribir la interfaz IDL
+2. Generar con idlj los ficheros .java a partir del .idl
+3. Para cada interfaz escribir el servidor
+   - *herencia:* escribir clase ~InterfazImpl.java~ (hereda de ~InterfazPOA.java~)
+	 Sólo puede implementar una interfaz, ya que no hay herencia múltiple
+   - *delegación:* escribir una clase que implemente ~InterfazOperations.java~
+	 Tiene la ventaja de poder implementar distintas interfaces
+4. Usar la clase ~InterfazImpl~ creada
+   1. Inicializar el ORB y el POA.
+   2. Crear el ~InterfazImpl~
+   3. Hacer llegar una referencia del objeto a los clientes (3 maneras)
+		- IOR "cadenificada"
+		- Servidor de nombres
+		- usando un FactoryObject
+
+** I. Triple-DES
+
+Se está empleando un algoritmo 2TDES. Emplea dos claves K_1 y K_2 para la encriptación, siendo la clave efectiva de $56b*2=112 bits$.
++ Ventaja: mayor seguridad frente a DES, al tener mayor longitud de clave
++ Inconveniente: mayor coste computacional.
+
+** J. Ticket Kerberos
+
+Se trata del ticket que genera el AS para la comunicación del cliente con el TGS.
+
+Ver  [[#A][Pregunta A]].
+
+El ticket ya debe estar de por sí encriptado con la clave secreta del TGS (compartida con AS).
+
+** K. SSL
+
++ Protocolo Handshake
+  1. Decide la versión SSL a usar
+  2. *Protocolo Cambio de especificaciones*
+    - Negocia el algoritmo criptográfico a usar
+  3. Autentica cliente/servidor mediante intercambio de certificados
+    - *Protocolo de Alerta*: comunica posibles problemas 
+  4. Genera la clave secreta compartida para iniciar la comunicación
+
++ Record Protocol: implementa el canal seguro
+  1. Divide los mensajes en paquetes
+  2. Comprime los paquetes si se ha pactado
+  3. Genera un resumen para cada paquete
+  4. Encripta el conjunto paquete+resumen
+
+** L. Identificación del proceso servidor
+
++ Posibles métodos de identificación
+  1. IP + PID (cambia con reinicio)
+  2. IP + identificador (si cambia la IP del servidor podemos usar DNS)
+  3. identificador (como aseguras que es único en toda la red?)
+  4. identificador propio de rango amplio (necesita broadcasts de localización)
+  5. servidor de nombres de servicio (elemento centralizado)
+  6. tarjeta de red específica que mantiene listas proceso-servicio (broadcast de localización)
+
+** M. Exportar/Importar interfaz RPC
+
+- *Exportar:* registrarse en el binder (vinculador) para ofrecer los métodos RPC del servidor. Si existe un servidor con el mismo servicio y versión se rechazaría la petición.
+- *Importar:* el cliente primero comprueba la cache si ha accedido recientemente a ese servicio, sino se comunicaría con el binder para obtener la identificación del servidor y opcode de la operación.
+
+** N. Arquitectura CORBA
+
+#+CAPTION: Diagrama de la arquitectura del middleware CORBA
+#+ATTR_LaTeX: width=0.75\textwidth
+[[file:CORBA.png]]
+
++ Elementos
+ - *Agente de Petición de Objetos* (ORB): Bus común por el que circula toda la información y a partir del cual los objetos interactúan entre si.
+ - *Adaptadores de objetos* (AO): Se encargan del mapeo entre objetos CORBA y sus implementaciones (una interfa IDL al objeto que la implementa, activa y desactiva los objetos)
+ - *Servicios CORBA*: Colección de objetos que resuelven problemas frecuentemente encontrados (estandarizados).
+ - *Facilidades CORBA*: Componentes de función más amplia ("grano grueso"): interfaces gráficas, administración de sistemas...
+
+** O. Definición CORBA
+
+Es un Middleware que ofrece un conjunto de servicios que hacen posible el funcionamiento de aplicaciones distribuidas sobre plataformas heterogéneas.
+
+CORBA trata con interfaces definidas en un lenguaje IDL de forma que los programadores puedan usar esos métodos como si fuesen locales, a través de referencias a objetos remotos.
+
++ Ventajas
+  - Distribución de la carga computacional
+  - Transparencia en la ubicación
+- Reutilización de código
+- Partición de aplicaciones
+- Replicación de servidores
++ Inconvenientes
+  - Tecnología más compleja y pesada.
+  - Nuevos desafíos: concurrencia, seguridad, ...
+
+** P. mountd y nfsd
+
+- *mountd*: servicio ofrecido por el servidor NFS mediante el cual los clientes pueden montar el sistema de ficheros (usando un mount modificado) en su sistema de ficheros virtual para poder acceder al sistema NFS remoto de manera transparente.
+
+- *nfsd*: demonio que se ejecuta fuera del kernel, en el servidor NFS, el cual usa las librerías de nivel de usuario RPC/XDR para recibir las peticiones de los clientes y reenviarlas al VFS del servidor NFS, el cual accederá a su sistema de archivos local para obtener la información solicitada.
+
+** Q. RSA
+
++ /Datos: P=13; Q=17; d=5/
+  1. Hallar Z del que se halló "d"
+	 - $Z=(P-1)*(Q-1)=192$
+  2. Hallar "N" para la función criptográfica
+	 - $N = P*Q = 13*17 = 221$
+  3. Hallar "e" (inverso en módulo Z de "d")
+	 - $e*d = [ 1 ]_{192} \rightarrow$ grupo equivalencia $[(192*i)+1]$: 1, 193, *385*, 578 ... 
+	   - O bien buscamos el que sea divisible por d ó se calcula mediante el algoritmo extendido de Euclides.
+	 - $e = \frac{d*e}{d} = \frac{385}{5} = 77$
+  4. Obtener función criptográfica
+	 - *Encript:* $E_{e,N}(M)= M^{e} \bmod N = M^{77} \bmod 221$
+	 - *Decript:* $D_{e,N}(C)= C^{d} \bmod N = C^{5} \bmod 221$
+
++ Definición
+  Es un algoritmo de encriptación asimétrico empleado para generar parejas de claves de tal forma que lo que se encripta con una sólo puede ser desencriptado con la otra.
+
++ Ventajas
+  - No requiere el intercambio de una clave secreta
+  - El tamaño de clave puede ser variable (depende del tamaño de números primos P y Q elegidos)
+  - Como se hace necesario la factorización de N, esto representa un coste computacional muy alto para valores primos P y Q mayores de $10^{100}$.
+
++ Inconvenientes (comunes con todos los asimétricos)
+  - Es más costoso que un algoritmo de encriptación simétrico
+  - Puede ser vulnerable al ataque de texto en claro escogido (generar todos los posibles mensajes encriptados hasta coincidir)
+
+* Ejercicios
+** 1. Código SSL
+
+- Se trata de un código servidor, en el cual se crea un socket en un puerto dado que permanecerá a la escucha (con un accept) respondiendo a peticiones de los clientes que puedan conectarse a él en ese puerto, usando un flujo de salida y de entrada  (aunque en el código no se muestra ninguna operación de intercambio de información usando esos flujos creados).
+
+- En los sockets inseguros la información se transmite sin encriptar, mientras que en los sockets SSL se emplea un algoritmo criptográfico pactado y se asegura la autenticidad del servidor (opcionalmente también la del cliente) mediante certificados.
+
+** 2. Grafo de sistema de ficheros. Asignar inodos y bloques.
+
+|--------+--------+--------+--------+--------+--------+--------+--------|
+| inodo1 | inodo2 | inodo3 | inodo4 | inodo5 | inodo6 | inodo7 | inodo8 |
+|--------+--------+--------+--------+--------+--------+--------+--------|
+|      4 |      3 |      3 |      2 |      2 |      2 |      1 |      2 |
+|--------+--------+--------+--------+--------+--------+--------+--------|
+|      3 |      1 |      4 |      5 |      6 |      7 |      8 |      9 |
+
+|---+-----+---+---+-----+---+---+-------+---+---+--------+---+---+--------|
+|   | B1  |   |   | B3  |   |   | B4    |   |   | B5     |   |   | B6     |
+|---+-----+---+---+-----+---+---+-------+---+---+--------+---+---+--------|
+| 2 | .   |   | 1 | .   |   | 3 | .     |   | 4 | .      |   | 5 | .      |
+| 1 | ..  |   | 1 | ..  |   | 1 | ..    |   | 2 | ..     |   | 3 | ..     |
+| 4 | MPI |   | 2 | SOD |   | 5 | ACCES |   | 6 | pract1 |   | 8 | pract3 |
+|   |     |   | 3 | BD  |   |   |       |   | 7 | pract2 |   | 6 | pract4 |
+|   | __  |   |   |     |   |   |       |   |   |        |   | 8 | pract5 |
+
+|-------+-------+-------|
+| B7    | B8    | B9    |
+|-------+-------+-------|
+| Datos | Datos | Datos |
+
+** 3. Código CORBA
+
+- Se trataría del código de un cliente CORBA.
+- Para referenciar al servidor se ha empleado un archivo ~server.ior~ que contiene una IOR cadenificada, tras leer esta cadena se convierte a una referencia a objeto corba (usando ~string_to_object~), y con el método ~narrow~ se transforma el objeto CORBA a la implementación del sirviente (~calcImpl~).
+- Una alternativa para obtener la referencia al servidor sería empleando un servidor de nombres (cuya dirección o nombre de dominio sean conocidos).
+  - Para ello se sustituiría el código siguiente
+	: LineNumberReader input = new LineNumberReader(new FileReader("server.ior"));
+	: String ior = input.readLine();
+	: input.close()
+	: org.omg.CORBA.Object obj = orb.string_to_object(ior);
+	: Calculadora calcImpl = CalculadoraHelper.narrow(obj);
+  - Por este otro
+	: org.omg.CORBA.Object obj = orb.resolve_initial_references("NameServer");
+	: NamingContextExt ncRef = NamingContextExtHelper.narrow(obj);
+	: calcImpl = CalculadoraHelper.narrow(ncRef.resolve_str("Calculadora"));
+
+** 4. Código CORBA
+
++ Descripción del proceso:
+  - El código tiene como objetivo la creación de un servidor CORBA empleando un objeto que implementa (por herencia) la interfaz ~CalculadoraImpl.java~.
+  - Se emplea el gestor de nombres "NameService" para registrar un enlace al servidor bajo el nombre "Calculadora" para que los clientes puedan acceder a este por medio del servidor de nombres.
+  - Finalmente, usando ~orb.run()~ se deja al servidor esperando llamadas remotas a los métodos por parte de los clientes.
++ Terminología CORBA:
+  - El objeto ~calcImpl~ es el denominado "sirviente", el cual posee los métodos RPC que pueden llamarse remotamente.
+  - La clase ~CalculadoraEjemplo.java~ que se muestra en el enunciado sería el ejecutable del servidor.
++ Modificación para realizar por delegación:
+  - En lugar de extraer la referencia del sirviente ~calcImpl~ de la forma siguiente.
+	: org.omg.CORBA.Object ref = rootpoa.servant_to_reference(calcImpl);
+  - Se deberá en su lugar obtener el "pseudosirviente" del cual ya sí se extraería la referencia.
+    : CalcPOATie pseudoSirviente = new CalcPOATie(calcImpl);
+    : org.omg.CORBA.Object ref = rootpoa.servant_to_reference(pseudoSirviente);
+
+** 5. Código CORBA
+
+- la clase ~FabricaPropiedadesImpl~ tiene el objetivo de crear, almacenar, devolver y eliminar objetos del tipo ~Propiedades~ identificándolos por un nombre.
+
+  - Constructor ~FabricaPropiedadesImpl~
+	- Llama al constructor de ~FabricaPropiedadesPOA~.
+  - Método ~Propiedades crear(nombre)~
+	1. crea un nuevos sirviente (~PropiedadesImpl~)
+	2. Lo registra en el POA
+	3. Obtiene el objeto accesible (Propiedades)
+	4. Lo almacena en una tabla (~Hashtable~) asignándole el nombre indicado, y lo devuelve.
+  - Método ~Propiedades localizar(nombre)~
+	- Obtiene uno de los objetos accesibles almacenados en la tabla, correspondiente al nombre indicado.
+  - Método ~void eliminar(nombre)~
+	- Elimina el objeto accesible de la tabla correspondiente al nombre indicado.
+
+** 6. Grafo de sistema de ficheros. Conceptos.
+
++ Conceptos:
+  - *inodo*: (ver [[#B][Pregunta teórica B]])
+  - *vnodo*: (ver [[#B][Pregunta teórica B]])
+  - *tabla vnodos*: Tabla gestionada por el VFS (sistema de archivos virtual) en la que se almacenan los vnodos del sistema de archivos.
+  - *tabla inodos*: Tabla gestionada por el módulo de organización de archivos, en la que se almacenan los inodos del sistema de archivos.
+  - *bloque*: Conjunto de sectores físicos del disco que representan la unidad mínima de información con la que trabajará el sistema de archivos. Pueden almacenar datos o bien usarse para almacenar meta-información del sistema (directorios, bloques de índices, etc).
+  - *enlace físico*: Relación que se establece entre dos (o más) archivos con distintas entradas en los bloques de directorios pero que apuntan todos al mismo inodo, teniendo por tanto los mismos bloques, de tal forma que si se borrase cualquiera de los archivos se liberaría el inodo de memoria, perdiendo los datos.
+  - *enlace simbólico*: Archivo que apunta a un bloque especial que contiene la ruta de otro archivo, de modo que al acceder a la información del archivo el sistema buscará en su lugar la de la ruta dada. La operación de borrado sobre el enlace simbólico no afectará a los datos del bloque.
+
++ Tabla de inodos
+|-----+-----+-----+-----+-----+-----+-----+-----+------+------|
+| in1 | in2 | in3 | in4 | in5 | in6 | in7 | in9 | in10 | in11 |
+|-----+-----+-----+-----+-----+-----+-----+-----+------+------|
+|   4 |   3 |   4 |   2 |   3 |   1 |   2 |   2 |    1 |    1 |
+|-----+-----+-----+-----+-----+-----+-----+-----+------+------|
+|   5 |   1 |   7 |   9 |   2 |   4 |  12 |   8 |   13 |   14 |
+|     |     |     |     |   3 |     |     |     |      |      |
+|     |     |     |     |   6 |     |     |     |      |      | 
+
++ Bloques
+|---+-----+-------+-------+-------+---+-----+-------+---+--------+---+-----+----+----|
+|   | B1  | B2    | B3    | B4    |   | B5  | B6    |   | B7     |   | B8  |    | B9 |
+|---+-----+-------+-------+-------+---+-----+-------+---+--------+---+-----+----+----|
+| 2 | .   | Datos | Datos | Datos | 1 | .   | Datos | 3 | .      | 9 | .   |  4 | .  |
+| 1 | ..  |       |       |       | 1 | ..  |       | 1 | ..     | 2 | ..  |  3 | .. |
+| 9 | MPI |       |       |       | 2 | SOD |       | 4 | ORACLE | 5 | pr1 | 11 | p7 |
+|   |     |       |       |       | 3 | BD  |       | 7 | ACCES  | 6 | pr2 |  5 | p8 |
+|   |     |       |       |       |   |     |       |   |        |   |     |    |    |
+
+|----+-----+----------------+-------|
+|    | B1  | B13            | B14   |
+|----+-----+----------------+-------|
+|  7 | .   | symlink        | Datos |
+|  3 | ..  | /BD/ORACLE/pr7 |       |
+| 10 | pr4 |                |       |
+|  5 | pr5 |                |       |

@@ -1,0 +1,774 @@
+
+
+
+
+
+* Unified Modelling Language
+UML es un lenguaje para visualizar, especificar, construir y documentar los artefactos (modelos) de un sistema que involucra una gran cantidad de software, desde una perspectiva OO.
+
+1) Construimos modelos para comprender mejor el sistema que se desarrolla
+(modelo es una simplificación de la realidad)
+2) Modelamos para describir la estructura y comportamiento del sistema
+3) Modelamos para documentar las decisiones tomadas
+4) Modelamos para proporcionar plantillas para ayudar a la construcción del sistema
+
+** Objetivos
+- Reunir los puntos fuertes de cada método
+- Idear nuevas mejoras
+- Proporcionar estabilidad al mercado 
+- Eliminar confusión en los usuarios
+
+*** Visualizar los elementos de un Sistema
++ Facilitando:
+- la comunicación entre los participantes (incluidas herramientas) en el desarrollo
+- la comprensión de las soluciones (notación gráfica),
+- el mantenimiento de las soluciones conceptuales a lo largo del tiempo (documentación)
+*** Especificar software
+- Se pueden construir modelos precisos, no ambiguos y completos.
+- Cubre las decisiones de análisis, diseño e implementación
+*** Construir software
+- No es un lenguaje de programación visual, pero sus modelos se pueden conectar de forma directa a una gran variedad de ellos.
+- Correspondencias entre UML y lenguajes: Java, C++, etc.
+- Ingeniería directa: generación de código.
+- Ingeniería inversa: reconstrucción de modelos
+*** Documentar
+- requisitos, arquitectura, diseño, código fuente, pruebas, ...
+
+** Raíces de UML
+En 1994, Booch, Rumbaugh (OMT) y Jacobson (Objectory/OOSE) deciden unificar sus métodos: Unified Modeling Language (UML)
+
+  UML unifica estos conceptos e introduce otros nuevos
+*** OMT - Object Modeling Technique (Rumbaugh et al.)
+      especialmente bueno para análisis de datos de SI entre otros, 
+      usa extensiones de los diagramas ER
+*** Método-Booch (G. Booch)
+     especialmente útil para sistemas concurrentes y de tiempo real
+     fuerte relación con lenguajes de programación, como Ada
+*** OOSE - Object-Oriented Software Engineering (I. Jacobson)
+     desarrollo guiado por los use cases
+     buen soporte de Ingeniería de Requisitos e Ingeniería de Información
+     Modelado y simulación de sistemas de telecomunicaciones
+
+** Bloques de construcción
+*** Elementos estructurales
+   Abstracciones básicas a partir de las que se construyen los modelos
+Son en su mayoría las partes estáticas
+de un modelo y representan cosas que son conceptuales o materiales.
+
+Existen variaciones de estos elementos tales como actores,
+señales, tipos de clases, aplicaciones, documentos, paginas, tablas,
+etc. Pero los más básicos son:
+**** Clases 
+   es una descripción de un conjunto de objetos que comparten
+   los mismos atributos, operaciones relaciones y semántica
+ Una clase implementa una o más interfaces. Gráficamente se representa como un rectángulo que incluye su nombre, sus atributos y sus operaciones.
+**** Interfaces
+Una interfaz es una colección de operaciones que especifican un servicio de una determinada clase o componente. Una interfaz describe el comportamiento visible externamente de ese elemento, puede mostrar el comportamiento completo o sólo una parte del mismo. Una interfaz describe un conjunto de especificaciones de operaciones (o sea su signatura) pero nunca su implementación. Se representa con un circulo, , y rara vez se encuentra aislada sino que más bien conectada a la clase o componente que realiza.
+**** Colaboraciones
+Es una interacción y es una sociedad de roles y otros elementos que colaboran para proporcionar un comportamiento mayor que la suma de los comportamientos de sus elementos.
+Las colaboraciones representan la implementación de patrones que forman un sistema. Se representa mediante una elipse con borde discontinuo.
+- Tienen dimensión tanto estructural como de comportamiento
+- Una clase dada puede participar en varias colaboraciones
+**** Casos de uso 
+es una descripción de un conjunto de secuencias de
+acciones que un sistema ejecuta y que produce un resultado
+observable y de interés para un actor. Se utiliza para mostrar los
+aspectos de comportamiento de un modelo y es realizado por una
+colaboración
+**** Clases activas
+Es una clase cuyos objetos tienen uno o más procesos o hilos de ejecución por lo y tanto pueden dar lugar a actividades de control. Una clase activa es igual que una clase, excepto que sus objetos representan elementos cuyo comportamiento es concurrente con otros elementos. Se representa igual que una clase, pero con líneas más gruesas
+**** Componentes
+Un componente es una parte física y reemplazable de un sistema que conforma con un conjunto de interfaces y proporciona la implementación de dicho conjunto. Un componente representa típicamente el empaquetamiento físico de diferentes elementos lógicos, como clases, interfaces y colaboraciones.
+**** Nodos
+Es un elemento físico que existe en tiempo de ejecución y representa un recurso computacional que por lo general dispone de algo de memoria y con frecuencia de capacidad de procesamiento
+
+*** Elementos de comportamiento
+                                  son las partes dinámicas de los
+modelos UML. Son los verbos de un modelo y representan
+comportamiento en el tiempo y espacio
+Estos elementos de comportamiento están conectados
+generalmente de manera semántica a elementos estructurales
+como clases, colaboraciones y objetos
+
+**** Interacción 
+es un comportamiento que comprende un conjunto de
+   mensajes intercambiados entre un conjunto de objetos, dentro de un
+   contexto particular para alcanzar un propósito específico. En una
+   interacción se involucran muchos otros elementos como mensajes,
+   secuencias de acciones y enlaces
+**** Estados 
+nos muestra mediante su combinación los distintos estados
+   por los que pasa un objeto como respuesta a los eventos.
+   Conjuntamente con él se involucran otros elementos como transiciones,
+   eventos y actividades para formas una maquina de estados
+
+*** Elementos de agrupación, son las partes organizativas de los
+modelos UML
+   Paquetes tiene como objetivo organizar elementos en grupos, tanto
+   estructurales como de comportamiento. Su concepción es puramente
+   conceptual, siendo elementos de agrupación básicos mediante los
+   cuales se puede organizar un modelo
+*** Elementos de anotación, son las partes explicativas de un modelo
+UML y se utilizan para describir, clarificar y hacer observaciones
+sobre cualquier elemento de un modelo
+   Notas se utilizan para mostrar comentarios o restricciones sobre un
+   elemento o conjunto de un modelo
+
+*** Relaciones entre los elementos
+**** Relaciones de Dependencia 
+es una relación semántica entre dos
+elementos, en la cual un cambio al elemento independiente puede
+afectar a la semántica del otro elemento dependiente, en ocasiones
+puede estar etiquetada
+**** Relaciones de Asociación 
+es una relación estructural que muestra
+las conexiones entre objetos. Generalmente va acompañada con
+una etiqueta y otros adornos como la multiplicidad y los nombres de
+rol
+**** Relaciones de Generalización
+ es una relación de
+especialización/generalización en la cual los objetos del elemento
+especializado pueden sustituir a los objetos del elemento general.
+De esta forma el hijo comparte la estructura y comportamiento del
+padre
+**** Relaciones de Realización
+ es una relación semántica entre
+clasificadores en la cual un clasificador especifica un contrato que
+otro clasificador garantiza que cumplirá
+
+*** Diagramas
+Son la representación gráfica de un conjunto de *elementos* y *relaciones*
+- Visualizados generalmente como un grafo conexo
+- Se utilizan para visualizar un sistema desde diferentes perspectivas
+- Proporciona una vista resumida de los elementos que constituyen el sistema
+
+**** Diagramas de Clases, muestran un conjunto de clases, interfaces y
+colaboraciones y sus relaciones y cubren la vista de diseño estática de
+un sistema
+**** Diagramas de Objetos, representan instantáneas de instancias de los
+elementos encontrados en el diagrama de clases. Cubren la misma
+vista estática que los diagramas de clases pero desde perspectivas de
+casos reales o prototípica
+**** Diagramas de Casos de Uso, muestran un conjunto de casos de uso
+sus relaciones y los actores. Cubren la vista de casos de uso estática
+de un sistema y son especialmente importantes en el modelado y
+comportamiento de un sistema
+
+**** Diagramas de interacción, muestran una interacción entre un
+conjunto de objetos y sus relaciones incluyendo los mensajes que
+pueden ser enviados entre ellos. Cubren la vista dinámica de un
+sistema. Existen dos tipos
+
+***** Diagramas de secuencia
+en los que se resalta la ordenación temporal
+de los mensajes
+***** Diagramas de colaboración
+en los que se resalta la organización
+estructural de los objetos que envían y reciben mensajes
+***** Diagramas de estados
+muestran un máquina de estados que consta
+de estados, transiciones, eventos y actividades. Cubre la vista dinámica
+de un sistema y son importantes en el modelado del comportamiento de
+una interfaz, una clase o una colaboración, resaltando el
+comportamiento dirigido por eventos de un objeto
+***** Diagramas de Actividades
+es un tipo especial de diagrama de
+estados que muestra el flujo de actividades dentro de un sistema.
+Cubren la vista dinámica de un sistema, siendo útiles para modelar el
+funcionamiento de un sistema y resaltar el flujo de control entre objetos
+***** Diagramas de Componentes
+muestran la organización y las
+dependencias entre un conjunto de componentes. Cubren la vista de
+implementación estática de un sistema. Se relacionan con los
+diagramas de clases en que un componente se corresponde por lo
+común con una o varias clases, interfaces o colaboraciones
+***** Diagramas de Despliegue
+muestran la configuración de nodos de
+procesamiento en tiempo de ejecución y los componentes que residen
+en ellos. Cubren la vista de despliegue estática de una arquitectura. Se
+relacionan con los diagramas de componentes en que un nodo contiene
+por lo común uno o más componentes
+
+
+** Reglas de UML
+como cualquier lenguaje UML tiene un número de
+reglas que especifican a qué debe parecerse un modelo bien
+formado, que es aquél que es semánticamente autoconsistente y
+está en armonía con todos sus modelos relacionados. UML posee
+reglas semánticas para
+*** Nombres
+como llamar a los elementos , relaciones y diagramas
+*** Alcance
+el contexto que da un significado específico a un nombre
+*** Visibilidad
+como se pueden ver y utilizar esos nombres por otros
+*** Integridad
+como se relacionan apropiada y consistentemente unos elementos con otros
+*** Ejecución
+que significa ejecutar o simular un modelo dinámico
+
+Hay que considerar que los modelos construidos durante el desarrollo
+  de un sistema tienden a evolucionar y pueden ser vistos por
+  diferentes usuarios de forma diferente y en momentos diferentes.
+  Debido a ellos en ocasiones no solo se construyen modelos bien
+  formados, sino que pueden considerarse modelos que sean
+      Abreviados, se ocultan ciertos elementos para simplificar la vista
+      Incompletos, pueden estar ausentes ciertos elementos
+      Inconsistentes no se garantiza la integridad del modelo
+Cuando los detalles de un sistema van apareciendo y mezclándose es
+  inevitable que se produzcan estos modelos incompletos, aunque
+  con el paso del tiempo y aplicando las reglas de UML en el análisis,
+  diseño e implementación se obtienen los bien formados
+
+** Mecanismos
+*** Especificaciones
+- Detrás de cada elemento de notación gráfica hay una especificación que proporciona una explicación de la sintaxis y semántica de ese bloque de construcción
+- Su objetivo es enunciar los detalles de un sistema
+*** Adornos
+Añaden información a las notaciones básicas de los elementos que en muchos casos son específicos para determinados elementos
+*** Dicotomías entre bloques de construcción
+- Clases/objetos
+- Casos de uso/Instancias de casos de uso
+- Interfaz/Implementación
+- Componentes/Instancias de componentes, etc
+*** Mecanismos de Extensibilidad
+Se utilizan para paliar los inconvenientes de un lenguaje cerrado que no es suficiente para poder cubrir todos los matices de todos los modelos en todos los dominios y en todos los momentos.
+**** Estereotipos
+Permite crear nuevos tipos bloques de construcción que deriven de los existentes pero sean específicos del problema
+**** Valor etiquetado
+Extiende las propiedades de un bloque de construcción UML permitiendo añadir nueva información a ese elemento
+**** Restricción
+Extiende la semántica de un bloque de construcción de UML, permitiendo añadir nuevas reglas o modificar las existentes
+
+
+
+* Diagrama
+Representación gráfica de que ofrece una *vista* de elementos que configuran un *sistema* y se relacionan entre sí.
+Permiten visualizar, especificar, construir y documentar aspectos del *sistema*.
+** Definción de Vista
+Proyección de la organización y estructura de un *modelo* del *sistema*, centrada en un aspecto concreto del mismo.
+*** Definición de Modelo
+Abstracción semánticamente cerrada (completa y autoconsistente) de la realidad, creado para comprender mejor un *sistema*.
+** Definición de Sistema
+Es una colección de *subsistemas* organizados para lograr un propósito, descrito por un grupo de modelos desde distintos puntos de vista.
+*** Subsistema
+Grupo de elementos algunos de los cuales constituyen una especificación del comportamiento ofrecido por los otros.
+
+
+** Tipos de diagramas 
+
+*** Diagramas estructurales 
+Visualizan, especifican, construyen y documentan los *aspectos estáticos* de un sistema.
+**** Definición de Aspectos estáticos
+Aquellos aspectos que cubren la parte más estable del sistema, constituyendo su esqueleto y andamiaje (ej: existencia y ubicación de clases, interfaces, colaboraciones, componentes, nodos)
+
+**** Diagrama de Clases
+Lo más utilizado en OO, son base para otros diagramas.
++ Pueden usar distintos mecanismos de abstracción
+-- clasificación/instanciación (más usado)
+-- composición/descomposición
+-- agrupación/individualización
+-- especialización/generalización
+
+Cada objeto pertenece (instancia) a una clase
+
+***** Niveles o perspectivas
+****** Conceptual 
+Representa los conceptos del dominio estudiado
+(los clientes tienen un nombre)
+(se describe el propósito de la clase)
+****** Especificación 
+Se representan la interfaz de los tipos con independencia de su implementación.
+(los clientes pueden almacenar/consultar su nombre)
+(se muestra el protocolo público de la clase)
+
+****** Implementación 
+Se representan las clases tal y como serán implementadas.
+(los clientes tienen un campo string nombre con métodos que lo gestionan)
+(detalle del conjunto de métodos de la clase)
+***** Atributos
+[visibilidad] nombre[:tipo_de_dato] [= valor_inicial] [{propiedades}]
+
+visibilidad: + | # | -  ( pública, protegida o privada respectivamente)
+propiedades: {frozen} | {addOnly}
+
+***** Operaciones
+[visibilidad]  nombre [(lista_parametros)] [:tipo_de_valor_retorno] [{propiedades}]
+
+visibilidad: +|#|-
+lista_parametros:
+propiedades: {isQuery}, {sequential}, {concurrent}
+
++ isQuery
+La ejecución no tiene efectos laterales (no cambia el estado del sistema)
+Se denomina *consulta* (si lo cambia se denomina *modificador*, en los cuales es muy importante el orden de ejecución).
+Un caso concreto de consulta es la de los *operación de observación*, "get" simple (en modificadores serían los *operación de establecimiento*, "set" simple).
+
++ Sequential
+Sólo puede haber un único flujo de invocación al mismo tiempo
++ Guarded
+Se mantiene semántica/integridad con múltiples flujos gracias a la secuenciación de las llamadas con guarda de objeto
++ Concurrent
+Se mantiene semántica/integridad con múltiples flujos gracias a que se considera la operación como atómica
+
+***** Asociaciones
+Relación estructural que especifica que los objetos de un elemento se conectan a los de otro
+
++ Navegabilidad
+Determina si una clase de la asocación tiene "conocimiento" de la otra
+Puede limitarse a una sola dirección
+
++ Visibilidad
+- Pública:   +propietario
+- Protegida: #propietario
+- Privada:   -propietario
+
+****** Agregación
+Asociación que representa la relación estructual "parte de"
+El elemento superior del que se forma parte es indicado por un rombo
+
++ Composición
+Es una forma de agregación con fuerte pertenencia y un tiempo de vida coincidente entre las partes y el todo.
+Las partes con una multiplicidad no fija pueden ser creadas después del propio compuesto, pero una vez creadas viven y mueren con él.
+Tales partes también pueden ser eliminadas explícitamente antes de la eliminaión del compuesto.
+
+****** Asociación calificada
+
+****** Clase Asociación
+Si se crea una clase extra para identificar la asociación (linea rayada a la asociación) puede añadirse una restricción "Sólo puede existir una instancia de la asociación entre cualquier par de objetos participantes"
+
+****** Asociación n-aria
+
+****** Realización
+Relación semántica entre clasificadores, en la cual un clasificador especifica un contrato que otro clasificador garantiza que cumplirá.
+linea discontinua con flecha blanca que apunta al clasificador que especifica el contrato.
+Semánticamente es mezcla entre dependencia y generalización.
+
+
+***** Relaciones de dependencia
+Indican que un elemento afecta o utiliza a otro 
+(flecha discontinua hacia aquel del que se depende)
+Pueden estar <<etiquetados>> con distintos estereotipos:
+
++ *bind*
+clase genérica -->  instancia
++ *friend*
+clase --> clase amiga
++ *refine*
+relación de refinamiento
++ *use*
+relación de uso
++ *import*
+un elemento importa al otro
++ *extend*
+para casos de uso
++ *include*
+para casos de uso
++ *instanceOf*
+instancia --> clase genérica
++ *instantiate*
+origen crea instancias del destino
+
+***** Generalizaciónes
+Indican que un elemento es un tipo más específico de otro más general ("es un")
+flecha continua cerrada hacia el padre
+Pueden etiquetarse con un estereotipo
+
++ *implementación*
+
+Pueden {etiquetarse} con distintas generalizaciones
+
++ *Complete*
++ *Incomplete*
++ *Disjoint*
++ *Overlapping*
+
+****** Clasificación múltiple
+Un objeto pertenece a más de una clase
+
+****** Clasificación dinámica
+un objeto puede cambiar de tipo o de rol (se etiqueta con <<dynamic>>)
+
+**** Diagrama de Paquetes
+Los paquetes se utilizan para organizar los elementos de modelado en partes mayores que se pueden manipular como un grupo.
+La visibilidad de los elementos debe controlarse para que algunos sean visibles dentro del paquete y otros permanezcan ocultos
+Los diagramas de paquetes o componentes también nos sirven para obtener diferentes vista de la arquitectura del sistema
+
+Los elementos incluidos en el mismo paquete suelen ser cercanos semánticamente y suelen cambiar juntos, entonces diremos que un paquete es bien estructurado y que es cohesivo y poco acoplado, estando controlado el acceso a su contenido
+
+Gráficamente un paquete se representa como una carpeta y ha de tener un nombre que lo distinga de otros, que puede ser
+   Nombre simple solo una cadena de texto
+   Nombre de camino, nombre de paquete precedido por el nombre del paquete contenedor
+
+Un paquete puede contener otros elementos, incluyendo clases, interfaces, componentes , nodos, colaboraciones, casos de uso, diagramas y otros paquetes
+Cada elemento pertenece exclusivamente a un único paquete 
+Se puede controlar la visibilidad de los elementos contenidos en un paquete de la misma manera en que lo hacemos en las clases
+- (+)Publico, visible a los contenidos de cualquier paquete que importe al paquete contenedor del elemento
+- (#)Protegido, solo puede ser visto por los hijos
+- (-)Privado, no son visibles fuera del paquete en el que se declaran
+
+El conjunto de las partes publicas de un paquete constituyen la interfaz del paquete
+Los paquetes que son amigos de otro paquete pueden ver a todos los elementos de este sin importar su visibilidad
+
+***** Relaciones entre paquetes
+****** Importación y Exportación
+  La importación concede un permiso de un solo sentido para que los elementos de un paquete accedan a los elementos de otro
+  La relación de importación en UML se modela como una dependencia con el estereotipo import
+  Las partes públicas de un paquete son sus exportaciones
+  Las partes que exporta un paquete son sólo visibles al contenido de aquellos paquetes que lo importan explícitamente
+  Las dependencias en los paquetes no son transitivas, permitiendo el propósito de la arquitectura por capas
+  Si un elemento es visible en un paquete es visible en todos los paquetes incluidos en ese paquete
+  Los paquetes anidados pueden ver todo lo que los paquetes que lo contienen
+
+****** Generalización
+Especifica las familias de paquetes
+Los paquetes implicados en la relación siguen el mismo principio de sustitución de las clases
+
+***** Elementos estándar
+   UML aplica todos los mecanismos de extensibilidad también a los
+   paquetes y define los siguientes estereotipos
+      Facade, especifica un paquete que es sólo una vista de cualquier otro
+      Framework, especifica un paquete que consta principalmente de
+      patrones
+      Stub, especifica un paquete que sirve de proxy para el contenido
+      publico de otro paquete
+      Subsystem, especifica un paquete que representa una parte
+      independiente del sistema completo que se está modelando
+      System, paquete que representa al sistema completo que se está
+      modelando
+   Cuando un paquete se marca como {global} significa que todos los
+   paquetes del sistema tienen una dependencia hacia él
+
+La distinción entre clase y paquete, es que las clases son
+abstracciones de cosas encontradas en el problema o en la
+solución y los paquetes son los mecanismos que se emplean para
+organizar los elementos del modelo
+Los paquetes no tienen identidad es decir no se pueden tener
+instancias de paquetes
+Los niveles de anidamiento en los paquetes debe ser controlado a
+dos o tres niveles
+Se debe intentar conseguir un conjunto equilibrado de tamaño de
+paquetes
+
+
+**** Diagrama de Objetos
+Modelan las instancias de los elementos contenidos en los diagramas de clases
+Modelar la vista de diseño y de procesos estática de un sistema
+
+Son de utilidad tanto en la ingeniería directa como en la inversa 
+Un diagrama de objetos es un diagrama que representa un conjunto de objetos y sus relaciones en un momento concreto
+Contienen objetos y enlaces y pueden contener notas y restricciones
+Cada instancia debe tener un nombre que la distinga de las otras instancias dentro de su contexto
+Las operaciones que se pueden ejecutar sobre un objeto se declaran en la abstracción del objeto
+
+***** Objetos
+El estado de un objeto es dinámico
+Al visualizar el estado de un objeto se esta especificando el valor de su estado en un momento dado del tiempo y del espacio
+Cuando se opera con un objeto, normalmente se cambia su estado y cuando se consulta su estado no se modifica
+Se puede asociar una maquina de estados con una clase, la cual es especialmente útil al modelar sistemas dirigidos por eventos o al modelar el tiempo de vida de una clase
+
++ Estereotipos
+++ Aplicados a las relaciones de dependencia entre objetos y clases
+- *instanceOf*
+Especifica que el objeto origen es una instancia del clasificador destino de la dependencia
+- *Instantiate*
+Especifica que la clase origen crea instancias de la clase destino de la dependencia
+++ Aplicados a los mensajes y las transiciones
+- *Become*
+Especifica que el destino es el mismo objeto que el origen de la dependencia, pero en un instante posterior y con valores, estados o roles posiblemente diferentes
+- *Copy*
+Especifica que el objeto destino es una copia exacta, pero independiente del origen de la dependencia
+
++ Enlaces y asociaciones
+- una conexión semántica entre objetos.
+- una instancia de una asociación.
+- un camino por el cual enviar un mensaje
+
+
+**** Diagrama de Componentes
+***** Contiene:
++ Notas y restricciones
+****** Componentes
+Poseen un nombre único y pueden tener valores etiquetados y compartimentos con detalles
+Representan empaquetamientos físicos de objetos lógicos, y ofrecen interfaces, no operaciones.
+Salvo eso, son muy similares a las clases (pueden participar en las mismas relaciones).
+******* Tipos 
++ Componentes de despliegue
+  Los necesarios y suficientes para formar un sistema ejecutable
+     Bibliotecas dinámicas (DLLs) y ejecutables
++ Componentes producto del trabajo
+  Productos finales del proceso de desarrollo
+     Archivos de código fuente y archivos de datos a partir de los
+     cuales se crean los componentes de despliegue
++ Componentes de ejecución
+  Se crean como consecuencia de un sistema en ejecución
+     Un proceso que se crea a partir de un ejecutable
+******* Estereotipos estándar
+- executable: componente que se puede ejecutar en un nodo
+- library: biblioteca de objetos dinámica o estática
+- table: componente que representa una tabla de una base de datos
+- file: documento con código fuente o datos
+- document: componente que representa un documento
+
+***** Modela:
++ código fuente
++ versiones ejecutables
++ bases de datos físicas
++ sistemas adaptables
+****** Modelado de ejecutables y bibliotecas
+1. identificar particion del sistema físico (configuraciones, reutilización...)
+2. identificar las bibliotecas y ejecutables
+3. si se necesita: interfaces más importantes
+4. si se necesita: relaciones entre componentes
+5. si se necesita: agrupar en paquetes 
+
+****** Modelado de tablas, archivos y documentos
+1. identificar los componentes y modelarlos
+2. relaciones entre ellos y las bibliotecas y ejecutables
+
+**** Diagrama de Despliegue *
+***** Contiene:
+- Nodos (y Componentes que residen en ellos)
+- Relaciones: dependencia y asociación
+- Notas y restricciones
+- También pueden contener paquetes o subsistemas para agrupar
+elementos del modelo en bloques más grandes
+
+***** Usado para modelar:
++ La configuración de nodos que participan en la ejecución y de los componentes que residen en ellos 
+(1 componente por nodo, si hay duplicidad: especificar, o relacionar con dependencias, o indicar componentes en compartimento del nodo).
++ La topología del hardware sobre el que se ejecuta el sistema
+****** Sistemas empotrados
+En este tipo de sistemas está involucrado software que controla dispositivos (motores, pantallas, etc) que a su vez están controlados por estímulos externos (sensores). 
+Con una situación de este tipo los diagramas de despliegue se utilizan para modelar los <<dispositivo>> y los <<procesador>> que comprenden un sistema empotrado.
+****** Sistemas distribuidos
+******* Sistemas cliente/servidor
+Requieren tomar decisiones sobre la conectividad de red de los clientes a los servidores (indicar protocolo de conexión en las relaciones).
+También ha de considerarse la distribución física de los componentes software del sistema a través de los nodos.
+Clientes suelen ponerse en un paquete o subsistema y los servidores en otro.
+
+******* Sistemas completamnete distribuidos
+Los sistemas distribuidos pueden tener muchas formas desde los simples con dos procesadores hasta aquellos que comprenden muchos nodos distribuidos geográficamente.
+En estos últimos los nodos se añaden y se eliminan conforme cambia el trafico de red.
+
+- Hay que identificar los dispositivos y los procesadores
+- Si hay que razonar sobre el rendimiento de la red o sobre el impacto de los cambios en la red, hay que modelar los dispositivos de comunicación al nivel de detalle necesario
+- Hay que prestar atención a las agrupaciones lógicas de nodos especificándolas mediante paquetes
+- Si hay que detallar la dinámica del sistema hay que introducir diagramas de casos de uso y sus correspondientes interacciones
+
+*** Partes dinámicas
+
+**** Diagrama de Casos de Uso *
+***** Contiene:
++ Puede contener paquetes para agrupar
++ Notas y restricciones
+****** Actores
+- Principales: personas que usan el sistema
+- Secundarios: personas que lo mantienen/administran
+- Material externo: dispositivos materiales imprescindibles
+- Otros sistemas: sistemas con los que el sistema interactua
+****** Relaciones
+- Comunicacion (entre actores y el sistema, determinando entrada/salida)
+- Herencia ( )
+- Inclusión (el caso base incorpora explitamente todo el comportamiento del caso destino)
+- Extension (el caso base incorpora implicitamente todo el comportamiento del caso destino)
+
+****** Casos de Uso
+******* Tipos
++ _Esenciales o de trazo grueso_, en ellos se ignoran detalles sobre la forma de interacción entre el actor y el sistema. Sólo se incluyen las alternativas más relevantes y no se entra en detalle sobre las acciones que realiza el sistema cuando el usuario interactúa con él
++ _Implementación o de trazo fino_, completan todos los detalles que no se han especificado anteriormente, completamos las alternativas de todo tipo y especifica con más detalle el comportamiento interno del sistema
++ _Temporales_, aquellos casos en los que el inicio de dicho caso esta determinado por el paso del tiempo
++ _Primarios_, son los que se corresponden con los procesos de negocio
++ _Secundarios_, son necesarios para que el sistema funcione
+normalmente
+******* Niveles
+Pueden establecerse por niveles o capas de especificación
++ Resumen
++ Usuario
++ Subfunción
+
+***** Modelan
++ El contexto de un sistema
++ Los requisitos de un sistema (funcionalidades + importantes)
++ se pueden usar en ingeniería inversa
+
+...
+Especifican el comportamiento de 
+Capturan el comportamiento del sistema en desarrollo sin tener que especificar
+Sirven como base 
+La modularización de los casos de uso permite
+...
+
+La mayoría de las veces los casos de uso se utilizan para el
+modelado del comportamiento de un elemento, ya sea un sistema
+completo, un subsistema o una clase y se centra en lo que hace el
+elemento no en cómo lo hace, existiendo tres razones para aplicar
+de esta forma los casos de uso que son:
+   Se permite a los expertos del dominio especificar su vista externa a un
+   nivel suficiente para que los desarrolladores construyan su vista interna
+   Mediante los casos de uso se permite que el creador de un elemento
+   comunique su intensión sobre cómo se debería usar
+   Sirven de base para probar cada elemento según evoluciona durante el
+   desarrollo y por tanto sirven de base además de cómo punto de partida
+   para las pruebas de regresión, para comprobar al añadir nuevos casos
+   de uso a elementos que estos pueden implementarse sin problemas, es
+   decir hay flexibilidad en la arquitectura y sino tendremos que
+   readecuarla
+
+***** Proceso de Análisis de Requisitos con Casos de Uso
+1.-Identificar los actores
+2.-Identificar los principales casos de uso de cada actor
+3.-Identificar nuevos casos a partir de los existentes
+4.-Crear descripciones de casos de uso de trazo grueso
+5.-Definir prioridades y seleccionar casos de la primera iteración
+6.-Escribir los casos de trazo fino y crear prototipos de interfaces
+
+
+**** Diagrama de Secuencia (diagr. de Interacción de dimensión temporal)
+_Diagramas de Interacción:_ modelan el flujo de control en una operación, describiendo la interacción entre objetos, implementan un caso de uso.
+
+**** Diagrama de Colaboración (diagr. de Interacción de dimensión estructural)
+
+**** Diagrama de Estado *
+***** Contiene:
++ Notas y restricciones
+****** Transiciones
+         evento_disparador[condición__de_guarda]/acción
+ESTADO1 -----------------------------------------------> ESTADO2
+
+- Puede ser una _autotransición_ (mismo origen y destino)
+- Pueden tener una _condición de guarda_, de modo que sólo hay transición si la condición se cumple después de ocurrir el evento.
+- La _acción_ que se puede realizar en la transición es atómica y puede incluir llamadas a operaciones, creación/destruccion o envío de otra señal a otro objeto.
+
+****** Estados
+- Nombre
+- _Acciones de entrada/salida:_ entry/opera()  exit/opera
+- _Transiciones internas:_ evento/opera() ...sin abandonar el estado (distinto de autotransiciones que lo abandonan y ejecutan exit y entry)
+- _Actividad del estado:_ do/actividad
+- _Eventos diferidos:_ evento/defer ...se guarda el evento para el siguiente estado
+******* Subestados (dentro de estados compuestos)
+Pueden tener sus propios estados inicial y final, pueden tener transición a otros estados externos al compuesto, aunque el estado compuesto superior peude tener otras transiciones también que se respetarían.
+
++ Subestados secuenciales
+- Puede haber subestados de historia (H*) o historia superficial (H), para recordar el último subestado activo de la ultima vez en que se ejecutó.
+
++ Subestados concurrentes
+se podrían también definir dos objetos activos, con su propia máquina. Lo cual es preferible si hay poca o ninguna comunicación entre las submáquinas.
+
+****** Eventos
+_Definición:_ Acontenicimiento significativo en un lugar y un tiempo dados
++ externos/internos (respecto al sistema)
++ Respecto al flujo de invocación de las operaciones, pueden ser:
+******* Síncronos
+
+ - Señales: 
+objetos <<signal>> (pueden tener clase con atributos,etc) enviados por un objeto (indicado con rel.dependencia send) y capturados por otro (indicado con ..??? ). nombre_signal/opera()
+Suelen existir una familia de señales relacionadas en jerarquía (ej: fallo-bateria ES_UN fallo-hardware).
+Las excepciones son un tipo de señales asociadas a las operaciones
+
+ - Eventos de llamada: 
+Son llamadas a una función de otro objeto, traspasando el control hasta que la operación lo devuelva. se representa igual que señales (identificar por contexto).
+
+******* Asíncronos
+
+ - Eventos de tiempo: after(2 segs)/opera()
+ - Eventos de cambio: when(a=b)/opera()
+
+***** Modela
+- Modelan el comportamiento de 1 objeto individual (a diferencia de diagramas de interacción que modelan varios) y se centran en el flujo de estados (frente a los diagramas de actividades que se centran en las acciones).
+****** Modelado de la vida de un objeto
+1- Analizar el contexto del objeto (clases vecinas, etc)
+2- identificar estados inicio/final y pre/postcondiciones
+3- identificar los eventos
+4- identificar los estados posibles del objeto, relacionandolos entre si
+5- identificar las acciones
+6- expandir los estados si posible
+7- probar la máquina (recorriendola)
+
+**** Diagrama de Actividades *
+***** Contiene:
+- Estados de actividad (pueden refinarse) y estados de acción (son atómicos)
+- Transiciones 
+- Objetos
+****** Además pueden existir
+- _Bifurcaciones_: con 1 transición de entrada y 2 o + salidas condicionadas [exp]. Debemos asegurarnos de que siempre se cumpla una de las condiciones de la bifurcación para no cortar el flujo de control, y tampoco solaparse. Se pueden usar para dar lugar a iteraciones (dirigiendo a actividades que indiquen repetir).
+- _Barras de sincronización_: Permiten controlar flujos concurrentes, inician una división (o fork) y siempre deben realizar luego la unión. El flujo no continua que todos los flujos se vuelvan a unir.
+- _Calles o Swimlanes_: División de las actividades en grupos asignados a objetos, subsistemas o entidades del mundo real.
+- _Dependencias de flujo de objetos_: En las actividades en las que se involucran objetos se puede enlazar el objeto mediante relaciones de dependentia actividad- ->objeto[estado]
+***** Usado para modelar:
+Su uso más generalizado es en el contexto de un sistema global, un subsistema, una operación o una clase.
+Otra alternativa de utilización es asociando diagramas de  actividades a los casos de uso, para modelar un escenario y a las colaboraciones para modelar aspectos dinámicos de una sociedad de objetos.
+****** Modelar un flujo de trabajo (workflow de desarrollo)
+1- Hayar el centro de interés del flujo de trabajo
+2- Identificar Calles: Seleccionar los centros de negocio
+3- Identificar estado inicial y final (y pre/potcondiciones)
+4- Especificar las actividades o acciones
+5- Refinar las actividades (organizar acciones en actividades)
+6- Se añaden transiciones (primero secuencial, luego bifurcaciones y forks/unions)
+7- Si es necesario añadir objetos para ver el flujo de objetos
+
+****** Modelar una operación
+1- Reunir abstracciones implicadas (entrada/salida, atributos y relaciones)
+2- Identificar estado inicial y final (y pre/postcondiciones)
+3- Especificar las actividades o acciones
+4- Añadir bifurcaciones cuando haya que especificar iteraciones y condiciones
+5- Usar fork/union si hay que especificar flujos paralelos de control (en clases activas)
+
+
+* El Proceso Unificado del Desarrollo de Software
+- Proporcione una guía para ordenar las actividades de un equipo
+- Dirija las tareas de cada desarrollador por separado y del equipo como un todo
+- Especifique los artefactos que deben desarrollarse
+- Ofrezca criterios para el control y la medición de los productos y actividades del proyecto
+
+*** Dirigido por los casos de uso
+Los CU representan los RF y determinan la interacción del usuario con el sistema.
+
++ Modelo de Casos de Uso
+ 1) Capturar los requisitos
+ 2) Analizar (especificar) el caso de uso
+ 3) Diseño del caso de uso
+ 4) Implementación del caso de uso
+ 5) Prueba del caso de uso
+ Hacer la funcionalidad completa para todos los usuarios
+
+*** Centrado en la arquitectura
+Arquitectura: Vista del diseño completo con las características más importantes que surge de las necesidades de la empresa (usuarios e inversores) y se refleja en los casos de uso.
+- Provee una base para reusar el software
+- Provee una base para administrar el proyecto y su complejidad
+- Facilita el desarrollo basado en componentes
+
+*** Iterativo e incremental
+Cada iteración resulta en una nueva versión interna o externa
+- Se reduce el riesgo de usar un solo incremento y no cumplir los plazos
+
+** Fases
+Cada ciclo que concluye con una versión del producto para el cliente consta de 4 fases las cuales a su ves se subdividen en iteraciones.
+*** (1) Inicio
+Define el ámbito del proyecto.
+*** (2) Elaboración
+Plan del proyecto, especificación funcional, arquitectura base.
+*** (3) Construcción
+Construir el producto.
+*** (4) Transición
+Dejar el producto operando en la comunidad de usuarios finales.
+
+** Las 4 P
+
+*** Personas (Arquitectos, desarrolladores, usuarios, clientes, etc)
+*** Productos (Modelos, codigo fuente, ejecutables, documentacion)
+*** Proyectos (metodología en la construcción del producto)
+*** Procesos (conjunto completo de actividades para obtener el producto)
+Conviente los requisitos de usuario en un conjunto consistente de artefactos que conforman un producto software.
+
+
+** Workflows (Flujos de Trabajo)
+
+** Modelos
++ Modelo de negocio
++ Modelo de analisis
++ Modelo de diseño
++ Modelo de despliegue
++ Modelo de implementacion
+
+

@@ -1,0 +1,87 @@
+
+
+*** (06.jun) En Ethereal, ¿para qué sirve el campo trailer en una trama Ethernet?
+
+El campo Trailer añade los bits de relleno necesarios para que la trama tenga el tamaño mínimo necesario.
+
+*** (06.jun) En la cabecera 802.11, ¿Qué significa DS Status?
+
+El DS Status indica que la trama viene desde el Sistema de Distribución de Celdas.
+
+*** (06.jun) ¿Quién responde a una solicitud ARP? 
+
+Responde la máquina que tiene la dirección MAC de la estación  cuya IP fue enviada como dato.
+
+*** (06.sep) En Ethereal, ¿para qué sirve el campo Type en una trama Ethereal?
+
+El campo Type indica el tipo de protocolo de nivel 3 que se utiliza (donde se empaquetan los datos).
+
+*** (06.sep) En la cabecera 802.11, ¿qué indica DS Status?
+
+El DS Status indica que la trama viene desde el Sistema de Distribución de Celdas.
+
+*** (06.sep) ¿Quién responde a una solicitud ping?
+
+Responde la máquina cuya dirección IP es referenciada en la solicitud ping.
+
+*** (07.dic) Se tiene un medio ideal, con ancho de banda entre 0 y 20 kHz, sin ruido blanco ni atenuación. Se utiliza una codificación NRZ de amplitud Vpp = 1 y Vt = 10Mbps. ¿Qué corrección hay que realizar al sistema?
+
+Puesto que la codificación NRZ dispone de dos niveles (M=2, para representar el 0 y el 1) por lo tanto la máxima capacidad del canal será, según Nyquist para canales sin ruido, de C = 2Blog(2) M, quedando C = 2B, C = 2 x 20KHz = 40 kbps. Por lo que no podría tener una Vt = 10Mbps.
+
+*** (07.dic) Explicar la secuencia de tramas siguiente.
+
+:          1. (Data, 0, 7, 0) >>|  |    |  |   
+:         15. (Data, 1, 7, 1) ->|  |    |  |   
+:                               |  |    |->|   17. (Data, 0, 7, 0) dly=16
+:         28. (Data, 2, 7, 2) ->|  |    |  |   
+:                               |  |    |X>|   31. (Data, 1, 7, 1) dly=16
+:                               |  |    |->|   44. (Data, 2, 7, 2) dly=16
+
+La secuencia comienza con el envío por parte del emisor de la trama (Data, 0, 7, 0) en el instante 1, que es de tipo "Data" como se indica en el primer argumento, y cuyo identificador de secuencia o número de secuencia es el 0. El último parámetro es el identificador para la corrección de errores, y la trama (Data, 0, 7, 0) en el instante 15. 
+
+El receptor recibe correctamente la trama 0 pero no recibe correctamente la trama 1. Justo después de que detecte que no le ha llegado correctamente la trama 0, le llega la tercera trama enviada por el emisor, cuyo numero de secuencia es el 2.
+
+*** (07.dic) ¿Cuántos hosts pueden conectarse a esta subred? 192.168.1.0 / 255.255.255.0
+
+Si bien de 0-255 tenemos 256 valores, podrían conectarse 256-2=254 ya que reservamos un valor para la puerta de enlace y otro para el broadcasting, sería 254 hosts los que se podrían conectar.
+
+*** (07.dic) ¿Para qué sirve el comando hostname? ¿En qué modo se emplea?
+
+El comando hostname sirve para asignar un nombre a un host o switch. Se emplea en modo Configuration.   Ejemplo enable -> configure terminal -> hostname “Prueba”
+
+*** (07.dic) ¿Qué comandos utilizarías para “encender” una interfaz en un switch?
+
+No shutdown.
+
+*** (07.dic) ¿Qué es el protocolo ARP?
+
+Es un protocolo que se utiliza para traducir direcciones IP (lógicas) en direcciones físicas de la red. Sigue las siguientes etapas:
+1. Si una máquina desea enviar un mensaje a otra a la que está conectada. Al no conocer su dirección fisica genera un mensaje de petición ARP (ARP-request) que contiene la dirección IP de la máquina.
+2. El mensaje se envía a todas las máquinas de la red.
+3. Sólo la que reconozca la IP como propia generará un mensaje de respuesta ARP (ARP-reply) que contiene la dirección física y lógica del destinatario y se la envía a la máquina que realizó la petición.
+4. A partir de ahora puede enviarle directamente la información.
+
+*** (07.dic) ¿Para qué sirve el comando ~clock rate~?
+
+El comando Clock rate se utiliza para configurar la velocidad de transmisión.
+
+*** (07.dic) ¿Qué es el campo trailer en una trama Ethernet?
+
+El campo Trailer añade los bits de relleno necesarios para que la trama tenga el tamaño mínimo necesario.
+
+*** (07.dic) En la cabecera 802.11, ¿qué indica ~DS status~?
+
+El DS Status indica que la trama viene desde el Sistema de Distribución de Celdas.
+
+*** (07.dic) ¿Qué es una BPDU?
+
+Es una trama multicast a la dirección del puente indicado en su interior.
+*** (10.jun) ¿Cómo implementa Ingrease un rechazo vuelta atrás? ¿Y el rechazo selectivo?
+En este ARQ con vuelta atrás no se hace un rechazo explicito, sino que se rechaza implícitamente, dejando que el receptor se quede esperando un timeout. 
+
+Este método tiene la desventaja de que si se hiciese el rechazo explícito se podría reenviar inmediatamente la trama que ha fallado, recuperándose más rápidamente. Si bien el emisor puede seguir enviando tramas posteriores hasta el cumplimiento del timeout, para poder aprovechar las tramas que se han recibido exitosamente tras el fallo éste método obliga al empleo de un almacenamiento temporal de las tramas en memoria del receptor, para poder reconstruir el orden correcto de las tramas recibidas.
+
+En cuanto al ARQ de rechazo selectivo, en lugar de mandar un RR (ready to receive) solicitando la trama que se espera recibir a continuación, lo que se hace es confirmar la última trama que se ha recibido correctamente y en el caso de que haya un error le envía NAK, indicando cual fue la anterior correctamente recibida antes de recibir la trama errónea.
+
+*** (10.jun) ¿Para qué se definen las subredes en el direccionamiento IP?
+Permiten por un lado una administración más manejable de la red (entre otros, se puede controlar el tráfico entre subredes mediante ACL), y por otro reducen el tamaño de los dominios de broadcast (permiten hacer un broadcasting a una subred más pequeña y no a todo).

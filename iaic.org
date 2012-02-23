@@ -1,0 +1,821 @@
+#+LaTeX_CLASS: refcard
+#+OPTIONS: toc:nil ^:nil
+
+* Ingeniería del Conocimiento
+** Definiciones
++ Ingeniería del Conocimiento  (IC)
+Disciplina que busca el *desarrollo de Sistemas Basados en el Conocimiento*  mediante una *metodología sistemática, disciplinada y cuantificable*.
+
+El objetivo de la IC es el mismo que de la IS y que no es más que el de transformar el proceso de desarrollo de un arte a un disciplina ingenieril.
+
++ Sistema Basado en Conocimiento (SBC):
+Un _sistema software_  para la  _representación del conocimiento_ de un dominio específico, con el objetivo de aplicarlo en la _resolución de problemas_ basandonos en _mecanismos de razonamiento apropiados_ de alto nivel.
+
+Tratan con problemas con requisitos subjetivos, entradas inconsistentes, incompletas o con incertidumbre y que no pueden ser resueltos aplicando metodologías clásicas.
+
+
+No pueden ser resueltos por algoritmos tradicionales ya que poseen:
+- Requisitos subjetivos
+- Entradas inconsistentes, incompletas o con incertidumbre
+
+Un SBC (y el conocimiento de un sistema) se compone de
+- una estructura de datos y
+- relaciones de carácter declarativo y procedimental: ontologías, mrp
+- junto a representaciones heurísticas-> simplifican Esp. Busq.
+
+ Además, poseen
+- métodos para realizar inferencias sobre el conocimiento almacenado,
+- procesos más o menos complejos de búsqueda,
+- toma de decisiones en problemas complejos,
+- y a menudo incorporan mecanismos de aprendizaje y comunicación en lenguaje natural.
+
+#+Latex: \begin{small}
+| Sistemas de Información (SI)        | Sist. Basados en Conocimiento (SBC)    |
+|-------------------------------------+----------------------------------------|
+| sistematicos y procedimentales      | declarativos y heurísticos             |
+| entrada datos organizados simples   | entrad. incompletas con incertidumbre  |
+| salida por algoritmos deterministas | metodos de resolucion adaptables       |
+|-------------------------------------+----------------------------------------|
+| espec. de requisitos establecida    | adquisición de conocimiento indefinida |
+| limitada en el tiempo               | puede ampliarse continuamente          |
+|-------------------------------------+----------------------------------------|
+| No reutilizable sin reprogramar     | métodos y conocimiento reutilizables   |
+|-------------------------------------+----------------------------------------|
+#+Latex: \end{small}
+
+Los SBC se desarrollan para realizar una tarea específica sobre un dominio determinado.
+ - _Tarea_: actividad orientada hacia una meta o a la resolución de problemas.
+ - _Dominio_: área en que se ejecutará la tarea.
+
+Las tareas pueden ser:
+ - _tareas de síntesis_ (clasificación, asesoramiento, diagnóstico,etc.)
+ - _tareas de análisis_ (como diseño, planificación, modelado,etc.).
+
+*** Arquitectura básica de los SBC
+
++ Base de conocimiento. _Representación del conocimiento_
+  - Contiene tanto conocimiento factual (ampliamente compartido por los expertos) como heurístico (menos riguroso, hipótesis).
+  - Representa ciertos hechos del mundo mediante algún formalismo para la representación de conocimiento
+
++ Motor de inferencia. _Métodos de razonamiento_
+ - Constituye los métodos usados para la resolución de problemas.
+ - Manipula la base de conocimiento para crear una linea de razonamiento
+
++ Otros:
+  + Tratamiento de incertidumbre
+  + Generación de explicaciones comprensibles y completas
+
+*** Ventajas de los SBC
++ Mantenimiento del conocimiento (reutilizable)
++ Resolución de problemas complejos (mediante heurística resuelven problemas no algoritmicos)
++ Ajuste de objetivos en función de su importancia
++ Tratamiento de incertidumbre
++ Explicación del razonamiento seguido
++ Reducción de mano de obra
++ Aumenta fiabilidad
++ Modularidad
+*** Inconvenientes de los SBC
++ Reutilización del conocimiento no siempre es posible
++ Dificil adquisición de conocimiento
++ Dificil aprendizaje y adaptabilidad
++ No tiene creatividad ni sentido común
+
+
+** Evolución histórica
+*** Inicios de los SBC
+Sistemas y técnicas de resolución de problemas mediante _técnicas de búsqueda_.
+Posteriormente se mejoraron con _sistemas heurísticos_. Sin embargo no eran buenos para grandes sistemas de conocimiento por su mala escalabilidad.
+Además en aquel entonces no existía una fase de análisis definida (se hacía Code&Fix).
+
+eran insuficientes! --> se planteo la transferencia de conocimiento (sistemas expertos)
+
++ Sistemas expertos
+Su principal inconveniente fue la dificultad en la _TRANSFERENCIA_ del conocimiento en la que estos sistemas se basaban, existiendo problemas en la comunicación entre expertos e ingenieros.
+
+**** Modelo de ciclo de vida de Buchanan
+Debido al code&fix existían problemas de planificación del tiempo y de mantenimiento (analogo a la crisis del software en IS).
+_Buchanan_ propuso un nuevo modelo del ciclo de vida para intentar abordar el
+
++ Modelo en cascada de Buchanan:
+1) Análisis de requisitos
+2) Definición de una especificación.
+3) Codificación y verificación
+4) Mantenimiento.
+
+Obligaba a establecer unos criterios muy definidos, generalmente basados en los documentos y/o el código generados, para determinar cuándo una determinada fase podía darse por concluida.
+Además, permitía un cierto grado de retroalimentación en el caso de que el análisis de los resultados de una determinada fase obligaran a retocar parte del trabajo realizado en una fase anterior.
+
+***** Desventajas
++ Inflexible (no se adapta a situaciones concretas)
++ Los requisitos iniciales debían estar definidos al inicio.
+No era apto para los SBC por su naturaleza exploratoria y altamente iterativa.
+
+**** Cuello de botella en la adquisición de conocimiento
+Buchanan además identificó que existía un  *cuello de botella de la adquisición de conocimiento*.
++ *Conocimiento tácito dificil de extraer* al tener los expertos menos conciencia de éste.
++ *Problema de comunicación entre expertos y ingenieros del conocimiento*.
++ *Limitaciones dadas por el lenguaje de codificación* se demuestra que la forma de modelar conocimiento depende fuertemente del lenguaje usado.
+
+**** Propuestas de Newell
+El principal problema que encontró Newell fue que no se distinguía diferencia entre *Conocimiento* y su *Representación*
+| Dispositivos > Circuitos > Nivel Lógico > Nivel Simbólico | Nivel de Configuracion |
+Se dió cuenta de que el nivel más alto en el que se había trabajado era el _simbólico_, y proponía elevar un nuevo nivel de lenguaje: _nivel de conocimiento_
+Se empieza a replantear la Ingeniería de conocimiento como una actividad de _modelado de conocimiento_, en lugar de _transferencia de conocimiento_.
+
+| Aspectos \ Nivel     | Simbólico               | Conocimiento                 |
+|----------------------+-------------------------+------------------------------|
+| Sistema              | computador              | agente                       |
+| Medio                | símbolos, expresiones   | conocimiento                 |
+| Componentes          | Variables, operaciones  | objetivos, acciones, cuerpos |
+| leyes de composicion | asociacion, designacion |                              |
+| leyes comportameinto | oper. secuenciales      | ppio. de racionalidad        |
+
+
+- Nivel estructual: cuerpos
+- Nivel funcional: acciones
+- Nivel teleológico: objetivos
+
+**** Resolución de problemas con limitación de roles (Mc Dermott)
+Proposito: limitar los _papeles (roles)_  del conocimiento dentro de un determinado _dominio_.
+Se distingue entre _dominio_ (base de conocimiento) y _tarea_ (conjunto de métodos de resolución).
+Cada tarea se subdivide en subtareas hasta llegar a inferencias, que ya no se dividen más.
+
+***** Ventajas
++ Conocimiento reutilizable
++ Facilidad de seleccionar el dominio una vez se ha determinado la tarea y fijado los roles necesarios.
+
+**** Tareas genéricas (Chandrasekaran)
+Observó que para tarea similares existía un vocabulario común entre expertos que fuesen incluso de distinto dominio.
+La tarea genérica se define como estrucutra del conocimiento que especifica tanto la tarea general en sí como el conjunto de métodos para llevarla a cabo y los elementos de conocimiento que se necesitarían.
+Existía unos árboles de tareas genéricas comunes para multitud de dominios.
+
+ + _tareas de Análisis_
+   - Clasificación
+   - Valoración
+   - Diagnóstico
+   - Monitorización
+   - Predicción
+ + _tareas de Síntesis_
+   - Diseño
+     - Configuración
+   - Planificación
+   - Programación temporal
+   - Asignación
+
+Las tareas genéricas se pueden usar como bloques constructivos para tareas más complejas, formando estructuras de tareas.
+_estructura de tareas_: arbol de tareas, metodos y subtareas aplicadas de forma recursiva hasta que se alcancen tareas que sean realizables por el conocimiento del dominio.
+Para una misma tarea puede haber subtareas que utilicen distinto metodo para resolver lo mismo.
+
+** CommonKADS
+Es un proceso en espiral de 4 fases:
+revisión -> valoración de riesgos -> planificación -> monitorización
+El producto software obtenido es el SBC.
+
+Del resultado de la unión de las metodologías de limitación de roles, tareas genéricas y las propuestas de Newell surgen 6 modelos que ofrece CommonKADS divididos en niveles.
+Se obtiene documentación y formularios correspondientes a cada modelo y nivel.
+
+*** Nivel Contextual (análisis): ¿Por qué desarrollar un SBC?
++ _OM: Modelo de Organización_ (analizar areas en las que sería útil, viabilidad, impacto)
++ _TM: Modelo de Tareas_ (refina lo anterior y establece tareas, entrada, salida)
++ _AM: Modelo de Agentes_ (ejecutores de una tarea: competencias, limitaciones, comunicación entre ellos)
+**** Análisis de viabilidad (OM)
+*Fuentes*: teoría dela organización, gestión de info, proceso de negocio. (entrevistas, brainstorming, etc)
+*Objetivo*: analizar la organización desde la orientación del conocimiento
+***** OM-1
+_Descripción de problemas, soluciones y contexto (metas y estrategias) de la org._
+Identificación del personal (proveedores, usuarios, gestores de conocimiento).
+***** OM-2
+_Descripción de las areas de interés (una por cada problema-solucion del OM-1)_
+1) Estructura de la org.
+2) Proceso de negocio (usando UML)
+3) Personal (organigramas de departamentos, etc)
+4) Recursos
+***** OM-3
+_Refina el elemento "Proceso" de OM-2 en subtareas_
+Cada subtarea debe indicar:
++ si es intensiva en conocimiento de un tipo
++ su importancia evaluada
+***** OM-4
+_Refina el elemento "Conocimiento" de OM-2_
+***** OM-5
+_Resume el análisis de la org. para evaluar viabilidad_
++ viabilidad empresarial (beneficios respecto a costes)
++ viabilidad técnica
++ viabilidad del proyecto
++ acciones propuestas
+
+**** Análisis de impactos y mejoras (TM, AM)
++ se estudia la relación tareas-agentes-conocimiento
++ se analizan las mejoras que pueden llevarse a cabo
+***** TM-1
+_Descripción detallada de las tareas que forman parte del proceso seleccionado_
+*Tarea*: parte del proceso de negocio realizada por agentes para satisfacer una meta
+Refinamiento de OM-3
++ Aspecto funcional (DFD, D. de actividad UML)
++ Aspecto estructual (D. UML)
++ Aspecto dinámico de control (D. de estado o actividad)
+***** TM-2
+_Especificación de conocimiento de las tareas y sus cuellos de botella_
+Refinamiento de OM-4
+***** AM-1
+_Descripción detallada de los agentes_
+Analizar roles y competencias de cada agente que realiza cada tarea.
+*Agente*: personal de la org. o también otros sistemas de informacion
+Representación mediante Casos de Uso UML
+**** Directrices de modelado contextual (OTA)
+Analizar toda la información anterior y integrarla para gestioanr y documentar la toma de decisiones sobre las mejoras de la org.
+*** Nivel Conceptual (análisis): ¿Cuál es la naturaleza/estructura de conocimiento & comunicación?
++ _Modelo de conocimiento_ (detalle de las estructuras del conocimiento, con independencia de implementación o rol (CML))
++ _Modelo de comunicación_ (transacciones entre agentes que colaboran realizando una tarea, con independencia de implement.)
+
+*Entrada*: alguna de las tareas intensivas de conocimiento (obtenidas en el contextual)
+*Salida*:  entrada del Modelo de Diseño
+
+**** El Modelo de Conocimiento
+***** Conocimiento del *Dominio*
+_Designa_: Campo de estudio o área profesional (pueden especializarse en ramas)
+_Conocimiento que incluye_: terminología general y hechos independientes de la tarea
+****** Esquema del Dominio
+Descripción _esquemática_ del conocimiento _estático_ del dominio
+******* Conceptos
+Definen colecciones de objetos con características similares.
+
+#+BEGIN_SRC CML
+CONCEPT cliente;
+  DESCRIPTION:
+    "Persona que solicita servicio";
+  SUPER-TYPE OF: cliente-libros, cliente-comics;
+  SEMANTICS:
+    DISJOINT: NO;
+	COMPLETE: YES;
+  ATRIBUTES:
+    nombre: STRING;
+    domicilio: STRING;
+    edad: NATURAL;
+  AXIOMS:
+    edad >= 18;
+END-CONCEPT cliente;
+#+END_SRC
+
+******* Relaciones
+
+Nota: La cardinalidad se expresa de forma opuesta a como se expresaría en UML (por cada concepto se indica las cardinalidades de los demas conceptos respecto a este)
+
+#+BEGIN_SRC CML
+BINARY-RELATION comprado-por
+  ARGUMENT-1: artículo;
+    CARDINALITY: 0-1;
+  ARGUMENT-2: cliente;
+    CARDINALITY: ANY;
+  ATTRIBUTES:
+    fecha: tfecha;
+END BINARY-RELATION comprado-por
+#+END_SRC
+
+******* Tipos de reglas
+#+BEGIN_SRC CML
+RULE-TYPE implicaciones;
+  DESCRIPTION:
+  ANTECEDENT:
+  CONSEQUENT:
+  CONECTION-SYMBOL:
+END RULE-TYPE implicaciones;
+#+END_SRC
+
+******* Modularización
+La metodología CommonKADS  permite organizar esta categoría de conocimiento por medio de la definición de distintos esquemas del dominio.
+
+#+BEGIN_SRC CML
+DOMAIN-SCHEMA <identificador>; 
+  USES: <lista a importar de <schemas> 
+        o partes de ellos (<parte> FROM <schema>) 
+		separados por comas>;
+  <Descripción de conceptos, relaciones y 
+   tipos de reglas>
+END DOMAIN-SCHEMA <identificador>;
+#+END_SRC
+
+****** Base de conocimiento
+#+BEGIN_SRC CML
+  KNOWLEDGE-BASE conocimiento-abstracción;
+	USES: 
+		reglas-abstracción FROM asesoramiento-computador;
+	EXPRESSIONS: 
+		cliente.edad=15
+			INDICA 
+              datos-solicitud.categoría-edad.adolescente;
+		...
+
+DOMAIN-KNOWLEDGE identificador;
+	Descripción del esquema(s) del dominio;
+	Descripción de la(s) base(s) de conocimiento;
+END DOMAIN-KNOWLEDGE identificador;
+#+END_SRC
+***** Conocimiento de las *Inferencias*
+_Designa_: Procesos básicos de razonamiento realizados directamente sobre el conocimiento del dominio
+En IS, las inferencias equivalen a las funciones hoja obtenidas como resultado del proceso de descomposición funcional. 
+Sin embargo, en cada función hoja, la IS lleva asociada una especificación del proceso que se realiza, bien en forma procesal (algorítmica o pseudocódigo) o declarativa (mediante el uso de postcondiciones y precondiciones). 
+En cambio, en la IC se adopta una posición más rigurosa: 
+''Cada inferencia queda completamente descrita mediante una especificación declarativa de sus entradas y salidas (roles dinámicos), que normalmente se realiza gracias a la utilización de conocimiento. El proceso interno se considera como una caja negra, y no tiene interés para el modelado de conocimiento”
+
+_Ref. al Dominio_: Indirectamente!! a través de los roles.
+
+****** Roles de conocimiento
++ Dinámicos (son cambiantes, constituyendo tanto entradas como salidas, siendo información distinta que se procesa para cada invocación de la inferencia)
++ Estáticos (son estables, se utilizan sólo como entrada para realizar el razonamiento en la inferencia)
+
+****** Funciones de transferencia
+Permite transmitir un elemento de información/conocimiento entre el agente de razonamiento y el mundo exterior.
+
+- *OBTAIN*:
+  El sistema _Solicita_ información externa _que él solicitó a alquien_ por iniciativa propia.
+- *RECEIVE*:
+  El sistema _Recibe_ información externa _sin haberla solicitado a nadie_ por iniciativa externa.
+- *PRESENTE*:
+  El sistema _Muestra_ su información interna _sin que nadie se la solicite_ por iniciativa propia.
+- *PROVIDE*:
+  El sistema _Ofrece_ su información interna _que alguien solicitó_ por iniciativa externa.
+
+#+BEGIN_SRC CML
+TRANSFER-FUNCTION <nombre de la funcion>;
+    TYPE: <OBTAIN | RECEIVE | PRESENTE | PROVIDE>
+    ROLES:
+    	INPUT: <concepto>;
+  		OUTPUT: <concepto>;
+END TRANSFER-FUNCTION <nombre de la funcion>;
+#+END_SRC
+
+****** Diagramas de inferencia
+Especifica las capacidades de razonamiento del sistema que se está desarrollando.
+
+- _roles dinámicos_: rectángulos, situándose el nombre del rol en su interior
+- _inferencias_: óvalos, situándose el nombre de la misma en su interior. 
+- _dependencias de entrada/salida roles-inferencias_: flechas
+- _funciones de transferencia_: rectángulos con las esquinas redondeadas, con el nombre de la función de transferencia en su interior
+- _roles estáticos_: dos líneas gruesas rodeando el nombre del rol, y se conectan con las inferencias mediante flechas
+Algunas inferencias trabajan o producen conjuntos de objetos, mientras que otras sólo lo hacen con objetos particulares. Para resaltar estas diferencias, se añade un círculo negro al rol asociado que representa un conjunto (o lista) de objetos
+***** Conocimiento de las *Tareas*
+Tarea define un proceso de razonamiento complejo. 
+La tarea más alta de la jerarquía deberá corresponderse con algunas de las tareas identificadas en el Modelo de Tareas  
+Para especificar una tarea en CML se necesita definir los siguientes elementos:
+
+#+BEGIN_SRC CML
+TASK <nombre de la tarea (infinitivos recomendado)>;
+"<lenguaje natural de lo que hace la tarea>"
+   GOAL:
+   "<objetivo de la tarea en lenguaje natural>"
+   ROLES:
+       INPUT:
+	   <roles de entrada no los estáticos, 
+	    que están ligados a las inferencias>; 
+	   "<Se pueden añadir comentarios>";
+	   OUTPUT:
+	   <roles de salida>; "<comentarios>";
+END TASK <nombre de tarea>;
+#+END_SRC
+****** Método de una tarea
+El método de una tarea nos indicará cómo se puede alcanzar el objetivo indicado en la tarea, mediante su descomposición en subtareas, inferencias y funciones de transferencia. 
+
+#+BEGIN_SRC CML
+TASK-METHOD <nombre>;
+    REALIZES: <tarea a la que está asociado;
+	DECOMPOSITION: 
+	    INFERENCES: 
+		<inferencias en las que se descompone>;
+		TRANSFER-FUCTIONS:
+		<funciones de transferencia en las que 
+		 se descompone>;
+	ROLES:
+	    INTERMEDIATE: <Roles>+
+	CONTROL-STRUCTURE: <Estructura control>
+	    ASSUMPTIONS: "<Texto>"
+END TASK-METHOD <nombre>;
+#+END_SRC
+
+**** El Modelo de Comunicación
+Este modelo actúa como un control de nivel superior sobre la ejecución de la tarea.
+
+MConoc. (tareas int.conoc.) --> MComunic (tareas hoja y tareas int.conoc.) --> requisitos control interacción --> MDiseño
+MConoc. (tareas int.conoc.) --> requisitos funciones razonamiento --> MDiseño
+
+***** Plan de comunicaciones
+Describe completamente el diálogo de alto nivel que realizan dos agentes para llevar a cabo una tarea conjunta.
+
+1) Para cada uno de los agentes del modelo de agentes:
+ - Recoger tareas hoja del modelo de tareas
+ - Recoger funciones de transferencia del modelo de conocimiento
+que poseen objetos de entrada o salida con información que debe intercambiarse con otro agente.
+
+2) Identificar las transacciones agente-agente que se realizan en estos, y darles nombre claro (verbo).
+
+3) Combinarlo en el _Diagrama de Diálogo_ (DD)
+
+4) Completar el plan añadiendo control sobre las transacciones (flujo de objetos de información).
+Se hace normalmente mediante pseudocódigo o mediante un diagrama de transición de estados utilizando UML.
+En el caso de usar pseudocódigo, utilizaremos primitivas de control especiales como:
+ SEND, RECEIVE, CARRY-OUT (combinación SEND/RECEIVE), WAIT-until/while, PROCESS (tarea), REPEAT-until/while, etc.
+
+***** Transacciones
+Elemento atómico básico del modelo de comunicación
+Especifica:  _qué información_ se intercambia entre _qué agentes_ para realizar _qué tareas_.
+La información que se detalla en este nivel procede de los modelos de tareas y agentes del modelado contextual, y del modelo de conocimiento
+
+Para especificar las transacciones necesitamos enumerar (CM-1):
+- Nombre
+- Objetos de información que se intercambian
+- Agentes involucrados
+- Plan de comunicaciones al que pertenece
+- Restricciones para que la transacción pueda darse 
+- Especificación del intercambio de información, en el caso de que sea necesario (el mensaje no es simple)
+
+***** Mensajes: Especificación de intercambio de información
+Detalla la estructura interna de los mensajes de una transacción determinada. 
+Esta especificación se basa en patrones y tipos de comunicación predefinidos, lo cual nos permite construir protocolos de mensajes estructurado
+
+El último elemento del formulario CM-1:  
+1.- Tipo de mensaje 
+2.- Contenido del mensaje 
+3.- Empaquetado de la información (para transferencias q aglutinan varios mensajes distintos)
+4.- El medio mediante el cual se transmite la información (ventana pop-up, selección en un menú, etc.). 
+
+Se usa también un formulario CM-2:
+1. Nombre de la transacción
+2. Agentes emisor y receptor
+3. Items de información (cada uno describiendo su rol, forma y medio)
+4. Mensajes (describiendo tipo, contenido y, si necesario, su contexto)
+5. Si necesario, poner control sobre mensajes (similar al control de transacciones)
+
+****** Tipos de mensajes
++ Mensajes de delegación/adopción de tareas 
+ - _Request/Propose:_ el emisor ve  una cooperación potencial y quiere negociar los términos de esta. Existe interés, pero no compromiso
+ - _Require/Offer:_ el emisor tiene un precompromiso, y la intención de recibir el compromiso del receptor. El mensaje denota, por tanto, un compromiso condicional
+ - _Order/Agree:_ el emisor tiene un compromiso, de acuerdo al cual debe actuar a la hora de realizar sus tareas
+ - _Reject-td/Reject-ta:_ el emisor no quiere comprometerse o cooperar en la delegación de tareas (td), o en la adopción de tareas (ta)
++ Mensajes de intercambio de información puro
+ - _Ask/Reply:_ petición de información de otro agente, que a su vez devolverá la información solicitada
+ - _Report:_ informa al otro agente del estado de una tarea previamente acordada con él (éxito, fracaso, etc.)
+ - _Inform:_ proporciona información a otro agente sin previo acuerdo (a diferencia de Reply y Report)
+
+*** Nivel Artefactual (diseño): ¿Cómo debe implementarse?
++ _Modelo de diseño_ (arquitectura a usar, decisiones técnicas (MVC), etc)
+
+**** Concepto de diseño. Características de un buen diseño.
+
+*Diseño:* _representación significativa_, desde el punto de vista de la ingeniería, _de algo que se va a construir_. 
+
+*Entrada:* modelos ANÁLISIS (requisitos de datos, funcionales)
+*Salida:* distintas visiones del producto software en proceso de desarrollo
+
+Esta salida deberá:
+ - a) implementar requisitos explícitos y ajustarse a los implícitos 
+ - b) ser guía comprensible para programadores, testers y mantenedores.
+ - c) ser imagen completa del soft. desde la implementación
+
+
++ De esta forma, el proceso de diseño producirá un 
+ - *Diseño de datos* (obtiene las estructuras de datos que se necesitarán)
+ - *Diseño arquitectónico* (relación entre modelos estructurales y restricciones)
+ - *Diseño de interfaz* (consigo mismo, con otros sistemas, y con usuarios)
+ - *Diseño de componentes* (transforma los elementos de la arquitectura)
+
+En el proceso de diseño se combinan: 
+ - intuición y el juicio, en función de la experiencia en construir entidades similares 
+ - heurísticas que proporcionan la forma de guiar la evolución del modelo
+ - un conjunto de criterios que posibilitan la evaluación de la calidad 
+ - y un proceso que conduce a una representación final del diseño.
+
+Para que una metodología para el desarrollo de SBC sea completa, debe abordar el diseño y la implementación del sistema, permitiendo producir software:
+ - libre de errores
+ - comprensible 
+ - correcto
+ - mantenible y portátil 
+
+***** Características de un buen diseño
+
+- (01). _Sin orejeras_. considerar enfoques alternativos, analizando todos aquellos que se basen en los requisitos del problema y los recursos disponibles.
+- (02). rastreable hasta el modelo de _análisis_.
+- (03). _trazabilidad_ en el cumplimiento de los requisitos.
+- (04). _reutilización_ no inventar nada que esté inventado.
+- (05). reducir la distancia existente entre el software y el problema.
+- (06). _uniformidad_ e integración (reglas estilo y cuidar interfaces)
+- (07). que _admita cambios_. (abstracción, refinamiento, modularidad)
+- (08). _robusto_. (no explota con errores o circunstancias inusuales)
+- (09). _codificación != diseño_.
+- (10). _evaluación de la calidad continua_ (no sólo al final)
+- (11). El diseño deberá revisarse para minimizar los errores _conceptuales_ antes de empezar con al sintaxis.
+
++ Mnemotécnico: 
+ - las _orejas_ del _análisis rastrean_ la _traza_ dejada por la _rueda_ que _separa_ el _estilo_ _cambiante_ con _robustez_. Su _código_ _evalúa_ el _concepto_
+
+**** Pasos a seguir en el modelo de diseño
+
++ (1) Diseño de la arquitectura del sistema.
+ Primero hay que especificar la arquitectura general del sistema.
++ (2) Selección de la plataforma de implementación.
+ En este paso se eligen el hardware y el software que se van a utilizar para la implementación.
+ Como ya dijimos antes, es importante hacer pronto esta elección ya que influye bastante en el resto de los pasos.
+ - En la mayoría de los casos las plataformas hardware y software vienen condicionadas por el cliente, con lo que no suele haber mucha libertad de elección
+
+***** (1) Diseño de la arquitectura del sistema
+
+*Subsistema:* elemento autónomo con funcionamiento independiente de otros subsistemas (con interfaces definidas para la comunicación).
+
+*Módulo:* componente que suministra uno o más servicios a otros módulos, dependiendo de los servicios suministrados por otros.
+
++ identificar los subsistemas
++ establecer marco para
+  - control (régimen de control entre las partes del sistema)
+  - comunicación entre subsistemas
++ descomposición modular de cada subsistema
+
+****** Arquitectura global del sistema
+CommonKADS recomienda una arquitectura basada en MVC
+
+******* Modelo-Vista-Controlador (MVC) [Goldberg, 1990].
++ Esta arquitectura está constituida por los siguientes
+subsistemas:
+******** Modelo de la aplicación.
++ En este subsistema se especifican las _funciones y datos que conforman la funcionalidad_. En un SBC será:
+  - las funciones de razonamiento,
+  - los datos que constituyen las bases de conocimiento
+  - los roles dinámicos manipulados
+
+******** Vistas.
+Vistas externas de funciones y datos del modelo de la aplicación.
+
+- No sólo _interfaz de usuario_, sino también _interfaces de comunicación entre sistemas_.
+
++ La _separación entre los objetos y su visualización_ permite:
+  - *definir múltiples vistas para un mismo objeto* (ej, entre distintos tipos de usuario)
+  - aunque requiere mecanismos de actualización de los datos para *asegurar la integridad de las visualizaciones*.
+
+******** Controlador
++ Implementa el modelo de comunicación, con la información de control especificada en el plan de comunicación y las transacciones.
+
++ Es la _unidad de control del sistema_.
+  - activa las funciones del modelo de aplicación
+  - decide cuándo recoger los resultados.
+  - gestiona las entradas del sistema.
+	(llama a las funciones de razonamiento (ej: una tarea), y muestra sus resultados por la correspondiente vista).
+
+
++ Suele ser _dirigido por eventos_ (externos y internos).
+
++ También puede _usar un reloj_, sobre todo en aplicaciones en tiempo real,
+  - puede lanzar determinados procesos como demonios,
+  - puede definir sus propias vistas para proporcionar información sobre el estado del sistema.
+
+******* Otras arquitecturas
+Existen otras arquitecturas que nos pueden llevar a descomposiciones diferentes.
+
+Por ejemplo, podemos basar nuestro sistema en una arquitectura
+de pizarras.
++ En este caso, debemos tener en cuenta subsistemas tales como:
+  - módulos de conocimiento,
+  - pizarras de datos y
+  - la unidad de control.
++ A su vez, la unidad de control se descompone en los módulos que implementan un ciclo básico de control basado en paso de mensajes:
+  - el mecanismo de equiparación,
+  - el mecanismo de selección,
+  - el criterio de parada,
+
+****** Arquitectura del modelo de aplicación
++ Este modelo contiene:
+  - elementos software que implementan las _funciones_
+  - _datos_ especificados en los modelos de análisis
++ referenciando:
+  - _funciones de razonamiento_ (tareas e inferencias)
+  - _estructuras de información_
+
++ 1.- Cumple con el _ppio. de conservación de la estructura_
+ - correspondencia elementos.Análisis - elementos.Arquitectura.
+
++ 2.- Permite incorporar refinamientos específicos del diseño
+ - La arquitectura se ha diseñado siguiendo OOP, ya que:
+    - A pesar de que algunos de los elementos especificados durante el análisis (tareas, inferencias ... ) tienen una naturaleza funcional, se describen como si fueran objetos de información (transformación directa).
+    - Facilita integración con otros sistemas (paradigma más popular)
+	- Facilita el uso de entornos de desarrollo de OOP que agilizan la implementación a partir de la especificación del diseño
+
++ 3.- Figura
+ - Aunque antes se consideraban las inferencias como cajas negras, en el diseño se debe especificar elalgoritmo a ejecutar con la activación de la inferencia, utilizando los roles de conocimientos especificados. Por ello el objeto "método-inferencia".
+
+ El resto de los objetos se pueden derivar directamente del modelo de conocimiento, aunque con algún detalle (el rol dinámico tiene un tipo de datos asociado y una serie de métodos para acceder/modificarlos).
+
+Todo esto se detallará en el paso (3).
+
+***** (2) Selección de la Plataforma de Implementación
++ Influyen
+ - restricciones del cliente
+ - factores estratégicos
+
++ Factores al seleccionar la herramienta para el desarrollo:
+ 1) _librería de vistas de objetos_ (mejor si las tiene de por sí)
+ 2) _representación declarativa del conocimiento_ (no sólo procedural, sino estilo clips)
+ 3) _interoperabilidad_ (módulos para bases de datos, para corba, u otras tecnologias)
+ 4) _paradigma de programación_ (que permita orientacion a objetos)
+ 5) _control de flujo_ (hilos, paso de mensajes..)
+ 6) _soporte para CommonKADS_ 
+
+***** (3) Especificación de los Componentes de la Arquitectura
+
+****** Controlador (modelo de comunicación)
+ - interfaces para gestores de eventos (externos e internos)
+ - si habrá reloj interno con una agenda
+ - si se permitirán interrupciones de una tarea
+ - si concurrencia
+****** Modelo de la aplicación
+
++ _Las tareas_
+ - inicializar (valores de entrada)
+ - ejecutar (metodo de tarea)
+
++ _Métodos de las tareas_
+ - decidir lenguaje para especificar la estructura de control (pseudocódigo)
+ - decidir como la estructura de control será ejecutada: método ejecutar (OOP, aunque en contra de representación declarativa..depende de lenguaje de implementación)
+
++ _Las inferencias_
+ - ejecutar (acceder a los roles entrada y invocar método de la inferencia)
+ - actualizar la memoria interna con las soluciones encontradas
+(has_solution y new_solution se usan en bucles para consultar estado)
+
++ _Métodos de las inferencias_ (especifica *cómo* la inferencia actúa)
+ - Mejor implementarlos separados (reutilización y múltiples soluciones)
+ - influye el lenguaje en que estén especificadas las inferencias (con CML habría que partir de cero, ya que las presupone cajas negras)
+
++ _Roles dinámicos_
+ - que tipos de datos se van a usar
+ - que funciones set/get/empty/..
+
++ _Roles estáticos_ (suelen ser instancias de relaciones, conceptos y reglas)
+ - funciones de acceso getAll/get/exists("blah")
+
++ _Bases de conocimiento_
+ - decidir forma de representar las instancias de reglas (o una tabla o clips)
+ - funciones de acceso (como los roles estáticos)
+ - funciones de modificación (edición y depuración del conocimiento) si se requiere
+
++ _Construcciones del dominio_
+ (definiciones de conceptos, relaciones y tipos de reglas no contemplados)
+ - se incluyen desde el esquema de dominio a efectos de documentación, no necesitan funciones adicionales
+
+****** Vistas
+ - numero de vistas (usuarios y expertos)
+ - actualización de las vistas con los objetos
+
+***** (4) Especificación de la Aplicación sobre la Arquitectura
+Los elementos de los modelos de análisis se especifican sobre los elementos de la arquitectura.
+
+****** Proyectar la información del análisis sobre la arquitectura
+Creación de las instancias de los elementos del paso anterior usando el modelo de análisis (el de conocimiento). (Influye el ppio de conservación de la estructura)
+- conveniente que sea automatizado
+
+****** Añadir los detalles necesarios para el diseño de la aplicación
+añadir decisiones de diseño
+
++ Controlador
+ - procesos de inicialización del sistema y gestores de eventos
+
++ Inferencia (una instancia por cada inferencia del modelo del conocimiento)
+ - forma de invocar al método
+
++ Método de la inferencia
+ - seleccionar el método para cada inferencia
+
++ Roles dinámicos
+ - tipo de datos para cada rol
+
++ Vistas
+ - diseño de interfaz de usuario
+
+** Librería de Tareas
+*** Análisis
++ Entrada: Datos del sistema
++ Salida: Alguna caracterización del sistema
+
+**** Clasificación
++ Objetivo: Identificar un objeto desconocido como miembro de una categoría (clase) conocida
++ Entrada:
++ Salida:
++ Terminología
+  - Objeto: Aquello que se desconoce y se quiere clasificar.
+  - Clase: categoría en la que se agrupan objetos con características similares
+  - Atributo: propiedad que se usa para identificar una clase 
+  - Característica: par atributo-valor de un objeto
+***** Método de poda
+Se *generan* todas las posibles _clases_ candidatas a partir del _objeto_
+Se *especifica* un _atributo_ del conjunto de _clases_
+Se *obtiene* el _valor_ del objeto para ese _atributo_
+Se *equipara* el _valor_ con cada una de las _clases_ para tener un _resultado_
+Se descartan (podan) las clases para las que el resultado es desfavorable.
+****** Variaciones del método
+- En la generación se pueden reducir las clases candidatas en función del objeto
+- En lugar de especificar el atributo que se mide, se puede permitir al usuario introducir el que desee con libertad
+- Usar clases jerarquizadas guía el proceso de poda (descarta subclases) y ayuda a especificar los atributos
+**** Valoración
++ Objetivo: identificar un caso como miembro de una categoría de decisión de acuerdo a unos criterios
+***** Método
+Se *especifican* los _criterios_ para un _caso abstraido_ particular
+Se *evalúa* el _criterio_ (previamente seleccionado) con el _caso abstraido_ para obtener su _valor_
+Se *equipara* el _valor del criterio_ para obtener una _decisión_
+****** Variaciones
+- La abstracción del caso es opcional
+- Los criterios pueden ser específicos a cada caso
+- La selección puede ser aleatoria / heurística / estadística.
+
+**** Diagnóstico
++ Objetivo: encontrar el defecto o avería que provoca una disfunción en el sistema
++ Entrada: fallos
++ Salida: defecto o avería que los causó
++ Terminología
+  - Fallos: datos iniciales
+  - hipótesis: son las posibles soluciones, a su conjunto se denomina "conjunto diferencial"
+  - defecto o avería: solución final 
+***** Método de cobertura causal
+Se obtienen todas las posibles _hipótesis_ que *cubran* los fallos y se *selecciona* una de ellas
+Se *especifica* un _observable_ que demuestre la _hipótesis_ seleccionada
+Se *obtiene* un _hallazgo_ para objeto respecto a ese _observable_
+Se *verifica* el _hallazgo_ con cada una de las _hipótesis_ para tener un _resultado_
+Se descartan las hipótesis para las que el resultado es desfavorable.
+
+**** Monitorización
++ Objetivo: analizar un sistema para ver si se comporta de forma esperada
++ Terminología
+  - parámetro: dato relevante para el seguimiento del sistema
+  - norma: valor esperado de un parámetro
+  - discrepancias: indican que el sistema funciona mal
+  - datos históricos: datos recopilados en ciclos previos
+***** Método dirigido por los datos
+Se *recibe* un _hallazgo_ del que se *selecciona* un _parámetro_
+Se *compara* el _hallazgo_ con la _norma_ *especificada* para el _parámetro_ seleccionado
+Se *clasifica* la _discrepancia_ en caso de que la comparación obtenga _diferencias_, de acuerdo a los _datos históricos_
+****** Variaciones
+- Si la clasificación es compleja se puede usar un método de clasificación
+- Puede usarse también un _Método dirigido por modelos_, donde la iniciativa la da el sistema (se activa con un intervalo de tiempo, en lugar de con la llegada de datos)
+
+**** Predicción
+_Analiza_ [1] el estado actual para _Construir_ [2] una descripción del posible estado futuro.
+
+[1]: Puede tratarse de una tarea de diagnóstico
+[2]: Puede tratarse de una tarea de síntesis
+
+
+*** Síntesis
++ Objetivo: construir la descripción de un sistema que cumpla unos requisitos
++ Entrada: requisitos del sistema a construir
++ Salida: descripción del sistema construido
+
+Se *trasladan* los _requisitos_ en _requisitos necesarios_ y _requisitos deseables_
+Se *generan* las _estructuras posibles_ partiendo de los requisitos generales
+Se *seleccionan* las _estructuras válidas_ que cumplan _requisitos necesarios_
+Se *ordenan* en una _lista de estructuras preferidas_ a partir de los _requisitos deseables_
+
+**** Diseño
+El diseño creativo es muy complejo, por lo que suele orientarse como una tarea de configuración.
+***** Configuración
++ Objetivo: encontrar una combinación de componentes que se ajusten a los requisitos y cumpla las restricciones
++ Terminología
+  - componente: parte a combinar
+  - parámetro: una característica de un componente o combinación de componentes
+  - restricciones: *limitan* el valor de los parámetros
+  - preferencias: *indican* el valor deseable
+  - requisitos: *expresan* necesidades y preferencias de los futuros usuarios
+****** Método propone-critica-modifica
+Se *propone* una _extensión_ del _diseño_ (a partir del diseño esqueletal (de los req) y los req necesarios)
+Se *verifica* si el _diseño_ con la _extensión_ cumple los _requisitos deseables_
+Se *Critica* el _diseño_ si hay _violación_ en la verificación anterior y se obtiene una _lista de acciones_
+Se *Modifica* el _diseño_ con la _acción_ *seleccionada* de la _lista de acciones_
+
+**** Asignación
++ Objetivo: crear una correspondencia entre dos conjuntos de objetos
++ Entrada: conjunto de objetos y de recursos
++ Salida: reparto
++ Terminología
+  - Objetos: aquellas entidades a las que se les debe asignar un recurso
+  - Recurso: puede estar asignado a uno o a un conjunto de objetos
+  - Reparto o distribución: asociación objeto-recurso
+***** Método sin vuelta atrás
+Se *seleccionan* los _objetos_ en un _conjunto_
+Se *agrupa* el _conjunto_ seleccionado en un _grupo_
+Se *asigna* un _recurso_ al _grupo_, de acuerdo a los _repartos actuales_, y los _recursos_ disponibles
+****** Variaciones
+- A veces existen ya repartos previos
+- A veces hay que añadir preferencias específicas en la asignación
+
+**** Planificación
+Como las de diseño pero el sistema se compone de actividades y dependencias temporales. (a veces se incluye la planificación temporal)
+**** Programación temporal
++ Objetivo: Dado un conjunto de trabajos predefinidos, consistiendo cada uno de ellos en una secuencia temporal de actividades denominadas unidades, esta tarea asigna recursos en intervalos de tiempo a todas las unidades.
++ Terminología
+  - Trabajo: secuencia ordenada de unidades
+  - Unidad: actividad que se lleva a cabo en un recurso
+  - Restricciones: condiciones a verificar cuando se asignan unidades a recursos
+***** Método envío/expedición temporal
+Se *especifica* un _programa_ inicial en base a los _trabajos_
+Se *selecciona* una _unidad candidata_ para ser asignada
+Se *selecciona* un _recurso_ para esa unidad
+Se *asigna* la _unidad_ al _recurso_ seleccionado, obteniendo un nuevo _programa_
+Se *evalúa* el nuevo _programa_ obteniendo un _resultado_
+Se *modifica* el _programa_ si el _resultado_ no es satisfactorio
+***** Otros métodos
+- constructivos: se va ampliando incrementalmente una programación incompleta
+- de reparación: se va modificando iterativamente una programación completa

@@ -1,0 +1,56 @@
+
+
+* 2. Interfaces y Elementos Hardware
+** Estructuras de los sistemas de control
+*** Sistemas centralizados
+*** Sistemas duales
+*** Sistemas jerárquicos
+*** Sistemas distribuidos
+** Procesadores
+*** Microprocesador
+*** Microcontrolador
+*** Procesador especializado
+** Temporizadores
+*** Reloj en tiempo real
+*** Watchdog timer
+** Técnicas de transferencia de datos
+*** Acceso de control directo
+*** Control dedicado
+*** Muestreo (polling)
+**** espera ocupada
+**** transferencia condicional (no bloqueante)
+** Interrupciones
+* 3. Lenguajes para aplicaciones en Tiempo Real
+** Características deseables en un lenguaje para tiempo real
+*** 1. Seguridad
+*** 2. Legibilidad
+*** 3. Flexibilidad
+*** 4. Portabilidad
+*** 5. Simplicidad
+*** 6. Modularidad
+*** 7. Eficacia
+* 4. Concurrencia y sincronización
+** Programación
+*** Paradigmas
+**** Paralelismo iterativo, y recursivo
+**** Productor/Consumidor
+**** Cliente/Servidor
+**** Peers
+** Ejecución atómica de instrucciones
+*** Paralelismo de grano fino
+*** Paralelismo de grano medio
+*** Paralelismo de grano grueso
+** Conjuntos disjuntos
+** Afirmaciones debilitadas
+** Invariantes globales
+** Sincronización
+*** Viveza
+*** Seguridad
++ exclusión mutua
++ evitar deadlocks
++ terminación normal
++ reanudación
+*** Política de planficación
+**** Con equidad débil
+**** Con equidad fuerte
+**** Con equidad incondicional

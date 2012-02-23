@@ -1,0 +1,548 @@
+# -*- org; ispell-local-dictionary: spanish -*-
+
+#+LaTeX_CLASS: report
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t
+
+#+TITLE: OTR Messaging
+#+AUTHOR: Fernando Carmona Varo
+#+EMAIL: q22cavaf@uco.es
+#+DATE: Córdoba, 30 de Mayo de 2010
+#+LANGUAGE: spanish
+
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \sloppy % suaviza las reglas de ruptura de líneas de LaTeX
+
+    
+
+* Introducción
+
+** Seguridad de las comunicaciones de mensajería
+
+Cada vez que un ordenador se conecta a una red y empieza a comunicarse con otros equipos siempre se está exponiendo a un cierto riesgo. Llevar a cabo una conversación que sea realmente privada en un entorno con millones de potenciales testigos como es internet es difícil, la probabilidad de que alguien pueda escuchar la conversación no es desde luego nada despreciable. \\
+
+Muchos de los protocolos más usados para la comunicación por mensajería instantánea viajan por la red sin encriptar (por ejemplo programas como WLM) y no es difícil para cualquier ordenador que actúa como router o intermediario interceptar los mensajes de una conversación que podríamos en principio considerar privada. Esto puede verse agravado cuando se trata de sistemas de mensajería usados en la empresa para comunicación interna de los empleados y coordinación del equipo, los cuales podrían portar información confidencial de alto valor para dicha empresa. \\
+
+Son muy conocidos los ataques "man in the middle" que mediante técnicas como el envenenamiento de las tablas ARP de dos equipos pueden situarse a la escucha dentro de una red de computadoras sin que ninguno de los dos extremos lleguen, en principio, a percibir la intrusión en su privacidad. Por ello incluso usando canales privados (VPN, etc) se hace necesario el empleo de un sistema de seguridad punto-a-punto.\\
+
+Es por ello que se hacen necesarios sistemas de seguridad que provean de protección contra estos riesgos. En concreto, el sistema de protección Off-The-Record nació con el objetivo de imitar la seguridad de una conversación privada real entre dos personas dentro de una habitación insonorizada, tratando de ofrecer a la seguridad de la mensajería instantánea algunas nuevas características que hasta el momento no habían sido ofrecidas para este tipo de sistema de comunicación. \\
+
+
+** Inconvenientes de la encriptación mediante PGP
+
+Un método que podría ser empleado para securizar un sistema de mensajería instantánea es el basado en la encriptación mediante PGP. Sin embargo, esta opción presenta algunos inconvenientes cuando se trata de proteger los intereses de los participantes de una conversación de mensajería de la cual se pretende obtener un nivel de seguridad similar al de una conversación privada tradicional donde dos personas se comunican de manera directa sin que otros los escuchen. \\
+
+En un sistema de mensajería basado en PGP, Alice (el emisor) emplea su clave pública para firmar digitalmente un mensaje de forma que Bob (el receptor) pueda saber con quién se está comunicando (esto le daría autenticidad). Tras la firma de este mensaje Alice lo encriptaría usando la clave pública de Bob para que sólo él sea capaz de leerlo (lo que le daría confidencialidad). \\
+
+Este sistema, en principio, podría parecer muy seguro, dado que como Alice usa la clave de Bob nadie salvo Bob puede desencriptar el mensaje. Sin embargo, este escenario se ve comprometido en el momento en que la computadora de Bob es robada, perdida o confiscada por entidades con capacidad para ello, o la información que almacena fuese accedida por virus, troyanos, spyware, etc, de forma que todas sus claves pudiesen ser obtenidas. \\
+
+En este caso el atacante sería capaz de leer no solo los mensajes futuros que se encripten con esa clave, sino también todos los mensajes pasados que pudiera haber almacenado anteriormente el atacante (o que pueda obtener del propio Bob), poseyendo una prueba matemática inequívoca de que fue Alice quien los envió. \\
+
+Esto podría poner a Alice en una situación de compromiso si no quisiese que estos mensajes fuesen reconocidos como suyos. Quien poseyese esta información podría incluso llegar a usarla ante un tribunal. E incluso en el caso de que Bob desechase los mensajes tras recibirlos, un atacante pasivo (Eve) podría escuchar el canal de comunicaciones y comprobar con seguridad la autenticidad del mensaje de Alice, poseyendo una prueba irrepudiable de que el mensaje procedía de ella. \\
+
+
+* Fundamentos de la mensajería Off-The-Record
+
+El protocolo Off-The-Record (OTR) fue introducido por Borisiv, Goldberg y Brewer en 2004 con el objetivo de ofrecer privacidad en comunicaciones sociales online de baja latencia. La tendencia era el empleo de mensajería instantanea para estas comunicaciones y por ello fue implementado inicialmente como plugin para el cliente de mensajería GAIM (ahora conocido como Pidgin) aunque en la actualidad se encuentra implementado en otras formas. OTR protege la confidencialidad de los mensajes (sólo serán leidos por Alice y Bob), y la autenticación (Alice se asegura de que es a Bob a quien está hablando) pero además ofreciendo la posibilidad de repudio de los mensaje en una conversación privada (nadie, incluido Bob, puede demostrarle a ningún tercero que el autor del mensaje es Alice). Además, incluso si una clave secreta es robada, la seguridad de los mensajes anteriores no se vería comprometida. \\
+
+El protocolo OTR se basa en 4 pilares centrales:
++ Confidencialidad directa perfecta
++ Firmas digitales y no-repudio
++ Posibilidad de repudio en el empleo de MACs (Message Authentication Code)
++ Encriptación deformable y olvido
+
+A continuación se describirán cada uno de estos puntos. \\
+
+** Confidencialidad directa perfecta
+
+Del inglés "*Perfect forward secrecy*", la confidencialidad directa perfecta representa la propiedad de un sistema de cifrado que nos garantiza que las claves usadas hoy no se verán descubiertas si el día de mañana se revela alguna información secreta relacionada con dichas claves.
+
+Si en cualquier momento la clave de desencriptación se revelase, cualquier mensaje, ya sea pasado, presente o futuro, podría ser revelado. 
+Para evitar este problema pueden usarse claves desechables de corta duración que son generadas según sea necesario y descartadas después de su uso. Estas claves también tienen la propiedad de que es imposible obtenerlas por derivación de ninguna clave de larga duración. \\
+
+Una configuración como esta ofrece una confidencialidad directa perfecta, ya que una vez que Alice y Bob descarten ambos una clave, no queda ya ninguna información que pueda obtenerse de ningún modo para recuperar la clave, y por tanto desencriptar mensajes encriptados con ella. Ni siquiera Alice y Bob serían capaz de volver a desencriptar los mensajes anteriormente encriptados una vez hayan ya desechado la clave. \\
+
+Para ofrecer confidencialidad directa perfecta en OTR se emplea el protocolo de Diffie-Hellman. Este protocolo permite a los dos lados de la comunicación sobre un canal público ponerse de acuerdo en una clave secreta compartida, sin revelarla a ningún posible intermediario. Para ello, Alice y Bob generan dos claves privadas (x_A y x_B) y se intercambian entre ellos las claves públicas (g^{x_A} y g^{x_B}) bajo un canal público común. Cada uno combinará la clave pública del otro con la clave privada propia, resultando en un mismo número idéntico en ambos casos. Alice puede entonces emplear este número como clave simétrica compartida para enviar mensajes a Bob. \\
+
+#+CAPTION:    Representación del algoritmo Diffie-Hellman
+#+LABEL:      fig:diffie-hellman
+#+ATTR_LaTeX: width=0.5\textwidth
+[[file:diffie-hellman.png]] 
+\\
+
+ $Y_{B}^{X_A} \bmod p = (g^{X_B} \bmod p)^{X_A} \bmod p = g^{X_BX_A} = K$ 
+
+ $Y_{A}^{X_B} \bmod p = (g^{X_A} \bmod p)^{X_B} \bmod p = g^{X_AX_B} = K$ 
+
+** Firmas digitales y el no-repudio
+
+El algoritmo Diffie-Hellman no ofrece un mecanismo de autenticación. Para ello se hace necesario el empleo de un sistema similar al de las firmas digitales. Ya que las firmas digitales usan criptografía de clave pública, no es necesario para cada par de individuos mantener una clave secreta compartida de larga duración; en lugar de ello, cada miembro debe tener una única clave pública que sea conocida por todos los demás y usada para verificar sus firmas. Por lo tanto, las claves públicas no necesitan ser mantenidas en secreto. Algunos algoritmos populares de firmado digital son el RSA y DSS. \\
+
+Además, estas claves pueden ser claves de larga duración, a diferencia de las claves de corta duración anteriores. La razón es que si Bob verifica la firma de Alice en una sección de los datos, y entonces la semana siguiente, la clave de Alice se ve comprometida, eso no afectaría al hecho de que la vieja firma fuese válida. Sin embargo una clave de encriptación se emplea para proteger una sección de los datos, y si la clave se ve revelada esos datos ya no estarían protegidos. \\
+
+Debido a esto, es aceptable mantener la misma clave para el firmado digital por un largo tiempo; nunca protegerás ningún dato adicional cambiando tu firma de la forma en que lo haces cambiando tu clave de encriptación. Además, es deseable mantener las claves de firma por un buen tiempo, ya que esto simplifica la distribución de claves, asegurándote de que todos tus contactos poseen una copia correcta de tu clave de firma digital. \\
+
+Además, las firmas digitales pueden ser verificadas por cualquiera, y como tal pueden ser usadas para probar a un tercero que Alice firmó un mensaje sin que sea necesaria la colaboración propia de Alice. Esta propiedad se conoce como no-repudio (Alice no es capaz de desacreditar la autoría de un mensaje con su firma). Como ya se indicó, esta no es una propiedad deseable de las comunicaciones privadas. Alice puede no querer darle a Bob la habilidad de demostrar a terceros que ella le digo algo en privado; este problema se ve amplificado por los movimiento de muchos gobiernos de asociar poder legal a las firmas digitales. Incluso si Alice confía en Bob, tal confianza no debe verse comprometida si alguien llegase a acceder al ordenador de Bob, o si existiesen procedimientos legales que forzasen a Bob a comunicar los mensajes privados de Alice dirigidos a él. \\
+
+Por ello el repudio es deseable: nadie debería ser capaz de probar que Alice envió un mensaje en particular, lo hiciese o no. Por esta razón, no debe emplearse la firma digital para probar la autoría de ningún mensaje de Alice. Los únicos datos que deben ser firmados son los valores iniciales de "g" en el protocolo de Diffie-Hellman. Todo el mundo, incluido Bob y Eve, pueden estar seguros de que Alice fue quien verdaderamente eligió el valor de x_A que produjo g^{x_A], pero eso será todo lo que puedan demostrar. \\
+
+** Repudio con el empleo de MACs (Message Authentication Code)
+
+Aunque se desea repudio para la comunicación OTR, aún se necesita autentificación para mantener la seguridad (Bob necesita asegurarse de que Alice es de hecho la que está enviándole los mensajes, incluso si insistimos en no dejar a nadie más conocerlo). \\
+
+Para este propósito, se emplean códigos de autentificación de mensajes (MAC, Messsage Authentication Codes). Una MAC es una función realizada sobre un mensaje usando una clave MAC secreta, que es compartida por Alice y Bob (puede pensarse en ella como una función hashing encriptada). Alice usa su copia de la clave MAC para obtener un MAC de su mensaje, y envía este MAC junto con su mensaje en una transmisión segura; Bob verifica la integridad del mensaje hayando la MAC del mensaje recibido usando su copia de la clave MAC compartida, y comparandola a la MAC que le fue transmitida. \\
+
+Sin embargo, una MAC no puede proveer no-repudio:  Bob no puede probar a un tercero que Alice haya enviado el mensaje, todo lo que puede probar es que alguien con la clave MAC lo generó, pero si se lo enviase a un tercero este podría pensar que incluso pudo haber sido Bob quien inventase el mensaje, ya que Bob también posee la clave MAC que podría haber generado el mensaje. \\
+
+Estas propiedades de las MAC las hacen perfectas para la comunicación OTR. Sólo Bob puede asegurarse de que Alice envía el mensaje y que ese mensaje no ha sido modificado todavía, y sin embargo nadie (ni siqueira Bob) puede probar esto a un tercero. \\
+
+** Encriptación deformable y olvido
+
+En algunos sistemas de encriptación, como ciertos modos de cifrado por bloques, es dificil producir textos cifrados que se descifren en textos significativos sin conocer la clave. Incluso si Eve intercepta el mensaje cifrado de Alice, cualquier cambio que quisiese hacer sobre el mensaje encriptado podría resultar en un conjunto de bits aleatorios en lugar de propio lenguaje natural. \\
+
+En OTR no sólo se pretende que Bob y Eve no puedan probar que Alice envió el mensaje, se pretende que además sea obvio que cualquiera podría haberlo modificado. Para esto se emplea un sistema de *encriptación deformable*, la cual facilita la alteración de texto cifrado de tal forma que sea posible hacer cambios significativos en el mensaje incluso cuando no conoces la clave. \\
+
+Por ello se emplea un cifrado de flujo, el cual encripta el texto enmascarándolo con una clave como por ejemplo podría hacer el empleo de la operación XOR. Para desencriptar, la misma XOR puede emplearse para eliminar la clave y revelar el texto. Esta encriptación es deformable, ya que un cambio en cualquier bit del texto cifrado se corresponderá con un cambio en el bit correspondiente del texto. En particular, si Eve puede deducir cual es el texto de un mensaje, entonces ella podría cambiar el texto cifrado a cualquier otro mensaje de la misma longitud, sin tener que conocer la clave. \\
+
+
+* El protocolo de mensajería Off-The-Record
+
+** Solicitud para el inicio de una conversación OTR
+
+Si Alice desea emplear el protocolo OTR para comunicarse con Bob existen dos maneras de indicárselo. Ambos métodos incluyen una forma de especificar la versión de OTR soportada. \\
+
+*** Mensaje de petición OTR
+Este mensaje representa una petición explicita al receptor para solicitar a este que inicie el protocolo OTR. \\
+
+El mensaje de petición consiste en la cadena de caracteres "?OTR" seguida de uno o varios identificadores que designen las versiones del protocolo que son soportadas. Este mensaje estará oculto al usuario (oculto en algún atributo o mensaje oculto del protocolo sobre el que se construya), y/o ser acompañado por un mensaje explicativo como "Alice solicitó iniciar una conversación privada". \\
+
+*** Mensajes de texto etiquetados
+
+Otra posibilidad con la que Alice puede indicar que está preparada para iniciar una conversación OTR si Bob lo desea (no es una solicitud explícita) es la de etiquetar un mensaje de texto que vaya a mandar a Bob añadiéndole a este espacios en blanco adicionales (16 bytes) seguidos de 8 bytes que indican la versión del protocolo OTR soportado. \\
+
+Esta etiqueta en los mensajes será, a ser posible, invisible, oculta para los usuarios, al igual que los mensajes de petición anteriores. \\
+
+** Intercambio autentificado de la clave (AKE) inicial
+
+Una vez que Bob ha recibido una solicitud de inicio de conversación OTR comenzará con el establecimiento de la clave compartida. \\
+
+Para encriptar los mensajes se emplea el protocolo estandar AES. La clave de encriptación es elegida usando Diffie-Hellman para establecer la clave compartida. Dado que el algoritmo de Diffie-Hellman no posee un mecanismo de autentificación por si sólo se hace necesario el empleo de firmas digitales. No obstante, para mantener el no repudio, este método de autenticación sólo se producirá en este primer intercambio de la clave. \\
+
+En la versión 1 del protocolo OTR el método de intercambio autentificado de clave es bastante simple, consistiendo en directamente firmar cada uno de los mensajes con las claves respectivas. \\
+
+*Bob:* $g^{y_1},firma_{k_B}(g^{y_1}),K_B$ 
+
+*Alice:* $g^{x_1},firma_{k_A}(g^{x_1}),K_A$ \\
+
+
+No obstante, como se verá más adelante, este método de intercambio presenta algunas vulnerabilidades por lo que en la versión 2 del protocolo se ha optado por un sistema de intercambio basado en el protocolo SIGMA que es algo más complejo pero que mejora la seguridad sin causar un impacto demasiado importante en la eficiencia. \\
+
+
+** Envío de mensajes y posterior recambio de claves
+
+Para asegurar que las claves son de corta duración, Alice y Bob pueden en cualquier momento realizar un nuevo Diffie-Helman descartando las anteriores claves x_A y x_B. En este punto, será imposible para Alice o Bob desencriptar viejos mensajes incluso con la ayuda de un atacante que pueda reenviar los valores de g_{x_A} y g_{x_B}. Por tanto, se alcanza confidencialidad directa. \\
+
+Para reducir las vulnerabilidades, Alice y Bob deben recambiar la clave tanto como sea posible. Diffie-Hellman es bastante rápido y no representará mayores problemas incluso para dispositivos de poca potencia, como PDAs, cambiar la clave al menos una vez por minuto. \\
+
+Un intercambio de mensajes en una conversación privada entre Alice y Bob podría ser de la manera siguiente: \\
+
+#+LaTeX: \vspace{0.4cm}
+
+*Bob:* $g^{y_1},firma_{k_B}(g^{y_1}),K_B$
+
+*Alice:* $g^{x_1},firma_{k_A}(g^{x_1}),K_A$
+
+*Alice:* $g^{x_2},AES_{c11}("Mensaje1")$
+
+*Bob:* $g^{y_2},AES_{c21}("Mensaje2")$
+
+*Alice:* $g^{x_3},AES_{c22}("Mensaje3")$ \\
+
+Donde $cij$ sería el valor obtenido al realizar una función hash sobre la clave compartida dada como $g^{x_{i}y_{j}}$. Para esta operación hash que será de 128 bits se puede emplear MD5 o SHA truncado. \\
+
+Además, en cada mensaje se deberá incluir un par de identificadores de clave de manera que se pueda saber que "cij" se está usando, ya que el protocolo no requiere necesariamente que Alice y Bob estén alternando mensajes uno a otro.
+
+*** Olvido de las claves antiguas
+
+Para obtener confidencialidad directa, Alice y Bob deben olvidar las viejas claves cada vez que se obtiene una nueva clave. Sin embargo, dado que los protocolos de mensajería suelen ser asíncronos, es posible que aún exista un mensaje en tránsito desde Bob que fuese encriptado usando la clave anterior. Si Alice borrase del todo la clave no habría forma de leer el mensaje de Bob. Por tanto, Alice debe recordar la última vieja clave utilizada hasta que reciba un nuevo mensaje de Bob usando la nueva clave. Asumiendo que los mensajes son recibidos en orden, todos los siguientes mensajes de Bob serán encriptados usando la nueva clave. \\
+
+Si Alice enviase varios mensajes de nuevas claves a Bob una detrás de otra sin recibir respuesta, necesitaría recordar toda la secuencia de claves hasta que reciba un mensaje de Bob que esté encriptado con una de las claves. Para evitar esto sólo se generará una nueva clave cuando se haya recibido una respuesta de Bob. De esta forma Alice sólo necesitará recordar como mucho 2 claves a la vez. \\
+
+
+*Alice:* $g^{x_2},AES_{c11}("Mensaje1")$
+
+*Alice:* $AES_{c11}("Mensaje2")$
+
+*Bob:* $g^{y_2},AES_{c21}("Mensaje3")$
+
+*Alice:* $g^{x_3},AES_{c22}("Mensaje4")$ \\
+
+
+Por supuesto, si Bob no responde por un largo tiempo, Alice mantendrá por un largo tiempo la vieja clave lo cual podría dar lugar a vulnerabilidades. Por ello Bob deberá enviar un mensaje vació de ACK para notificar a Alice la recepción de la clave. Además Alice podrá olvidar las viejas claves si ha pasado un tiempo suficiente que haga improbable que un mensaje antiguo de Bob esté circulando. \\
+
+*Alice:* $g^{x_2},AES_{c11}("Mensaje1")$
+
+*Alice:* $AES_{c11}("Mensaje2")$
+
+*Bob:* ACK
+
+*Alice:* $g^{x_3},AES_{c21}("Mensaje3")$ \\
+
+
+*** Autenticación en el intercambio de mensajes
+
+OTR emplea una aproximación híbrida a la autenticación, usando firmas digitales en el establecimiento de la clave inicial y usando posteriormente el empleo de funciones MAC. El uso de firmas ayuda a evitar el mantenimiento de muchas claves privadas predefinidas, mientras que el uso de MACs para autenticar los mensajes posteriores permite el repudio. \\
+
+Para generar una clave MAC, se aplica una función hash a la propia clave de desencriptado (cij). Eso asegura que aquel que es capaz de leer un mensaje puede también modificarlo y actualizar la MAC. Por ejemplo, incluso si Eve pudiera de algun modo recuperar la clave de encriptado y descifrar los mensajes no tendría ningún modo de convencer a nadie de que fue Alice o Bob quienes escribieron el mensaje y no ella misma, asegurando con ello el repudio. \\
+
+Si Bob ya conoce la clave pública de Alice, podrá asegurar en la primera autenticación que g^{x1} vino de hecho de Alice, y por tanto el secreto g^x1y1 sólo será conocido para ambos. De este modo los mensajes autenticados con la llave H(g^{x1y1}) podrán considerarse procedentes de Alice. Si la clave de autenticación fue segura las siguientes lo serán también. \\
+
+*Bob:* $g^{y_1},firma_{k_B}(g^{y_1}),K_B$
+
+*Alice:* $g^{x_1},firma_{k_A}(g^{x_1}),K_A$
+
+*Alice:* $g^{x_2},AES_{c11}("Mensaje1"),MAC_{hash(c11)}(g^{x_2},AES_{c11}("Mensaje1"))$
+
+*Bob:* $g^{y_2},AES_{c21}("Mensaje2"),MAC_{hash(c21)}(g^{y_2},AES_{c21}("Mensaje2"))$ \\
+
+Para la autenticación de los mensajes, el receptor deberá comprobar que al hacer la operación con la función MAC al contenido con la clave MAC correspondiente, el resultado debe coincidir con el obtenido junto con el resto del mensaje. \\
+
+**** Revelando claves MAC
+
+Para añadir un nivel de seguridad extra, una vez que Alice conoce todos los mensajes que ha enviado a Bob identificados por la MAC ella publica esa clave MAC como parte de su siguiente mensaje. \\
+
+Bob ya no necesita emplear esta clave, dado que ya ha comprobado todos los mensajes autentificados por ella. Sin embargo, ahora cualquiera puede crear mensajes arbitrarios que tengan esta clave MAC, y nadie puede señalar a ninguna persona en particular como autor potencial del mensaje. Esto puede verse como análogo a una confidencialidad directa: cualquiera que recupere la clave MAC en el futuro será incapaz de usarla para verificar la autenticación de mensajes anteriores. \\
+
+Como se ha empleado como clave MAC el resultado de una operación hash de un sólo sentido la seguridad de la clave, en principio, no se vería comprometida. No obstante, esto podría suponer una posible vulnerabilidad si la función hash no fuese lo suficientemente segura. En el capítulo siguiente se hablará al respecto.
+
+* Debilidades y evolución del sistema OTR
+
+Alrededor de un año después de la publicación original del protocolo OTR, Mario Di Raimondo, Gennaro y Krawezyk señalaron tres principales puntos flacos posibles en el sistema OTR: 
+1. Fallo de autenticación
+2. Fallo en la actualización de la clave
+3. Soporte inseguro del repudio \\
+
+En cuanto a la autentificación, en primer lugar el protocolo OTR hereda el posible ataque "identity misbinding" descubierto originalmente por Diffie et al. \\
+
+Supongamos un atacante, Eve, que escucha entre los participantes Bob y Alice. Usando este ataque, Eve  podría hacer a Alice pensar que está hablando con Bob, y a Bob pensar que los mensajes son de Eve. Para hacer esto Eve lanza un ataque "man-in-the-middle" llevando a cabo conversaciones simultaneas entre Alice y Bob. \\
+
+
+*Alice* $\rightarrow g^{x}, firma_{k_A}(g^{x}),K_A \rightarrow$ *Eve*
+$\rightarrow g^{x}, firma_{k_E}(g^{x}),K_E \rightarrow$ *Bob*
+
+*Alice* $\leftarrow g^{y}, firma_{k_B}(g^{y}),K_B \leftarrow$ *Eve*
+$\leftarrow g^{y}, firma_{k_B}(g^{y}),K_B \leftarrow$ *Bob* \\
+
+#+LaTeX: \vspace{0.3cm}
+
+El revelado de la clave privada de autenticación podría causar un ataque de suplantación. Un atacante podría usar esta información para producir una clave de sesión válida mientras la clave de larga duración que ha descrifrado no sea revocada. Mario Di Raimondo sugiere actualizar todas las claves periodicamente para asegurar que el revelado de una clave privada no afecte a las siguientes conversación una vez actualizada. \\
+
+Como ya se dijo anteriormente, el mecanismo de revelado de las claves MAC debilitaría la seguridad de las claves de encriptación, ya que las claves MAC son generadas a partir de una suma de comprobación de las claves de encriptación. El atacante podría usar este conocimiento para fabricar un ataque de fuerza bruta asistido por un diccionario, aunque pudiese ser computacionalmente costoso. También la elección de usar un cifrado en stream puede causar problemas, especialmente cuando se está intentando manejar contadores en la encriptación para evitar la repetición de valores. Mario Di Raimondo sugiría tres algoritmos de intercambio alternativos: SIGMA, SKEME y HMQV. \\
+
+Esta crítica dio lugar al desarrollo de una segunda versión del protocolo OTR en 2005, en la cual se introdujeron los siguientes cambios: \\
+
+1. Se arregló el problema del "identity misbinding" añadiendo un mensaje de identificación adicional al comienzo de la sesión de conversación. Se emplea el algoritmo SIGMA para la autenticación (será descrito a continuación).
+2. Ya no se revelará la clave pública de los usuarios a posibles observadores pasivos durante la autenticación inicial.
+3. Se implementó soporte para mensajes OTR fragmentados, ya que muchos protocolos poseen una limitación en el tamaño de mensaje que podría no ser suficiente para el envío de un mensaje cifrado. \\
+
+El nuevo sistema de intercambio de clave merece tratarlo de manera especial ya que es el cambio más importante, logrando sobreponerse a las vulnerabilidades encontradas por Di Raimondo et al.
+
+** Intercambio de clave usando SIGMA
+
+A continuación se describe la variante del protocolo SIGMA que se emplea en el intercambio de clave compartida de OTR a partir de la versión 2 de la especificación. Todas las exponenciaciones se someten después al cálculo del módulo de un número primo en particular perteneciendo a una clase de equivalencia, del cual g es el generador. Las claves públicas de larga duración de Alice y Bob son pub_{A} y pub_{B} respectivamente.
+
+Se considera que Alice ha sido la que ha solicitado el establecimiento de conexión OTR y Bob quien responde a la petición iniciando el algoritmo de intercambio de clave compartida.
+
+#+CAPTION:    Mensajes para el intercambio de clave mediante el protocolo SIGMA
+#+LABEL:      fig:SIGMA
+#+ATTR_LaTeX: width=0.5\textwidth
+[[file:SIGMA.png]] 
+\\
+
+La estrategia a llevar a cabo por este método es la de involucrar a la clave compartida generada, la cual Eve no conoce, en el propio proceso de autentificación. Para ello, se encripta la clave de Bob inicial con un valor aleatorio "r" que no se da a conocer hasta que Alice ha generado ya su clave, entonces, en el mismo mensaje en el que se ofrece la clave "r" para desencriptar y hayar la clave secreta se incluyen una serie de valores de comprobación empleando distintos hash derivados de la clave compartida que Eve no conoce para transmitir las claves públicas y los identificadores de clave usados para empezar a numerar las claves según se vayan recambiando (keyid).
+
++ *Bob*
+ 1. Elige un valor aleatorio r (128 bits)
+ 2. Elige un valor aleatorio x (al menos 320 bits)
+ 3. Envía a Alice AES_{r}(g^{x}),HASH(g^{x})
++ *Alice*
+ 1. Elige un valor aleatorio y (al menos 320 bits)
+ 2. Envía a Bob g^{y}
++ *Bob*
+ 1. Comprueba que el g^y recibido está en los límites dados por el módulo.
+ 2. Calcula $s = (g^{y})^x$
+ 3. Calcula dos claves AES: c,c' ; y cuatro claves MAC: m1, m1', m2, m2' por medio de distintos HASH sobre s.
+ 4. Toma keyid_{B}, un numero de serie para su clave g^x de Diffie-Hellman
+ 5. Calcula M_B = MAC_{m1}(g^{x}, g^{y}, pub_{B}, keyid_{B})
+ 6. Calcula X_B = pub_{B}, keyid_{B}, firma_{B}(M_{B})
+ 7. Envía a Alice r, AES_{c}(X_{B}), MAC_{m2}(AES_{c}(X_{B}))
++ *Alice*
+ 1. Usa r para desencriptar el valor de g^x que le enviaron antes
+ 2. Verifica que HASH(g^{x}) verifica ese valor.
+ 3. Comprueba que el g^x recibido está en los límites dados por el módulo.
+ 4. Calcula $s = (g^{x})^y$ (Será el mismo valor que el calculado por Bob)
+ 5. Calcula dos claves AES: c,c' ; y cuatro claves MAC: m1, m1', m2, m2' por medio de distintos HASH sobre s (serán los mismos que Bob).
+ 6. Usa m2 para verificar MAC_{m2}(AES_{c}(X_{B})
+ 7. Usa c para desencriptar AES_{c}(X_{B}) obteniendo $X_B = pub_{B}, keyid_{B}, firma_{B}(M_{B})$
+ 8. Calcula M_B = MAC_{m1}(g^{x}, g^{y}, pub_{B}, keyid_{B})
+ 9. Usa pub_{B} para verificar firma_{B}(M_{B})
+ 0. Toma keyid_{A}, un numero de serie para su clave g^y de Diffie-Hellman
+ 1. Calcula $M_A = MAC_{m1}(g^{y}, g^{x}, pub_{A}, keyid_{A})$
+ 2. Calcula $X_A = pub_{A}, keyid_{A}, firma_{A}(M_{A})$
+ 3. Envía a Bob AES_{c'}(X_{A}), MAC_{m2'}(AES_{c'}(X_{A}))
++ *Bob*
+ 1. Usa m2' para verificar MAC_{m2'}(AES_{c'}(X_{A}))
+ 2. Usa c`para desencriptar AES_{c'}(X_{A}) obteniendo $X_A = pub_{A}, keyid_{A}, firma_{A}(M_{A})$
+ 3. Calcula $M_A = MAC_{m1}(g^{y}, g^{x}, pub_{A}, keyid_{A})$
+ 9. Usa pub_{A} para verificar firma_{A}(M_{A})
+
+Si todas las verificaciones tuvieron éxito, Alice y Bob compartirán ahora la clave pública "s" gracias al Diffie-Hellman. Además, gracias a las comprobaciones llevadas a cabo en esta versión del protocolo SIGMA Alice podrá estar segura de que esta clave es conocida únicamente por alguien que tiene acceso a la clave privada de Bob (si la firma es segura, será únicamente Bob), y Bob podrá decir lo mismo de la clave con respecto a Alice. \\
+
+** Problema de la autenticación
+
+No obstante, incluso con el protocolo basado en SIGMA para el intercambio de la clave aún se supone que Alice y Bob conocen la clave pública del otro antes de empezar el intercambio. Si no fuese así Eve podría hacerse pasar por Bob fácilmente. \\
+
+Por ello se hace necesario que cada usuario mantenga almacenadas las claves públicas de los contactos con los que establece conversaciones privadas. No obstante esto requiere de un canal seguro a través del cual los usarios puedan intercambiar sus claves públicas con la seguridad de que al otro lado está la persona con la que realmente quieren establecer contato. \\
+
+Para facilitar el proceso se ha desarrollado un sistema mediante el cual los dos participantes pueden establecer una palabra o respuesta que sólo ambos conozcan, de tal modo que empleando un hash de este texto como clave puedan establecer un canal seguro bajo el que transmitirse las claves públicas si ambos textos escritos se corresponden con una misma cadena de texto conocida por ambos participantes. \\
+
+No obstante, en un capítulo posterior se hablará de los inconvenientes prácticos que siguen existiendo para la autenticación aun usando esta medida. \\
+
+* Implementación y adopción de OTR
+
+** Pidgin
+El primer software en implementar el sistema OTR de cara al usuario final fue el cliente de mensajería instantanea multiplataforma y muñltiprotocolo Pidgin, siendo parte de la tesis el desarrollo de OTR la construcción de un plugin para Pidgin que demostrase el protocolo.
+Este plugin se encuentra en la lista de complementos de pidgin bajo el nombre, en español, de "Mensajería Off-The-Record". Y puede usarse en cualquier conversación con independencia del protocolo que se emplee. \\
+
+Si está activada la casilla "Iniciar mensajería privada automáticamente", solicitar una conversación privada es tan sencillo como enviar un mensaje inicial desde Pidgin. De lo contrario, será necesario presionar el botón. Una vez solicitado el inicio de una conversación privada, si ambos participantes poseen el plugin instalado se iniciará un proceso de inicialización y autenticación. \\
+
+ Una vez iniciada la solicitud de una sesión privada, primero se comprueba si Alice y Bob han tenido anteriormente una conversación empleando OTR, si esto es así el proceso de autentificación no será necesario ya que Alice y Bob usarán los mismos pares de claves pública/privada que fueron ya verificados anteriormente, y la conversación será automáticamente encriptada y autenticada. Si no fuese así, el botón OTR indicará que la conversación no está "verificada", se ha recibido la huella digital del otro participante pero no se está seguro si es quien debe ser, por lo que será necesario realizar una operación que autentifique a los usuarios de tal modo que puedan estar seguros de estar hablando con quien creen que hablan. \\
+
+Alice y Bob pueden elegir entre tres formas de autenticarse: usando el método de la pregunta y respuesta, usando una clave secreta compartida, o por verificación manual de firma digital. Siendo la clave compartida el método por defecto y el otro sólo disponible en una pestaña de preferencias avanzadas. \\
+
+*** Autenticación por pregunta-respuesta
+
+Una vez Alice pulsa en "autenticar amigo" aparecerá una ventana solicitando una pregunta para realizarle a Bob y una respuesta que Alice sepa que sólo podría responder el propio Bob. Una vez establecida tanto la pregunta como la respuesta que Bob debería dar, se le presentará a Bob esa pregunta y deberá responderla con el mismo texto exacto que Alice puso como respuesta. Si lo hace correctamente Bob será autenticado. \\
+
+No obstante, esto sólo autenticaría a Bob, pero para autenticar a Alice sería necesario que Bob le hiciese una pregunta a ella del mismo modo, o que usase algún otro método de autenticación con ella. \\
+
+*** Autenticación por clave secreta compartida
+
+Mediante éste método ambos usuarios se verán autenticados simultáneamente. Se solicitará una palabra o frase secreta que ambos deberán haber acordado previamente por un canal seguro distinto del chat. Si ambos introducen la misma palabra secreta el estado del botón de ambos usuarios cambiará a "privado", sino se mostraría un mensaje de error y habría que repetirlo. \\
+
+*** Autenticación manual de la huella digital
+
+Alice y Bob pueden decidir verificar manualmente la firma digital del otro, para ello podrá irse a la pestaña de claves públicas y verificar manualmente la clave de Bob. sería recomendable que la clave fuese verificada desde un canal seguro distinto de la conversación que estén teniendo. \\
+
+*** Resultados del uso de OTR
+
+En Julio del 2008 se realizaron una serie de pruebas para evaluar. Se establecieron conversaciones de cuatro pares de amigos, estudiantes de la Universidad de Waterloo. Cinco hombre, tres mujeres. 
+En la versión del plugin OTR que se usó no se había implantado aún el método de "pregunta respuesta" por lo que el que emplearon principalmente fue el de "secreto compartido", en el cual además en esta versión sólo se autenticaba uno de los usuarios.
+
+- Aparecieron problemas en descubrir la interfaz para autenticarse (click derecho en el botón de OTR).
+
++ Autenticación
+- 3 de los participantes escribieron la palabra secreta explicitamente en el chat (uno de ellos intentó describir el secreto, pero tras fallar varias veces cambió de opinión).
+- 2 de ellos pensaron que lo que tenían que introducir era una pregunta que el otro tendría que responder (no leyeron la ayuda).
+- 1 recibió la petición de clave del otro y sin embargo introdució una clave propia al pensar que había sido él quien la produjo.
+- 2 usaron huella digital sin preocuparse de verificarla con el otro participante, y además no se dieron cuenta inicialmente de que su compañero tenía problemas para verificarles a ellos.
+
+Incluso cuando habían comprendido ya como establecer una clave compartida, dos de las cuatro parejas aún tuvieron problemas acordando la clave secreta de forma correcta. Incluso aunque usaron preguntas secretas para las que pensaban que la otra persona debería conocer la respuesta fallaron múltiples veces debido a diferente manera de escribirlo o no entender la descripción del otro. \\
+
+No obstante, una vez que los usuarios aprendieron a usar la interfaz de autenticación no volvieron a aparecer problemas. \\
+
++ Una de las presunciones de OTR es que los usuarios se conozcan off-line y sean capaces de establecer una clave secreta a través de algún canal externo. No obstante esto no tiene porque ser cierto.
+Este problema no es exclusivo de OTR, ya que la autentificación mediante un secreto compartido es usada en otros sistemas de privacidad.
+Algunos de los participantes indicaron tras los experimentos que la dificultad en establecer una clave secreta compartida es razón suficiente para no usar OTR en el futuro, a pesar de conocer el nivel de seguridad que ofrece. \\
+
+Además, hay preguntas como "¿Cúal es el nombre de nuestra Universidad?" que un gran número de usuarios podría conocer o averiguar sin ofrecer garantías de que se trate de la otra persona. \\
+
+** Telepathy
+Telepathy es un sistema de mensajería que añade una capa de abstracción que permite a múltiples programas acceder a las funciones de mensajería, notificación de estado y lista de contactos que ofrecen diferentes protocolos, sin tener que preocuparse por las particularidades de cada uno. \\
+
+Uno de los principales clientes de Telepathy (mantenido por los mismos desarrolladores) es Empathy. En el FAQ (preguntas frecuentes) de Empathy podemos encontrar la siguiente explicación en cuanto a la aplicación del sistema Off-The-Record para el establecimiento de conversaciones privadas:
+
+#+begin_QUOTE
+/Will Empathy have OTR ("Off The Record") support?/
+
+We think that the correct approach to secure end-to-end communications is to support it natively in the protocol. There is ongoing work on standardising secure end-to-end messaging in Jingle (using XTLS and Jingle) and we plan to support this in the future (current API sketch).
+
+We don't think that layering encrypted messaging on top of protocols that don't support it is very useful, since such extensions won't, by definition, work in native protocol clients, and any clients that do go out of their way to support encrypted messaging might as well do so using a native protocol. 
+#+end_QUOTE
+
+La especificación "XTLS" define un método mediante el cual un programa que soporte protocolo XMPP Jingle puede usar un sistema TLS (protocolo sucesor de SSL) para la encriptación punto a punto, ya sea por TCP o UDP. El caso típico es el de canalizar sentencias XMPP entre dos usuarios en un chat usando streams XML. Sin embargo también puede ser empleado entre clientes XMPP y otros servicios remotos (por ejemplo una sala de chat en grupo MUC), o ser usado para la encriptación de transferencias de ficheros (jingle-file) o conversaciones de audio y/o video encriptadas (Jingle-RTP) y otras aplicaciones.
+
+No obstante, el protocolo TLS no ofrece la capacidad de repudio que se garantiza al usar OTR, con lo que aún es posible encontrar ventajas en la utilización y el desarrollo de este sistema de seguridad.
+
+* Conversaciones de grupo
+La conversación en salas de grupo son a menudo empleadas para mejorar la eficiencia en muchas empresas, para reuniones de grupo, comunicación interna o a veces incluso para la atención al consumidor. Esto tiene el beneficio de permitir a los empleados realizar otras operaciones al mismo tiempo que atienden la comunicación en la sala y reducir costes. Las empresas que contratan trabajadores a distancia. \\
+
+A pesar de todas estas ventajas, no existe un sistema de seguridad fiable construido específicamente sobre estas salas de chat. Actualmente el protocolo OTR no posee soporte para salas de conversación en grupo, por lo que sería conveniente extenderlo para ofrecer un mayor soporte. \\
+
+** Group Off-The-Record (GOTR)
+
+*** Mecanismo de comunicación privada
+Se pretende hacer que uno de los miembros del chat, cualquiera de ellos, actúe como un servidor virtual. Este servidor realizará el intercambio de claves con todos los demás participantes de la misma forma en que haría en una conversación OTR normal punto-a-punto. De este modo el servidor virtual comparte un secreto con cada miembro del chat, estableciéndose un canal privado entre cada uno de los participantes del chat y el servidor virtual. El servidor será el responsable de enrutar todos los mensajes. Esto implica que el servidor virtual necesita procesar y enviar todos los mensajes de cualquiera de los miembros de la conversación a todos los demás dentro de la misma sala. \\
+
+En una conversación donde tuviésemos 4 miembros: Alice, Bob, Carol y Dave; donde Alice sería el servidor virtual, se deberían tener tres claves secretas compartidas conocidas ambas por el servidor virtual: SS_{Alice-Bob}, SS_{Alice-Carol} y SS_{Alice-Dave}. Para que Bob enviase que pudiese leer Dave antes debería mandarselo a Alice y será esta la que se lo remita a Dave. \\
+
+
+#+CAPTION:    Esquema de canales seguros en una conversación OTR en grupo.
+#+LABEL:      fig:gotr
+#+ATTR_LaTeX: width=\textwidth
+[[file:GOTR.png]]
+
+**** Identificación del destino
+
+Dado que el protocolo será construido por encima de una sala de chat insegura existente estamos comunicándonos en un canal común compartido, en el cual todos los participantes reciben los mensajes que envía cualquiera de los demás. Debido a ello es importante conocer el miembro al cual va enviado un mensaje antes de intentar descifrar el cuerpo del mensaje, ya que sería inútil gastar tiempo en intentar descifrar un mensaje del cual no se conoce la clave compartida. \\
+
+*Bob:* \\
+=?RECV?Alice@jabber.org?ENDRECV?= \\
+=<mensaje1 encriptado con= SS_{Alice-Bob} =>=
+
+*Alice:* \\
+=?RECV?Carol@jabber.org?ENDRECV?= \\
+=<mensaje1 encriptado con= SS_{Alice-Carol} =>=
+
+*Alice:* \\
+=?RECV?Dave@jabber.org?ENDRECV?= \\
+=<mensaje1 encriptado con= SS_{Alice-Dave} =>=
+
+**** Identificación del remitente
+
+También es necesario que en el mensaje se especifique el remitente, especialmente cuando se trata de un mensaje enviado desde el servidor virtual al resto de participantes. De otro modo Carol no podría saber que es Bob quien envió el mensaje que ella recibió a través de Alice, pudiendo llegar a pensar que fue Alice quien directamente mandase el mensaje, ya que es de ella de quien lo recibió. \\
+
+*Bob:* \\
+=?RECV?Alice@jabber.org?ENDRECV? ?SEND?Bob@jabber.org?ENDSEND?= \\
+=<mensaje1 encriptado con= SS_{Alice-Bob} =>=
+
+*Alice:* \\
+=?RECV?Carol@jabber.org?ENDRECV? ?SEND?Bob@jabber.org?ENDSEND?= \\
+=<mensaje1 encriptado con= SS_{Alice-Carol} =>=
+
+*Alice:* \\
+=?RECV?Dave@jabber.org?ENDRECV? ?SEND?Bob@jabber.org?ENDSEND?= \\
+=<mensaje1 encriptado con= SS_{Alice-Dave} =>=
+
+**** Identificación del servidor virtual
+
+En algunos protocolos, como el de Windows Live Messenger, no existe ningún tipo de escala de privilegios dentro de una sala de chat, por lo que se podrían presentar problemas cuando, por ejemplo, entra un nuevo participante en la sala y necesita establecer un intercambio con el servidor virtual para establecer la clave compartida a emplear. \\
+
+Se emplea el archivo de configuración "otr.chatinfo" para almacenar la información del chat pertinente. Siguiendo la siguiente estructura: \\
+
+
+=?AC?<usuario>?CID?<identificador local de la sala>=
+
+=?HOST?<servidor virtual>?STAT?<estado seguridad>=
+
+Donde =<estado seguridad>= podría tomar los siguientes valores: 
+
+- =0= indica que la conversación no es privada.
+- =1= indica que la conversación privada ha terminado.
+- =2= indica que la sesión es privada y no ha terminado.
+
+*** Conclusiones sobre GOTR
+
+Un sistema de seguridad construido como una capa superior, como el descrito para la comunicación OTR en grupo precisa de un número considerable de mensajes de control que se ve incrementado cuanto mayor sea el número de usuarios en la sala. Se podría esperar que en su implantación se incremente mucho el número de paquetes y se produzcan retrasos importantes. No obstante, aunque no se hizo un cálculo exhaustivo del retraso producido, se realizaron varias pruebas de usuario, con grupos de hasta diez usuarios sin que existiese un retraso considerable. Teóricamente, el límite de  usuarios en una sala de grupo sería el propio límite establecido por el protocolo, si bien el retraso podría verse incrementado considerablemente al llegar a cierto grado de participantes. \\
+
+No obstante, cierto retraso introducido por el protocolo se considera preferible para poder lidiar con el intercambio de claves de modo que pueda obtenerse un canal de comunicación seguro. \\
+
+Además se trata de un protocolo relativamente simple de implementar y que reutiliza los mecanismos ya desarrollados en la tecnología OTR entre dos participantes, pudiendo aprovecharse de las futuras mejoras y mantenimiento que se haga en esta. \\
+
+** Multi-party Off-The-Record (mpOTR)
+
+La tecnología OTR analizada hasta ahora persigue la consecución de conversaciones privadas entre dos individuos, la propuesta por Multi-party OTR permite la modularización mediante el uso de extensiones que proveen además de otras propiedades, como el anonimato o el establecimiento de un juez que monitorice los posibles atacantes. \\
+
+Un aspecto significativo del protocolo mpOTR es el de la monitorización del proceso en caso de encontrar desviaciones del protocolo por parte de los participantes, en principio estas desviaciones pueden usarse para detectar atacantes o participantes con intenciones maliciosas.  No obstante, no está claro a priori si un usuario que se comporte de forma honesta y siga el protocolo no pueda poseer intenciones maliciosas. De modo similar, si un usuario observa desviación del protocolo seguido el usuario puede no siempre distinguir a un verdadero usuario malicioso de una inestabilidad en la red (no obstante, ciertas desviaciones, como las de un participante lanzando sentencias conflictivas, puedes ser identificadas) \\
+
+Respecto a esto último podemos distinguir tres tipos de adversarios en función del punto del protocolo en el que basen su ataque: adversarios a la seguridad (intentan leer mensajes que no les corresponden), adversarios al consenso (afectar a la coordinación de parámetros comunes de la conversación que deberían ser iguales para todos los participantes) y adversarios a la privacidad (intentar obtener la clave privada de un participante).
+
+*** Mecanismo de comunicación
+
+Para asegurar la confidencialidad entre los participantes P_1 de una sala de chat C_1 los participantes derivan en una clave encriptada gk1. Los mensajes enviados a la sala se encriptan bajo esta clave para asegurar que sólo miembros de P_1 puedan leerlos. Para ofrecer autenticación de los mensajes, cada participante A genera un par de claves publica-privada (E_{A,1}, e_{A,1}) que serán usadas sólo en la sesión actual. Cada mensaje enviado por A estará firmado bajo la clave de A, e_{A,1}, para la sesión actual. Los participantes intercambian sus claves públicas para la sesión actual E_{X,1}
+
+
+**** Fase de Iniciación
+
+Esta fase es la responsable de realizar la autentificación de las entidades, facilitar el intercambio de las claves públicas, y asegurar la confidencialidad directa y la denegabilidad. Cada participante del protocolo ejecuta el algoritmo *Initiate()* con su vista de la conversación como parámetro. Este procedimiento sólo tendrá éxito si cada uno de los demás participantes completa su parte del protocolo de forma correcta y tiene la misma vista de la conversación.
+
+Cada participante calcula un identificador global para la sesión sid_i, calculado tomando cada uno un valor aleatorio x_X y transmitiéndolo por multidifusión a los demás. El valor como resultado de una función hash sobre el conjunto de los valores aleatorios de cada contribución en el grupo se emplea como identificador sid_i. Este identificador es único globalmente con una alta probabilidad, siempre que al menos uno de los participantes de comporte honestamente. Si un adversario ha manipulado las contribuciones aleatorias, podrá ser detectado durante el algoritmo *Attest()* llamado al final de *Initiate()* cuando sid_i y los demás parámetros de la comunicación sean hallados.
+
+***** Intercambio de clave pública repudiable (DSKE)
+
+#+CAPTION:    Intercambio de clave pública repudiable en una conversación mpOTR.
+#+LABEL:      fig:dske
+#+ATTR_LaTeX: width=1.4\textwidth
+[[file:mpotr-DSKE.png]]
+\\
+
+Se emplea un sub-protocolo llamado DSKE (Deniable Signature Key Exchange). Este protocolo permite a los participantes intercambiar firmas de modo que se mantenga el repudio, de tal forma que no existen pruebas de que ningún participante tenga que estar necesariamente ligado a una clave y pueda rechazar haber participado siquiera en la conversación. Un participante usará una clave de corta duración para firmar mensajes durante una sesión. Una vez llegado el momento la clave privada empleada será publicada al final de la sesión para garantizar la posibilidad de repudio. En este proceso se emprea el algoritmo *AuthUser()* para intercambiar las claves de manera repudiable. \\
+
+Cada par de usuarios realizará este intercambio de firma hasta que cada participante de la conversación posea las firmas de todos los demás. La figura \ref{fig:dske} muestra un diagrama de como se realizaría el intercambio de claves en una conversación en grupo de tres participantes.\\
+
+***** Cálculo de la clave del grupo
+
+#+CAPTION:    Negociación para la clave de grupo en una conversación mpOTR.
+#+LABEL:      fig:gka
+#+ATTR_LaTeX: width=0.5\textwidth
+[[file:mpotr-GKA.png]]
+\\
+
+Una vez que se poseen todas las firmas los demás participantes se puede proceder a negociar el establecimiento de una clave de grupo. Como el establecimiento de esta clave deberá ser llevado a cabo empleando las claves públicas anteriores, en cualquier momento uno de los participantes podría repudiar cualquier cosa codificada bajo esa clave ya que no puede probarse que haya participado en la conversación, siendo la clave pública usada repudiable. La figura \ref{fig:gka} muestra un diagrama del establecimiento de la clave de grupo.\\
+
+**** Fase de Comunicación
+
+#+CAPTION:    Comunicación de un mensaje de Alice en una conversación mpOTR.
+#+LABEL:      fig:send
+#+ATTR_LaTeX: width=0.75\textwidth
+[[file:mpotr-Send.png]]
+\\
+
+En la fase de comunicación los participantes intercambian mensajes confidenciales con la seguridad de que no han sido modificados y que corresponden a sus respectivos autores. En cada sala de chat se usa la clave de grupo gk_1, las claves públicas de los participantes E_{X},1 y el identificador de sesión sid_1 para la sala de chat en un sistema estandar de primero encriptar y luego firmar, para ofrecer una encriptación autentificada de los mensajes enviados en la sala de chat. En la figura \ref{fig:send} puede observarse un diagrama de como se realizaría el envío de un Mensaje desde Alice a los demás participantes en una conversación de 3 usuarios.\\
+
+Los algoritmos *AuthSend(M)* y *AuthReceive()* son los empleados para el cometido de, respectivamente, enviar mediante multidifusión el mensaje M, y recibir mensajes. \\
+
+**** Fase de Cierre
+
+Cuando la aplicación determina que no hay ya mensajes entre los participantes y que la sesión de chat debe terminar se invoca el algoritmo *Shutdown()*. Este algoritmo se encarga de determinar si todos los participantes están realmente listos para terminar la sesión de chat y publicar en consenso sus claves privadas generadas. \\
+
+Para comprobar que los participantes están listos para cerrar la sesión se hace un resumen en una función hash del contenido de todos los mensajes, y se intercambia bajo encriptación autentificada. Cuando todos comprueban que los demás tienen el mismo valor de hash se publican las claves privadas y se da fin a la sesión.
+
+Esta fase permite detectar si ha ocurrido alguna violación del consenso y asegura el repudio. tras el cierre se puede iniciar una nueva sesión en la que se generarían nuevas claves que permitirían la transmisión de nuevos mensajes encriptados. \\
+
+*** Conclusiones sobre el protocolo mpOTR
+
+Como ha podido verse hasta ahora mpOTR tiene tres objetivos principales a conseguir: confidencialidad, consenso y repudio. Se consigue la confidencialidad por medio de medidas criptográficas estándar. El consenso se basa en pares de claves publica-privada para una sesión. El repudio se basa en la habilidad de un usuario de disociarse del par de claves. El punto crucial de mpOTR es la distribución de claves publicas específicas para cada sala de chat, lo cual se convierte en el mecanismo de autentificación durante todo el chat. \\
+
+Este protocolo tiene la ventaja de usar un modelo en el que cada usuario auntentica a los otros participantes por sí mismo sin la necesidad de un servidor central. \\
+
+No obstante, este protocolo es muy lento debido a los constantes cierres y aperturas de sesión para asegurar la confidencialidad directa y repudio. Aún está en desarrollo para mejorar su eficiencia. \\
+
+
+* Conclusiones
+
+En el presente trabajo se han expuesto varios aspectos del protocolo OTR empleado para el encriptado de conversaciones de mensajería de manera segura, confidencial, autenticada y repudiable. \\
+
+Podemos decir que la característica más reseñable de este protocolo es precisamente la del repudio, el cual permite usarlo como un sistema que realmente garantiza la privacidad tal y como lo ofrecen las conversaciones privadas de la vida real. Proporcionando algunas propiedades que no poseen sistemas como PGP o TSL/SSL. \\
+
+Además, una ventaja importante de OTR es que puede ser instalado por encima de cualquier protocolo de intercambio de mensajes instantáneos sin la necesidad de tener una integración dentro del propio protocolo de mensajería, sino que basta poner una capa por encima que podría instalarse sean cuales fueren las características del protocolo. \\
+
+No obstante aún quedan obstáculos por resolver, y el establecimiento de un secreto que realmente permita garantizar la correcta autenticación es algo realmente complejo de resolver (tal como pudo observarse en la experiencia del usuario realizada para el plugin OTR de Pidgin), ya que la total automatización de la adquisición de la clave pública supondría una menor fiabilidad, y si se empleasen firmas digitales certificadas se perdería parte de la capacidad de repudio que caracteriza a este protocolo.
+
+
+* Bibliografía
+
+- "Off-the-Record Communication, or, Why Not To Use PGP"; Nikita Borisov, Ian Goldberg, Eric Brewer; Febrero 2002
+
+- "Off-the-Record Instant Messaging for Group Conversation"; Iang Bian, Remzi Seker, Umit Topaloglu; Julio 2007
+
+- "Multi-party Off-the-Record Messaging"; Ian Goldberg, Berkant Ustaoglu, Matthew D. Van Gundy, Hao Chen; Noviembre 2009
+
+- Telepathy Mailing List [[http://lists.freedesktop.org/archives/telepathy/2009-October/003936.html]]
+
+- "Off-the-Record Messaging Protocol version 2" [[http://www.cypherpunks.ca/otr/Protocol-v2-3.1.0.html]]
+
+- "A User Study of Off-the-Record Messaging"; Ryan Stedman, Kayo Yoshida, Ian Goldberg; Julio 2008
+
+- "Improved User Authentication in Off-The-Record Messaging"; Chris Alexander, Ian Goldberg; Octubre 2007
+
+- XTLS: End-to-End Encryption for the Extensible Messaging and Presence Protocol (XMPP) Using Transport Layer Security (TLS) [[http://tools.ietf.org/id/draft-meyer-xmpp-e2e-encryption-02.html]]

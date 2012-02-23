@@ -1,0 +1,45 @@
+
+* 2007-JUN
+** Teoría
+*** 1. Unidad de detección de riesgos por dependencia de datos: que persigue, que tipo de circuito, donde está situado, cuales son sus entradas y salidas y que resuelve y como
+
+*** 2. La TLB: Objetivo que pretende, que tipo de circuito es y como está organizado, que contiene, como funciona en un sistema con Caché.
+
+*** 3. Las dos técnicas básicas para el chequeo de la disponibilidad de los operandos. Es uno de los subapartados del espacio de diseño del "Lanzamiento (dispatch) de Instrucciones". Eran: 1) Política de lanzamiento, 2) Velocidad de lanzamiento, 3) Esquema de chequeo y 4) Tratamiento de ER vacías.
+
+*** 4. Del tema de Procesamiento de Saltos: Retardo del Salto: Esquema básico. Explicarlo con ejemplo. Esto viene del apartado "Aproximación básica del manejo de saltos" y es la primera técnica que se presenta. Las otras técnicas eran "el manejo de saltos condicionales no resueltos" y "Evitar saltos condicionales".
+
+** Problemas
+*** 1. El registro $31 contiene el número (-1)*1.100101x2^4. Sabiendo que se utiliza el formato IEEE 754, escribe la secuencia de código MIPS que permita almacenar en el registro 1 el signo (1), en el registro $2 los bits de la mantisa (1100101) y en el registro $3 el exponente (4).
+
+*** 2. Indica cómo añadir la instrucción ~cpp $R~ (carga contador de programa), que guarda en el registro $R la dirección de memoria en la que ella se encuentra almacenada, en el camino de datos multiciclo.
+
+*** 3. Considera la secuencia de instrucciones para realizar copia de memoria a memoria: ~lw $6,100($3)  sw $6,200($4)~. Indica las modificaciones necesarias en el camino de datos segmentado para que este código se ejecute sin detenciones.
+
+*** 4. Describe las características de un programa que tenga, con respecto a la búsqueda de instrucciones, baja localidad temporal, pero alta localidad espacial. Muestra algún código de ejemplo.
+* 2006-JUN
+** Teoría
+*** 1. Indicar que inconvenientes tiene dar el valor MFLOPS como medida del rendimiento
+*** 2. ¿Qué hace la instrucción ~JAL~ y cómo genera la dirección de salto?
+*** 3. Valores "raros" en la representación en punto flotante (IEEE 754) de simple precisión.
+*** 4. Fases para realizar la suma de dos números en punto flotante.
+*** 5. La U. de control de ALU da de salida 3 bits hacia la ALU, ¿Cuáles son las entradas a la unidad?
+*** 6. Diga al menos 5 de las señales de control, y su significado, que debe generar la unidad de control central para una máquina con las instrucciones: ~add, sub, and, or, beq, slt, lw~ y ~sw~ (máquina monociclo)
+*** 7. ¿Qué bits de control hay que tener en los registros de segmentación EX/MEM y MEM/WB?
+*** 8. ¿Qué se entiende por riesgo de salto?
+*** 9. En cada posición de la caché, ¿qué debe haber? (para una caché totalmente asociativa)
+*** 10. ¿Qué entiendes por una caché asociativa por conjuntos?
+*** 11. ¿Qué es y para que sirve la TLB?
+*** 12. Que se entiende por Procesador Superescalar
+*** 13. Definir el concepto de "issue" (lanzamiento)
+*** 14. Que se entiende por pre-decodificación y para que se usa.
+*** 15. Que se entiende por renombramiento de registros
+*** 16. Que se entiende por ejecución especulativa
+*** 17. Que se entiende por "Zero-cycle branching"
+*** 18. Que diferencia hay entre la predicción fija y la predicción estática de los saltos
+*** 19. ¿Qué entiendes por la BTAC (Branch Target Access Cache)?
+*** 20. ¿Qué diferencia hay entre Nivel de Especulatividad (level of speculativeness) y Grado de especulatividad (degree of speculativeness)
+*** a. Unidad de control principal de la máquina monociclo
+*** b. Memoria virtual
+*** c. Estaciones de Reserva, que son, los diferentes tipos, donde están colocados
+*** d. Esquema para el chequeo de disponibilidad de Operandos de las máquinas superescalares (Técnica de "scoreboarding", Esquema de xs

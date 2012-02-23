@@ -1,0 +1,1231 @@
+# -*- org -*-
+#+TITLE: Resumen de Arquitectura de Redes
+#+AUTHOR: Fernando Carmona Varo
+#+OPTIONS: 
+
+#+LATEX_class: refcard
+#+ distorsion de retardo: llegan las distintas freq a distinto tiempo
+
+# μđ ∆∫∂ΣΩη γ ξν λ
+
+** Introducción
+*** Topología de la red
++ Física: Esquema del cableado de los dispostivos fścos
++ Lógica: Esquema de como circula la nformacón a través de la red
+**** Tipos de redes
+***** Según estructura
++ *Redes punto a punto*: Pares de conexiones entre cada dos máquinas (jerárquca, estrella, malla)
++ *Redes de difusión* (broadcast): un solo canal de comunicación al que cada una envía y todas reciben (bus, anillo).
+***** Según distancia entre nodos
++ Personal Area Network (PAN) (1m)  
++ Local Area Network (LAN) (10m < A < 10km)
+  - Velocidad 10-100 Mbps (las nuevas hasta 10 Gbps)
+  - Son redes de difusión (ethernet, token ring)
++ Metropolitan Area Network (MAN) (10km < A < 100km)
++ Wide Area Network (WAN) (100km < A < 10000km)
+  - Son ya redes punto a punto
+**** Ejemplo: Red de Telefonía Conmutada o Básica (RTC ó RTB)
++ Telefono <-ParTrenzado-> oficina central <-Fibra-> Interurbana <-Fibra-> Conmutación intermedia
+*** Modelo multicapa
+**** Definiciones
++ *Servicio*: Aspecto semantico de la comunicación entre capas.  
+  - *Orientado (o no) a conexión*: En conexión se reserva un recurso que se mantiene para el usario mientras se mantenga conectado. Si no orentado a conexión, intercambio simple de información.
+  - *Confiable*: Se confirma la recepción de ada mensaje (introduce retardos pero mayor seguridad).
++ *Interfaz*: Aspecto sintáctico de la comunicación entre capas (define los parámetros y los resultados que se esperan).
++ *Protocolo*: Algoritmo para la comunicación en la realización de un servicio empleando una interfaz.
+**** Modelo OSI
++ Capa Física (bits)
++ Enlace de datos (tramas)
++ Red (paquetes)
++ Transporte (TPDU)
++ Sesión (SPDU)
++ Presentación (PPDU)
++ Aplicación (APDU)
+***** Críticas
++ aparición inoportuna
++ Mala tecnología (compleja, dos capas casi vacías)
++ Mala implementación (pesada y lenta)
++ Mala política (modelo TCP/IP se integró en el UNIX de Berkeley)
+**** Modelo TCP/IP
+Familia de protocolos resultado de ARPANET
++ *Host a red*: intercambio de datos entre equipos de la misma subred, el software depende del tipo de red (ARPANET, SATNET, Packet Radio...).
++ *Interred*: intercambio de datos entre equipos de distintas redes (protocolo IP)
++ *Transporte*: Protocolos TCP y UDP para permitir a aplicaciones la comunicación.
++ *Aplicación*: Protocolos de alto nivel (FTP,HTTP, SMTP, TELNET...)
+***** Críticas
++ No distinción Servicio/Interfaz/Protocolo
++ No es modelo general
++ La capa "Host a Red" no es realmente una capa
++ Sin mención a capa física o de enlace
++ Salvo TCP e IP, los demás protocolos son demasiado específicos
+Diferencia respecto a OSI: el servicio orientado a conexión se hace en la capa de transporte mientras que en el modeo osi se hace en la capa de red
+**** Modelo híbrido
++ Capa Física
++ Enlace de datos
++ Red
++ Transporte
++ Aplicación
+** La Capa Física (bits)
+*** Conceptos
++ _Dato:_ Entidad capaz de transportar información 
++ _Señal:_ Representación eléctrica o electromagnética de los datos
++ _Transmisión:_ Comunicación de datos mediante propagación y procesamiento de señales
+**** Perturbaciones en la transmisión
++ _Atenuación:_ Pérdida de energía de la señal debida a la distancia
+  - Medios guiados: reducción exponencial
+  - Medios no guiados: depende de condiciones atmosféricas
++ _Distorsión de retardo:_ Variación en la velocidad de transmisión en un medio guiado debida a la frecuencia.
++ _Ruido:_ señales no deseadas insertadas entre emisor y receptor.
+  - ruido térmico (por agitación de electrones, es un _ruido blanco_)
+	En 1Hz: $N_{0}=k*T$ (donde $k=1.38*10^{-23} J/K$)
+  - ruido de intermodulación 
+  - diafonía (acoplamiento entre lineas de transmisión)
+  - ruido impulsivo (pulsos de corta duración y alta amplitud)
+**** Capacidad del canal
+Cada canal tiene una capacidad C que representa el máximo valor de velocidad de transmisión (V_t)
+| $Vt(b/seg) = Vm (símbolos/seg) * log_2(M)$ = Vm * b(bits/símbolo) |
+Siendo "M" el número de estados posibles de la unidad de información (símbolos).
+
++ _Teorema de Niquist_: Sin ruido, para un ancho de banda "W"
+| $Vm = 2*W$               |
+| $Vt = C = 2W * log_2(M)$ |
+
++ _Teorema de Shanon_: Con relación señal/ruido "SNR"
+| $(SNR)_{dB} = 10*log_{10}(SNR)$ |
+| $C = W * log_2( 1+SNR )$        |
+
+  - $SNR = \frac{ S=PotenciaSenyal }{ N=Ruido }$
+
++ Relación E_b/N_0: señal(por bit) por densidad de ruido(por Hz)
+| $E_b/N_0 = (S/R)/N_0 = S/(kTR)$                     |
+| $(E_b/N_0)_{dB} = S_{dbW} -10logk - 10logT -10logR$ |
+
+*** Análisis de la señal
+Se contienen datos en una señal electromagnética gracias a un parámetro físico (ie voltaje o corrente) que varía a lo largo de tiempo/espacio/otros.
+**** Respecto a su valor
++ Continua/Discreta en el tiempo
++ Continua/Discreta en amplitud
++ Periodicidad (No periodica = periodo infinito)
+- frecuencia espectral?
+- El ancho de banda se define como el rango entre las frecuencias de corte (aquellas en las que la amplitud cae 3dB respecto del máximo, donde se concentra la mayor parte de la energía espectral)
+**** Tipos
++ Analógica: continuas en tiempo y amplitud, conjunto continuo de valores
++ Digitales discretas tanto en tiempo como en amplitud, alfabeto de símbolos discretos
+**** Muestreo
+Es la discretización temporal de una señal continua en un dominio de tiempo (periodo de muestreo T).
+La frecuencia de muestreo (1/T) de la señal debe ser como mínimo el doble de la máxima componente en frecuencias de la señal, para poder tomar muestras suficientemente pequeñas.
+
+*** Medios de transmisión
+**** Medios Guiados
+ confinan la señal en un medio sólido
+***** Magnéticos o ópticos (disco, dvd...)
+***** Cable de par trenzado (LAN ethernet, telefono)
+Dos cables se trenzan cancelando las ondas magnéticas de la corriente al circular. Usado en telefonía y LANs.
++ Tipos
+  - Apantallado (STP) con recubrimientos reduciendo el ruido aunque encareciendolo y engordandolo
+  - No apantallado (UTP) con más tasa de error que otros cables pero más barato y es flexible, muy usado
+***** Cable coaxial (televisión, antigua ethernet, telefonia larga distancia)
+- Núcleo de cobre, recubrimiento aislante, maya de cobre exterior que además aisla de interferencias y cubierta de plastico final. Usado en TV y telefonía de larga distancia.
+- Menos atenuación y ruido que los pares trenzados. Algo más caro.
+***** Fibra óptica
+- Filamento de vidrio del espesor de un pelo, revestimiento de vidrio con menor indice de refracción (para reflexión total, ángulo mayor que el crítico), y cubierta de plástico.
+- Gran ancho de banda (50Gbps!) y grandes distancias. Sólo necesita repetidores cada 50Km, y es delgado y ligero. 
+- Es el más caro de instalar y reparar.
++ Tipos
+  - Multimodo de índice discreto (haces rebotando con diferente ángulo)
+  - Multimodo de índice gradual (gradiente de refracción, forma curvas)
+  - Monomodo (un único haz de luz recto directo)
++ Luz emitida desde un LED o ILD
+  - 4 bandas en la zona infrarroja del espectro
+**** Medios no Guiados
+- _Antena:_ Conductor que radio o capta energía electromagnética
+- _Ganancia:_ medida de direccionalidad de una antena
+***** Radiotransmision (Radio FM y Televisión VHF y UHF)
+- Antenas isotrópicas (omnidireccionales) con frecuencias 30MHz-1GHz
+- Atenuación: $L=10log( 4 \pi d / \lambda )^2 dB$
+Se ven afectadas por las condiciones meteorológica
+***** Microondas (antena parabólica)
+- frecuencias 1-40GHz (mayor rango de frecuencias que radio)
+- Relación altura antenas: $d(km)=3.57( \sqrt{ \frac{4}{3} h_1} + \sqrt{ \frac{4}{3} h_2} )$
+- Atenuación: $L=10log( 4 \pi d / \lambda )^2 dB$
+- direccional (necesita estar alineado), y a frecuencias bajas no atraviesa paredes.
+Algunas pueden refractarse y cancelar la señal (desvanecimiento por múltiples trayectorias).
+****** Satélites (TV, centrales telefónicas, terminales VSAT)
+- Las bandas de frecuencia se denominan *canales transpondedores*.
+- rango óptimo de transmisión entra 1-10GHz, retardo propagación 250ms
+- Satélites geoestacionarios permiten enlazar punto-punto o difusión.
+***** Ondas infrarrojas y milimétricas (mando a distancia)
+***** Ondas laser (conexión de LANs entre edificios)
+Alto ancho de banda de bajo coste, pero estrechez unidireccional y alteraciones con corrientes de convección de calor.
+
+*** Modos de transmisión
+Puede hacerse la transmisión de datos digitales/analogicos en señales digitales/analógicas, con cualquier combinación posible.
+**** Respecto al sentido de transmisión
+- Simplex: un sentido
+- Semi-duplex: en sentido alternante
+- Full-duplex o duplex: en ambos sentidos a la vez
+**** Ana>>Dig Digitalización: Muestreo>>Cuantificación>>Codificación
+En el muestreo se debe cumplir el teorema de la frecuencia de muestreo (Nyquist)
+***** PAM (amplitud), 
+***** PWM (duracion de señal),
+***** PPM (duración de silencio),
+***** PCM (pulsos equiespaciados de igual duración y amplitud).
+Se toman "n" bits por muestra
+- Ruido cuantificación: $SNR_{dB} = 6.02*n + 1.74 dB$
+***** DM (modulación delta)
+Cada intervalo Ts sube/baja un nivel de cuantización \delta.
+- Ruido de cuantización (cuando la señal es constante, sube-baja)
+- Ruido de sobrecarga de pendiente (cambio brusco en la señal, muestreo escalonado)
+**** Dig>>Dig: Cambio de codificación de linea
+Transforma información binaria en señal digital (cada pulos un bit, normalmente).
+
+#+Latex: \begin{small}
+| Unipolar    |   0 |   1 |   0 |   1 |   1 |   1 |   0 |   0 |   0 |
+|-------------+-----+-----+-----+-----+-----+-----+-----+-----+-----|
+| NRZ-M       |   0 |  +1 |   0 |  +1 |  +1 |  +1 |   0 |   0 |   0 |
+| NRZ-I       |   0 |  +1 |  +1 |   0 |  +1 |   0 |   0 |   0 |   0 |
+| RZ          | -10 | +10 | -10 | +10 | +10 | +10 | -10 | -10 | -10 |
+| bipolar-AMI |   0 |  +1 |   0 |  -1 |  +1 |  -1 |   0 |   0 |   0 |
+| pseudotern. |  +1 |   0 |  -1 |   0 |   0 |   0 |  +1 |  -1 |  +1 |
+| manchester  |  10 |  01 |  10 |  01 |  01 |  01 |  10 |  10 |  10 |
+| manch.dif.  |  01 |  10 |  10 |  01 |  10 |  01 |  01 |  01 |  01 |
+#+Latex: \end{small}
+***** Unipolar
+_Obsoleta:_ con componente continua (DC), no sincroniza relojes.
+***** NRZ (non-return zero)
+Implementación sencilla pero no detecta errores y tampoco sincroniza, además posee componente continua
+ -M: 1=tension 0=tierra
+ -I(inverted): 1=cambio de tensión 0=no produce transicionn (mejor ante ruido)
+***** RZ (return to zero)
+Resuelve la sincronización metiendo un retorno a cero en mitad de cada bit (1=+1, 0=-1).
+***** Bipolar-AMI (binario multinivel)
+- Buen sincronismo para grupos de 1s, detección de errores y sin componente continua
+- Pero presenta problemas con cadenas de 0s y necesita detectar 3 niveles diferentes
+0 --> tierra
+1 --> alternadamente +vcc y -vcc
+***** Pseudoternario 
+0 --> alternadamente +vcc y -vcc
+1 --> tierra
+***** Bifase
+Autosincronizado, sin DC y con deteccion de errores pero consume el doble de velocidad debido a las transiciones.
+****** Manchester
+0 --> transicion +vcc->tierra
+1 --> transicion tierra->+vcc
+****** Manchester diferencial
+***** B8ZS
+Mejora del AMI en el que en los octetos de ceros se introducen violaciones de código que añadan sincronismo (hace ~100000000~ --> ~+000+-0-+~ ó ~-000-+0-+-~). Esta combinación es poco probable que sea provocada por ruidos accidentales.
+**** Dig>>Ana: Modulación analógica
+***** ASK (Amplitud-Shift Keying)
+Se almacena info en la amplitud solo.
+- Ancho $B_T=(1+r)R$
+***** FSK (Frequency-Shift Keying)
+Se almacena la info en la frecuencia sólo. (más fiable que ASK)
+- $B_T = 2 \Delta F + (1+r)R = ( \frac{ (1+r)M }{ log_2 M  })$
+- Teléfono: transmisión duplex
+***** PSK (Phase-Shift Keying)
+Se almacena la info en la fase
+****** DPSK
+****** QPSK
+- $B_{T} = ( \frac{1+r}{L} )R = ( \frac{1+r}{log_2 M} )R$
+***** QAM (Quadrature Amplitud Modulation)
+Combina ASK y PSK.
+En el diagrama de constelación, el angulo es la fase y la longitud del vector es la amplitud.
+- $B_{T} = ( \frac{1+r}{L} )R = ( \frac{1+r}{log_2 M} )R$
+
+**** Ana>>Ana: Transformación analógica
+***** Amplitud Modulation (AM)
+Multiplicación de la señal de entrada por la señal moduladora
+Puede usarse para amplificar señales
++ Tipos
+  - Doble banda lateral con portadora (BSBTC)
+	$P_t = P_c ( 1 + n_a^2/2)$
+  - Banda lateral única (SSB)
+  - Doble banda lateral con portadora suprimida (DSBSC)
+  - Banda lateral residual (VSB)
+***** Modulación angular
+****** Phase Modulation (PM)
+$B_T = 2 (n_p A_m +1) + 2B$
+****** Frequency Modulation (FM)
+$B_T = 2 \Delta F + 2B$
+*** Espectro expandido
+**** Frequency Hopping Spread Spectrum (FHSS)
+Se emite en una serie de frecuencias aparentemente aleatorias una señal FSK o BPSK
+**** Direct Sequence Spread Spectrum (DSSS)
+Cada bit de información se representa mediante varios bits en la señal transmitida, expandiendo la señal sobre una banda de frecuencia más ancha.
+Conocida una semilla concreta, se hacer XOR con una secuencia pseudoaleatoria
+*** Tecnicas de comunicación de datos digitales
++ Transmisión asíncrona
++ Transmisión síncrona: emisor y receptor se sincronizan
+**** Interfaces
+**** Modems
+*** Técnicas de multiplexación
+Necesario multiplexar un canal cuando se quiere compartir un medio por varios transmisores.
+También puede hacerse a nivel de capa de enlace, como se verá más adelante (tecnicas de contencion y técnicas libres de colisión).
+**** Frequency Division Multiplexing (FDM)
+El ancho de banda se divide en canales separados por bandas de guarda
+**** Wavelength Division Multiplexing (WDM)
+**** Time Division Multiplexing (TDM)
+***** Síncrona
+Tramas formadas por ranuras temporales. Una secuencia de ranuras de una fuente es un canal.
+Delimitación de tramas, inserción de bits
+***** Estadística
+- Las ranuras se asignan mediante reserva dinámica
+- Puede tener una o varias fuentes de datos por trama
+Fracción de tiempo \rho que está ocupado el servidor:
+- $\rho = \lambda T_s = \alpha / K = \lambda / M$
+Donde ~K~ es la razón entre la capacidad efectiva de la linea multiplexada y la entrada máxima total (número de fuentes*velocidad de cada fuente)
+Y $\alpha$ es la fracción media de tiempo que transmite cada fuente $0<\alpha<1$.
+**** Linea de abonado digital asimétrica (ADSL)
+Usa FDM: 25kHz inferiores pa Plain Old Telephone (POST), y el resto pa enlaces ascendente y descendente
+- Cancelación de eco: 
+Multitono discreto: subcanales de 4kHz
+
+** La Capa de Enlace de Datos (tramas -> MAC)
+*** Métodos de entramado
+**** Conteo de caracteres
+Con un error se pierde la sincronía y no se puede recuperar
+**** Banderas de inicio y fin con relleno de caracteres
+: FLAG-HEADER-MENSAJE-ENDER-FLAG
+Los "FLAG" que aparezcan en MENSAJE se rellenan con un caracter =ESC= delante
+**** Banderas de inicio y fin con relleno de bits
+Se toma una secuencia de bits (ej 011110) como delimitador de inicio y fin.
+
+Cuando se encuentran 3 bits a 1 se inserta un 0 para evitar que se forme el "1111" de la trama bandera "011110".
+
+**** Violaciones de código (a nivel físico)
+*** Detección y correccion de errores
+palabra-codigo = bits-datos + bits-redundantes
+- Codificador FEC (Forward Error Correction) genera palabras código
+- Decodificador FEC: detecta (y corrige el error si posible)
+**** código de Hamming
+Siendo d el tamaño de la palabra en la que se aplica hamming:
+- Para detectar d errores la palabra debe ser de longitud d+1
+- Para corregir d errores la palabra debe de ser de longitud 2d+1
+**** códigos de paridad
+Puede detectar errores pero no corregirlos
+**** código CRC (redundancia cíclica)
+se incluye una suma de verificacion (Frama Check Sequence) de "r" bits al final de la trama del mensaje (M) forma que se tenga en total "n" bits de trama fijos, de forma que esta trama resultante sea divisible por el polinomio generador G(x) acordado por adelantado (la trama se traduce a polinomio de x).
+
+La rama que se añade será el resto de la division: $( M(x)*2^r )/G(x)$
+donde 2^r implica añadir ceros por la derecha hasta igualar el numero "n" de bits deseados de la trama final. El resultado final $(M(x)*2^r + FCS)$ será divisible por tanto por G(x), y la división será =0 en la comprobación CRC.
+
+*** Control de Flujo (evitar pérdidas y saturación)
+**** Protocolo parada y espera 
+El emisor envía una trama y espera recepción de ACK para la siguiente.
+Bueno para tramas muy largas, ya que se disminuye los mensajes ACK necesarios.
+
++ T_f = t_{trama} + t_{prop} + t_{proces} + t_{ACK} + t_{prop}  \approx  t_{trama} + 2t_{prop}
+
+  - $t_{trama} (s) = \frac{ BitsDatos+BitsCabecera (b) }{ tasaDeDatos (bps) } = \frac{L}{R}$
+  - $t_{prop} (s) = \frac{ distancia (m) }{ velocidadDeSeñal (m/s) } = \frac{d}{V}$
+
+  - longitud de enlace: $B (b) = R (bps) * d/V (s) = R \frac{d}{V}$
+
+ - tiempo de propagación normalizado: $a = \frac{ t_{prop} }{ t_{trama} } = \frac{B} {L}$
+ - tasa de datos efectiva: $R_{ef} = \frac{ L_{datosTotal} }{ T_{f} }$
+ - eficiencia: $U = \frac{ TiempoTransmitiendoDatos }{  TiempoTotal } = \frac{ t_{datos} }{  T_f }$
+
+Parada y espera: $U = \frac{t_{trama}}{t_{trama}+2t_{prop}} = 1/(1+2a)$
+
+**** Ventana deslizante
+
+Cuando el receptor solicita la siguiente trama implica que ha recibido todas las anteriores (confirmacion acumulativa en bloques).
+
+| emisor     | receptor    | enviado | RR |
+|------------+-------------+---------+----|
+| [0123:]456 | 0123[:4567] |     0-3 |  4 |
+| 123[456:7] | 12345[:67   |     4-6 |  6 |
+| 345[67:01] | 12345[:67   |     6-7 |  - |
+| 345[67:01] | 234567[:0   |     6-7 |  0 |
+
+- RR: ready to receive (con numero de secuencia: piggybacking)
+- RNR: Deja al emisor a la espera
+
+Las transmisiones pueden ser full-duplex
+
+El tamaño de ventana W debe ser >= 2a+1 para el máximo aprovechamiento del canal.
+
+ - U = W / (2a+1)
+
+*** Control de Flujo (evitar pérdidas y errores)
+**** ARQ (automatic repeat request) con parada y espera 
+
+Espera confirmación ACK de la trama anterior, sino la reenvia tras un tiempo.
+Puede marcarse alternadamente ACK0 ACK1 y tambien numerar las tramas para coordinar en caso de perder un ACK.
+Necesita menos memoria temporal que las ventanas
+
++ Transmisiones por trama bien recibida: $N_r = 1/(1-P)$
+  - Siendo P la probabilidad de que una trama falle y haya que volver a transmitir.
+  - Eficiencia: $U = \frac{ t_{trama} }{ T_f N_r } = \frac{ 1-P }{ 1+2a }$
+
+
+**** ARQ (automatic repeat request) con ventana deslizante
+Para evitar esperar siempre confimación se usa una ventana que confirme por bloques.
+
+El tamaño de ventana debe ser menor de los números de secuencia, es decir si se usan k bits de secuencia, el tamaño de ventana debería ser 2^{k-1}. Para evitar que si falla la confirmación/rechazo de la trama k y se recibe la 0 no se sabe si es reenviada o la de nueva secuencia.
+
+El emisor puede enviar un RR(bit Poll=1) para preguntar al receptor el último número de secuencia recibido, para casos en los que falle la última trama de la secuencia.
+
+Para manejar los errores durante la transmisión se usan dos métodos básicos
+***** ARQ con vuelta atrás N (o de rechazo simple)
+Todas las tramas están numeradas, y al encontrar un error el receptor envia una señal negativa REJ rechazando el numero de trama, el emisor reenviara esta trama y todas las posteriores que se hubieran enviado. "K" es el número de tramas que se reenviarían
+
++ $N_r = 1 - K + K/(1-P) = \frac{ 1-P+KP }{ 1-P }$
+  - Si $W >=2a+1$: $U = \frac{ 1-P }{ 1+2aP }$
+  - Si $W < 2a+1$: $U = \frac{ W(1-P) }{ (1+2a)(1-P+WP) }$
+	(La ventana se agota)
+***** ARQ con rechazo selectivo
+En vez de usar REJ usa SREJ, rechazo selectivo, sólo se reenviará la trama del error y no las demás.
+
++ $N_r = 1/(1-P)$
+  - Si $W >= 2a+1$: $U = 1-P$
+  - Si $W < 2a+1$: $U = \frac{ W(1-P) }{ 1+2a }$
+
+*** Control del enlace de datos
+**** Binary Syncronous Control (BSC)
+Orientado a carácteres (por IBM, en desuso)
+- Semiduplex de parada y espera, transmisión síncrona, orientado a conexión
++ Funcionamiento
+
+  + Selección: maestro pregunta a esclavos preparados para recibir
+	- --S-ENQ--> <--NAK-- --EOT-->
+	- --S-ENQ--> <--ACK-- --SOH--STX--ETX/B-BCC--> <--ACK-0/1-- ... --EOT-->
+  + Sondeo: maestro pregunta a esclavos si quieren transmitir:
+	- --P-ENQ--> <--EOT--
+	- --P-ENQ--> <--SOH--STX--ETX/B--BCC-- --ACK-0/1--> ... --EOT-->
+**** High Data Link Control (HDLC)
+Orientado a bits
+|----------+---------+------------+--------+------------+----------|
+| Delim(8) | Addr(8) | Ctrl(8-16) | Inf(v) | FCS(16-32) | Delim(8) |
+|----------+---------+------------+--------+------------+----------|
++ Campos de delimitación (01111110)
+  - inserción de un cero en los datos para evitar aparición de delimitador
+  - Un bit erróneo puede partir la trama en dos, o unir dos tramas en una
++ Tipos de tramas para el campo Control(8-16)
+  - 8b (para numeros de secuencia de 3b)
+	- I: Información (envía/pide numero de secuencia recibidos y enviado, el bit P/F es para sondeo/fin)
+	- S: Supervisión (ACK,RR,RNR,REJ,SREJ,etc)
+	- U: No numerada (para control.. abrir/cerrar conexión, etc)
+  - 16b (para numeros de secuencia de 7b)
+	- Información
+	- Supervisión
++ Funcionamiento
+  
+**** Link Access Procedure B (LAPB)
+**** Link Access Procedure D (LAPD)
+**** Point-to-Point Protocol (PPP)
+Protocolo orientado a caracteres
+|------+---------+---------+--------------+------+------------+------|
+| D(8) | Addr(8) | Ctrl(8) | Protcl(8-16) | (v)  | FCS(16-32) | D(8) |
+|------+---------+---------+--------------+------+------------+------|
++ Sirve como contenedor para múltiples protocolos
+  - PPPoE: PPP over Ethernet (mete las tramas ethernet, las envía y le da salida)
+  - PPPoA: PPP over ATM
++ Proporciona un método para delimitar la trama que permite detectar errores
++ Proporciona dos protocolos propios (1er bit=1 en Control)
+  - *Layer Control Protocol (LCP)*: Tras conexión física, configura enlace (IP, etc)
+  - *Network Control Protocol (NCP)*: Negocia opciones de capa de red
+
++ Funcionamiento
+  1) Se detecta la portadora
+  2) Se establece la comunicación negociando los parámetros Handshake (LCP)
+  3) Autenticación (si falla termina y vuelve a dejar el canal libre)
+  4) Entra en la fase de configuración de red (NCP)
+  5) Abre el canal de comunicación y comienza la transmisión
+  6) Terminación de la comunicación y eliminación de la portadora
+*** Técnicas de acceso al medio
+la capa de enlace se divide en 2 subcapas para redes locales de difusión:
+**** Técnicas de contienda (pelea por el acceso al canal)
+Son protocolos con detección de portadora
+***** ALOHA puro
+
+Se envian datos y luego se escucha para ver si fueron destruidos. Si colisión espera un tiempo aleatorio antes de reenviar.
+
++ Velocidad real de transporte: $S=G*P_0$
+  - G: media de intentos de envio por tiempo de trama
+  - probabilidad de no colisión: $P_0 = e^{-2G}$ (ya que requiere 2 tiempos de trama en silencio: 2G)
+
+Velocidad real de transporte máxima es con G=0.5, siendo $S=Ge^{-2G}=18.4%$
+
+***** ALOHA-Ranurado
+Como ALOHA pero se divide el tiempo en intervalos discretos, y las tramas se envian en estos intervalos. Esto reduce un poco el solapamiento.
+
++ $S= G*P_0$
+  - $P_0 = e^{-G}$ (sólo necesita 1 ranura con silencio)
+
+Velocidad real de transporte máxima es con G=1, siendo $S=Ge^{-2G}=36.8%$
+
+***** CSMA (mirar antes de emitir datos)
+Se hace una escucha *en primer lugar* para evitar transmitir si ya se esta transmitiendo (CSMA)
++ Tipos de CSMA
+  - _p-persistente_: para transmitir queda permanentemente a la escucha hasta que esté desocupado y se cumpla una probabilidad p (sino espera a la siguiente ranura temporal). Si p=1 transmite en cuanto esté desocupado (1-persistente).
+  - _no-persistente_: para transmitir hace solo una escucha cada intervalo aleatorio de tiempo para ver si está desocupado.
+
+****** CSMA/CD (collision detection)
+cuando una estación detecta una colisión aborta la transmisión, espera un tiempo aleatorio y reintenta. (periodos alternativos de 3 estados: contención+actividad y inactividad) ----...----....---- \hspace{0.5cm} ..--
+
++ Las ranuras de contención duran el doble de thau (lo que tarda la señal en propagarse entre las dos estaciones más alejadas)
++ Algoritmo de retoceso exponencial binario: establece las esperas por colisión
+  - colisión 1: espera de 0 a 1 tiempos de ranura (aleatorio)
+  - colisión i: espera de 0 a $2^i-1$ tiempos de ranura
+  - colisión >=10: se congela en 1023
+  - colisión 16: aborta
+**** Técnicas libres de colisión (acceso planificado)
+ Las estaciones transmiten solo cuando se les permite.
+***** Protocolos basados en reservas. Protocolo de mapa de bits
+Se establecen instantes de tiempo pequeños, uno para cada estacion que desee transmitir, durante el periodo de contencion. \\
+Las estaciones que deseen transmitir mandan un bit=1 en el instante de tiempo que les corresponda, y envía cada una 1 trama en el orden establecido, cada una e una ranura de tiempo asignada según su orden. \\
+Tras eso se vuelve a la ranura de contención para volver a solicitar transmitir.
+
++ En carga baja: $Eficiencia = d/(N+d)$ (N: nº estaciones; d: trama)
++ En carga alta: $Eficiencia = d/(1+d)$ (más eficiente!)
+
+***** Protocolos con prioridades. Conteo descendente binario
+Cuando una estación quiere transmitir difunde su valor propio, aplicando un OR a los bits que haya en el canal, de forma que al final solo queda un ganador de la contienda.
++ Ejemplo: 0000 + 1010 + 1000 = 1010
+
++ $Eficiencia = d/(log_2N + d)$
+
+***** Protocolos basados en consultas. Paso de testigo
+Las estaciones que transmiten se intercambian el testigo (token) en una estructura de anillo, pasandose el turno para transmitir.
+
+***** CSMA/CA (collision avoidance)
+Basado en MACAW (se verá más adelante)
+**** Problemas en Wifis
+***** Problemas
++ Estacion oculta
+Durante una transmision A-B aparece un C apartado y intenta transmitir a B al mismo tiempo, interrumpiendo.
++ Estacion expuesta
+Durante la transmision B con un lejano A un C cercano quiere transmitir a otro lejano D pero al ver que B está transmitiendo espera para evitar colisión.
+***** Medium Access with Collision Avoidance (MACA)
+Antes de transmitir envian RTS (request to send), y si el receptor esta en condiciones responde CTS (clear to send).
+
++ Estacion oculta: B no dará CTS si ya esta con A.
++ Estacion expuesta: C interceptará el RTS y sabrá que A está alejado (no lo detecta), con lo que puede transmitir a D sin problemas.
+*****  Medium Access with Collision Avoidance Wireless (MACAW)
+Como MACA pero incorpora confirmacion ACK tras cada transmisión exitosa.
+
+*** Ejemplos
+**** Ethernet (IEEE 802.3)
+Bus de 10Mbps, basado en CSMA/CD con retroceso exponencial binario
+***** Subcapa MAC (Media Access Control) 
+|------+------+------+---------+----------+-----+--------|
+| P(8) | DAdd | SAdd | Type(2) | D(0-1500) | Pad | FCS(4) |
+|------+------+------+---------+----------+-----+--------|
++ P: preambulo (10101010)
++ Destination Address: multicast:bit47=1 broadcast:todo=1
++ Type: protocolo al que pertenecen los datos de Data
++ Pad: Relleno de hasta 46B (la longitud del mensaje MAC debe ser siempre como mínimo 18+46= 64B)
++ FCS se aplica al resto de la trama menos al preámbulo
+***** Cableado Ethernet
+- Codificación Manchester: +0.85V y -0.85V
++ Tipos de cableado
+  - 10Base5: coaxial grueso, por derivación vampiro con cable transceptor
+  - 10Base2: coaxial fino, conector en T con el transceptor en la tarjeta
+  - 10BaseT: hub que deriva a pares trenzados hacia la tarjeta controladora
+  - 10BaseF: como 10BaseT pero usa fibra optica, inmunidad al ruido
+***** Ethernet conmutada
++ Matriz de conmutación
+  - cada tarjeta forma un dominio de colisión
+  - cada puerto tiene un buffer: dominio de colisión independiente
+**** Fast Ethernet (802.3u)
+100Mbps
+**** Gigabit Ethernet (802.3z)
+1Gbps, CSMA/CD (extensión de portadora de 512b), conmutadores duplex total
+**** Ethernet 10 Gbps (802.3ae)
+10Gbps por un cable de par trenzado
+**** LAN inalámbricas (802.11)
+***** Subcapa MAC
+801.11b: tasa máxima de bits: 11Mbps
++ Dos modos de funcionamiento:
+  - Distributed Coordination Function (DCF) (redes ad-hoc, con CSMA/CA)
+  - Puntual Coordination Function (PCF) (cuando hay punto de acceso)
+****** Trama
+|-------+--------+------+------+-------+-----+------+-----|
+| Frame | Durat. | Add1 | Add2 | Addr3 | ... | Data | FCS |
+|-------+--------+------+------+-------+-----+------+-----|
++ Duration: indica la duración de la transmisión (para los que están esperando por el CSMA/CA)
++  "Frame" contiene:
+|---------+------+---------+------+--------+----+-------+----|
+| version | type | subtype | toDS | fromDS | MF | Retry | .. |
+|---------+------+---------+------+--------+----+-------+----|
++ type: si los datos son de control o de administración
++ subtype: RTS,CTS,ACK,.. (tramas de control)
+**** Logic Link Control (LLC) (802.2)
+**** MAN inalámbricas, WiMAX (802.16)
+Circuito local inalámbrico (WLL): Local Multi-Dot Service (LMDS)
+**** Bluetooth (802.15)
+
+** La Capa de Red (paquetes -> NSAP, IP)
++ Se encarga de elegir la ruta adecuada para llevar los paquetes desde el origen hasta el destino (con nodos intermedios en redes punto a punto), cuidando no sobrecargar algunas lineas de comunicación.
+
+*** Puentes
+**** Árbol en expansión
+Es un mecanismo que generan tablas de encaminamiento en función de la topología.
+- Evita bucles cerrados (no marear el paquete) y limita la selección de rutas alternativas.
++ Algoritmo (sólo mantiene las rutas más cortas desde la raíz a cada puente)
+  1. Búsqueda del puente raíz: un puente recibe una Bride Protocol Data Unit (BPDU)
+	 Si su ID es menor, descarta la BPDU recibida
+	 Si su ID es mayor, incrementa el coste del camino a la raiz y reenvia
+  2. Búsqueda del puerto raiz: es el puerto cuya BPDU tiene el mínimo coste acumulado (el más cercano a la raiz)
+  3. elección del puente designado: el que transmita desde la LAN a la raíz con el menor coste
+**** conmutador rápido vs conmutador de almacenamiento y reenvío
+El rápido sólo lo reenvía y tarda menos pero no comprueba el checksum.
+
+*** Conmutación
+**** Conmutacion de circuitos (canal de comunicación dedicado)
+1. Establecimiento de la conexion
+2. Transferencia de datos
+3. Cierre de conexión
++ Desventajas: canal dedicado permanentemente, retardo en establecimiento
++ Ventajas: tras establecerse hay transparencia y velocidad constante
+**** Conmutación de paquetes
++ Ventajas: 
+  - Eficiencia superior al compartir dinámicamente
+  - Conversión en la velocidad de datos
+  - Mejor comportamiento ante aumento de tráfico
+  - Posibilidad de usar prioridades
++ Desventajas:
+  - Paquetes grandes pueden monopolizar y pequeños requerirán más envíos (situación de compromiso)
+  - No hay garantía de que los paquetes lleguen ordenados (necesidad de numeración)
+***** Mediante datagramas (cada paquete se trata y enruta de forma independiente en cada nodo)
+***** Mediante circuito virtual (todo paquete tiene una ruta establecida previamente)
+*** Enrutamiento
++ Conceptos:
+  - *ppio.optimiz.*: Si I-J-K es ruta optima, entonces J-K también
+  - *arbol sumidero*: conjunto de rutas óptimas desde todos puntos hacia un mismo destino dado. La meta es hayar todos los arboles sumideros.
+**** Parámetro "distancia" (varias métricas)
+- Cantidad de saltos
+- Distancia física
+- Retardo medio de encolamiento (tiempo de espera)
+- Costo de comunicación (económico, se puede introducir en los routers como parámetro)
+**** Algoritmos estáticos (se carga en los routers al arrancar la red)
+- Estos algoritmos no toman en cuenta la carga actual de la red.
+***** Enrutamiento por camíno mínimo o mínimo coste
++ Disjkstra
+  - Distancia al nodo origen se marca en cada nodo etiquetadas (de forma tentativa o permanente si ya se revisaron todos los caminos al nodo)
+  - Se recorre el arbol actualizando valores "(DistanciaOrigen,NodoAnterior)" cada nodo eligie DistanciaOrigen mínima de entre las recibidas desde los nodos anteriores.
+***** Inundación
++ Reenvia a toda salida (salvo por la que entró). Para evitar duplicados:
+  - evitar enviar por segunda vez el mismo paquete (llevando un registro)
+  - integrar contador de saltos (al llegar a cero se descarta el paquete)
+Este algoritmo tiene aplicaciones militares, también en bbdd distribuidas (actualizaciones) y como comparativa de otros algoritmos.
+****** Inundación selectiva
+Como inundacion pero sólo se manda por las lineas de salida más próximas al destino, aproximadamente.
+***** Encaminamiento aleatorio
+**** Algoritmos dinámicos (se actualizan segun la carga actual de la red)
+***** Enrutamiento por vector distancia
+Bellman-Ford
++ Cada router mantiene una tabla con la mejor distancia conocida a cada destino y la ruta a seguir.
++ Estas tablas se actualizan intercambiando info con los vecinos (las envia cada T mseg a todos, incluyendo mensajes ECHO para medir el retardo).
+_inconvenientes_ (reemplazado por estado de enlace en ARPANET 1979):
+- No tiene en cuenta el ancho de banda (aunque puede usar otras métricas).
+- En "A-B-C", el nodo B no sabe si está incluido en las rutas q C le mande.
+  - Si A se desconecta y C manda a B un vector obsoleto indicando distancia 2 de A, entonces B encaminará a A desde C, y C volvería a actualizarse encaminando a A desde B, así sucesivamente aumenta la distancia de A al infinito.
+***** Enrutamiento por estado del enlace
+
+1. Descubrir y conocer las direcciones de los vecinos (paquete HELLO)
+
+2. Medir la distancia de cada uno de los vecinos (paquetes ECHO, (ida+vuelta)/2)
+
+3. Construye paquete con el estado de todos sus enlaces vecinos (periodicamente o cuando se cae/activa una de las lineas)
+
+4. Envía un paquete con esta información a todos los demás (mediante inundación).
+  - Cada nodo guarda una tabla donde, para cada nodo de la red, se va marcando banderas de a quien se envia el ACK y a quien se reenvia por inundación, así como la edad y número de secuencia.
+  - Cuando se cumple la edad (llega a cero) se descarta la información de ese enrutador (reduce el efecto de secuencias corruptas)
+
+5. Cuando se acumula un grupo suficiente de paquetes de estado de enlace puede construir el grafo de la subred completa y ejecutar el algoritmo de Dijkstra para hayar la ruta más corta a todos los destinos.
+
++ _ventajas_: el paquete echo contará el tiempo tanto de ancho de banda como el retardo por carga de las lineas.
+
++ _inconvenientes:_
+  - Mala escalabilidad: se necesita una cantidad de memoria para almacenar los datos y de cómputo para hacer el algoritmo proporcional a (n.vecinos)*(n.enrutadores). Puede ser un problema en redes grandes.
+
+***** Enrutamiento jerárquico
+Para hacer el enrutamiento escalable, los enrutadores se dividen en regiones, cada enrutador obtiene las rutas dentro de su región, pero no sabe nada de las otras.
+_jerarquía:_ regiones < clústeres < zonas < grupos < [...]
++ 720 routers: 10x(9 regiones)x(8 clusteres)
+  - El número óptimo de niveles para una subred de N enrutadores es ln(N)
+***** Enrutamiento por difusión
+Requiere una lista compelta de todos los destinos.
+****** Difusión por inundación
+****** Árbol sumidero:
+Conociendo el árbol de expansión (los caminos mínimos posibles desde un origen) de todos los nodos, se difunde el paquete sólo a las ramas siguientes del árbol (todas las aristas menos por la que entró).
+****** Reenvío por ruta invertida
+Cuando llega un paquete de un destino, se comprueba el arbol de hacia arriba, si no se recibió el paquete del nodo correcto se descarta como duplicado. Si es correcto, se difunde hacia abajo por las ramas del árbol.
+***** Enrutamiento por multidifusión
+
+1. Los host informan a los routers de a que grupo de multidifusión pertenecen.
+
+2. Cada enrutador calcula un arbol de expansion que cubre a todos los demás enrutadores de la subred (algunos enrutadores conectan hosts de varios grupos).
+
+3. Cuando se envía un paquete a un grupo el primer enrutador filtra el arbol enviando sólo por lineas que conducen a hosts que no sean miembros del grupo.
+
+***** Enrutamiento por hosts móviles
+cada host móvil tiene: _loc.base + direc.base_
+cada area posee un agente base (hosts de ese area que están visitando otra area) y uno o más agenes foráneos.
+El host primero envía el mensaje a la base host de su area, la base renvia al agente foraneo el mensaje del host y al host la dirección del agente foraneo para que a partir de ahí la comunicación sea con el foraneo.
+***** Enrutamiento en redes de igual a igual (P2P)
+****** Algoritmo de Chord (distribución de claves (valores hash) en un anillo)
++ 2^m claves, cada nodo posee clave asignada y formando un anillo apunta al siguiente nodo online (pueden existir huecos).
++ A cada nodo se le asignan, además de su clave (k), todas las claves de los nodos anteriores que faltan (huecos) desde su predecesor.
+  - Al buscar una clave, si esta está entre el nodo y su sucesor, significa que la clave está asignada al sucesor.
++ Para la búsqueda de otras claves se emplea la tabla finger:
+  - Tabla de m filas en las que se indica que nodos poseen la clave "(k+2^i) mod 2^m"
+  - Se envía solicitud al nodo cuya clave se aproxime más a la buscada (pero no la exceda)
+  - Este nodo comprueba si posee la clave, sino, propaga la solicitud usando su propia tabla finger
+*** Control de tráfico y de congestión
+El medio, el procesamiento o la sobrecarga pueden producir situaciones de congestion. Se han de controlar varios niveles, el del tráfico punto a punto emisor-receptor (flujo) y el del tráfico de la subred globalmente (congestión).
+**** Control de congestión (en general)
++ Soluciones de Ciclo Abierto (mejorar el diseño), o de Ciclo Cerrado (monitorizar)
+***** Contrapresión (puede ser mediante paquetes de obstrucción)
+- El nodo congestionado envía un _paquete de obstrucción_ para frenar total o parcialmente el nodo anterior
+- El nodo anterior no vuelve a velocidad normal mientras siga recibiendo mensajes de ralentización
+- La restricción se propaga hacia atrás
+- En redes orientadas a conexión que permitan control de flujo de nivel de enlace no sería necesario el uso de paquetes de obstrucción
+***** Señalización implícita (sistemas finales detectan congestión)
+***** Señalización explícita 
++ tres categorías de técnicas
+  - binarias (bit en un paquete transmitido por nodo congestionado)
+  - basadas en crédito (el emisor tiene un crédito sobre la conexión)
+  - basadas en velocidad (limitar velocidad del emisor)
+**** En circuitos virtuales
++ Control de admisión
+Si congestionado entonces no se admiten nuevas conexiones (o se admiten usando rutas alternativas no congestionadas)
++ Reservar recursos a lo largo de la ruta del circuito
+**** En datagramas (también en circuitos virtuales)
+Cada enrutador asocia a cada lnea de salida una variable indicando el uso reciente, se pone la linea en estado de advertencia si rebasa un umbral. En advertencia se realiza una de:
+- _Bit de advertencia_ Bit del header q solicita reducir el tráfico al detectar congestión. Puede ser activado por routers intermedios afectando sólo a parte de la linea.
+- _Paquetes reguladores:_ paquetes especiales mandados al emisor para que reduzca x% especificado en el paquete. Se ignorarán posteriores paquetes reuladores por un tiempo.
+- _Paquetes reguladores de salto por salto:_ Los routers intermedios comprueban y aplican el paquete regulador recibido, propagando el efecto por la red hasta el destino, por cada salto que da.
+
+**** Desprendimiento de carga
++ Cuando se inundan con paquetes que no pueden manejar simplemente los tiran.
++ El descarte puede ser selectivo de forma que sólo se descarten los paquetes marcados con prioridad más baja (si es ftp los más recientes para no perder mucho y si es multimedia los más viejos para sincronizar mejor).
++ Es preferible la detección temprana aleatoria mediante un algoritmo a dejar que se dañe el trabajo y luego tratar de solucionarlo. Los routers mantienen un promedio de sus longitudes de cola y comprueban cuando se sobrepasa un umbral debido a fluctuaciones (variaciones de esta media).
+
+**** Control de fluctuación (variación en el retardo)
+
+
+*** Quality of Service (QoS)
++ Factores
+- *Confiabilidad* (medida en que los datos son correctos)
+- *Retardo* (tiempo perdido en la transmisión y procesamiento intermedios)
+- *Fluctuación* (desviaciones producidas en el retardo a lo largo del tiempo)
+- *Ancho de banda* (cantidad de información que es posible enviar)
+**** Técnicas
+***** Sobreaprovisionamiento
+Proporcionar ccapacidad de sobra para fluidez.
+***** Almacenamiento en bufer
+Buffer que reduce fluctuación aunque incrementa retardo.
+***** Modelado de tráfico
+Se reduce la fluctuación desde el envío, regulando la tasa promedio.
+***** Algoritmo de cubeta con goteo
+Produce un modelado del trafico mediante un buffer-cubeta que gotea x bytes/tiempo.
+  - La diferencia respecto al buffer es que regula la tasa de salida de manera constante.
+***** Algoritmo de cubeta con tokens
+Para transmitir un paquete hay que eliminar un token de la cubeta.
+- La cubeta añade tokens a una velocidad constante (se puede regular para adaptarse al tráfico). Esto permite acumular tokens para alcanzar mayor velocidad durante un tiempo si anteriormente faltaron datos. Permite más flexibilidad en el flujo.
++ $Tamaño_{Tokens} + v_{EntradaTokens}*tiempo = v_{SalidaDatos}*tiempo$
+***** Reserva de recursos
++ Conocida la ruta fija (como un circuito virtual) es posible reservar recursos a lo largo de ella
+  - 3 tipos a reservar: Ancho de banda, espacio en buffer, ciclos de CPU
++ Retardo promedio por paquete T
+  - Sin competencia: 1/μ (inversa de velocidad de procesamiento de paquetes μ)
+  - Compitiendo (existe flujo aleatorio de λ paq/seg): (1/μ) * 1/(1-λ/μ)
+***** Calendario de paquetes
+Se trata de evitar que un emisor agresivo acapare los routers de la linea
++ Algoritmo de encolamiento justo: Routers con varias colas, 1 por linea (round robin)
+***** Reenvío expedito o acelerado
+Los routers ofrecen dos clases de servicios: normal y expédito (más prioritario)
+***** Reenvío asegurado
+En función de "Tipo de servicio" (campo del paquete IP) se clasifican en prioridades filtrandose algunos hacia cubetas.
+*** Interconexión de redes (Internet)
+**** Generalidades
+***** Entunelamiento
+Permitir la transmisión entre redes que usen distinto protocolo (se encapsula)
+***** Fragmentación
+Cada red impone un tamaño máximo a sus paquetes (MTU: Maximum Transfer Unit)
++ Razones: hardware, SO (buffer), protocolo, estándares, minimizar consecuencias de error, minimizar tiempo/paquete
++ Tipos
+  - Transparente: realizada por los routers, el host no interviene.
+  - No transparente: la realizan los propios hosts, deben poder reensamblar.
+**** Protocolo IP
++ _Network Service Access Point (NSAP):_ Dirección cuyo propósito es identificar la ubicación hacia la que está destinada la conexión a nivel de capa de red.
+***** IPv4
++ Header IPv4: 20-60B (5-15 palabras de 32b)
+  + 04b)Version del protocolo (IPv4/6)
+  - 04b)IHL: tamaño encabezado en palabras de 32b (máximo 15*32=480b=60B)
+  - 06b)Tipo servicio: reenvio expedito/asegurado/...
+  - 16b)Longitud total del datagrama en B (máximo paq: 2^{16}B)
+  + 16b)Id: de secuencia
+  - 01b)DF: No fragmentar
+  - 01b)MF: More fragments follow
+  - 13b)Desplazamiento del fragmento
+  + 08b)Time To Live
+  - 08b)Protocolo
+  - 16b)Checksum(header)
+  + 32b)Dirección origen
+  + 32b)Dirección destino
+  + 0b<320b) Opciones:
+	- Seguridad (que tan secreto es el datagrama)
+	- Enrutamiento estricto dese el origen (únicos enrutadores por los que pasa)
+	- Enrutamiento libre dese el origen (enrutadores por los que debe pasar)
+	- Registrar la ruta (cada enrutador añade su dirección IP)
+	- Marca de tiempo (cada enrutados agrega una marca de tiempo)
+****** Redes IPv4
+******* Clases
++ Clase A:   1.0.0.0/8
++ Clase B: 128.0.0.0/16
++ Clase C: 192.0.0.0/24
++ Clase D: 224.0.0.0/4 (redes de multidifusión)
++ Clase E: 240.0.0.0/4 (reservado uso futuro)
+******* Classless InterDomain Routing (CDIR)
+***** IPv6
++ Header IPv6: 40B (10 palabras de 32b)
+  + 04b)Version del protocolo (IPv4/6)
+  - 08b)Clase de tráfico: permite prioridades, sustituye a "Tipo de servicio")
+  - 20b)Etiqueta de flujo: opciones particulares de la conexión (uso futuro)
+  + 16b)Longitud Carga Util: Indica cuantos B siguen al encabezado (hata 64Mb=8MB)
+  - 08b)Encabezado Siguiente: Indica cabezado de extensión ó protocolo superior encapsulado
+  - 08b)Límite de saltos: reemplaza a Time To Live
+  + 128b)Dirección origen (16B)
+  + 128b)Dirección destino (16B)
+
++ Ventajas
+ - Más direciones (2^128: suficiente para cada molécula del planeta)
+ - Más simple: invariable (no IHL), no Protocolo (hay Encabzad sigte)
+ - Se evita checksum (más veloz, ya se hace en enlace/transporte)
+ - Aunque tamaño de header mayor, menos campos (veloz procesado)
+
+****** Direcciones IPv6
++ 128b: 48b(ISP) + 16b (subred) + 64b (host)
++ Direcciones especiales "IIII:IIII:IIII:SSSS:HHHH:HHHH:HHHH:HHHH"
+  - :: (ausencia de dirección)
+  - ::1 (localhost)
+  - ::xxx.xxx.xxx.xxx (compatibilidad con IPv4)
+  - fe80:: (prefijo para direcciones locales)
+  - ff00:: (prefijo para direcciones multicast)
+****** Encabezados de extensión
++ Se van encadenando encabezados opcionales con info extra
+  - 8b) Encabezado Sigte
+  - 8b) Tamaño encabezado en 8B (max: 256*8=2MB) excluyendo 8B obligatorios
+  - 6B<2054B) Opciones
+	- Opciones de tamaño fijo
+	- Opciones tamaño variable
+	   - 8b) Tipo (primeros 2b indican q hacer si no se reconoce: saltar op, descartar paq, devolver ICMP)
+	   - 8b) Tamaño de opción en Bytes
+	   - 0<255B) Valor de la opción
+******* Encabezado salto por salto
+Carga información que debe ser examinada por cada nodo por el que pasa el paquete
+******** Jumbograma (datagramas de hasta 4GB carga útil)
++ No se mandarán mensajes de menos de 64KB (para eso emplear IPv6 normalmente.
++ Al usar esta extensión, el "Tamaño de carga útil (16b)" de IPv6 debe ser cero, ya que igualmente el máximo en B sería 2^16 = 64K
++ Header de extensión:  (Tamaño de carga útil de IPv4 debe ser cero!)
+  - 8b) Tipo = 194
+  - 8b) Tamaño opción Jumbograma (siempre 4B = 32b)
+  - 32b) Tamaño Carga util en bytes: 2^32 = 4GB
+******* Encabezado de fragmentación
+- Usado por el nodo origen, no por los enrutadores (fragmentación no transparente)
++ Encabezado
+  - 8b) Encabezado sigte
+  - <Reservado>
+  - Desplazamiento (offset) del fragmento
+  - 1b) M: flag que indica que hay Más fragmentos (en el último fragmento M=0)
+  - 32b) Identificador (del paquete total, no del fragmento!)
+******* Encabezado para enrutamiento (indica nodos intermedios por ls que pasar)
++ Header de extensión
+  - 8b) Tipo = 43
+  - 8b) Segmentos restantes
+  - 32b) <Reservado>
+  - 128b) Direccion 1
+  - 128b) Direccion 2
+  - ....
+  - 128b) Direccion n
+******* Encabezado de autenticación
+******* Encabezado de encriptación
+******* Encabezado de opciones de destino
+**** Multidifusión
++ Direcciones de tipo D (224.0.0.0/4) reservadas
+  - 224.0.0.1 (todos los hosts de una LAN)
+  - 224.0.0.2 (todos los routers de una LAN)
+  - 224.0.0.5 (todos los routers OSPF de una LAN)
+  - 224.0.0.6 (todos los routers designados OSPF de una LAN)
+****** Internet Group Management Protocol (IGMP)
+Protocolo para intercambiar y actualizar información acerca de la pertenencia de hosts a grupos de mutidifusión específicos.
+- tipo1: routers interrogan en multicast si los miembros de un grupo siguen activos
+- tipo2: Hosts informan explicitamnete su membresía a un grupo específico
+**** Redes privadas
+***** Network Address Translation (NAT)
++ Solución parcial al reducido número de direcciones IPv4
+  - Emplea direcciones locales reservadas para red privada
+	- 10.0.0.0/8
+	- 170.16.0.0/12
+	- 192.168.0.0/16
+  - Cuando un paquete sale al exterior se convierte la IP local a la externa, asignando un puerto TCP/UDP a la comunicación
+  - En la respuesta, el router comprueba en una tabla a que host correspondía dicha comunicación por ese puerto
+***** Port Address Translation (PAT)
+**** Protocolos de control
+***** Mensajes de control de errores (ICMP)
+- Destino inalcanzable (error 404) No pudo entregarse el paquete.
+- Tiempo excedido: TTL de un paquete llega a cero.
+- Problema de parámetro: Campo de cabecera no válido.
+- Control de congestión: paquete regulador.
+- Reenvío: Enseña a un enrutador mejores rutas.
+- Echo: Pregunta a una máquina si está viva (ping).
+- Echo Reply: Sí estoy viva (pong).
+- Solicitud de timestamp: Igual que el eco pero marcando el
+   tiempo.
+- Respuesta timestamp: igual respuesta eco pero con tiempo.
+****** ICMPv6
++ Añade descubrimiento de MTU mínima en el camino origen-destino
+  - Cuando el datagrama recibido > MTU de enlace salida, se transmite un mensaje ICMPv6 de paquete demasiado grande (debe eliminarse el datagrama).
+***** Resolucion de direcciones
+****** Address Resolution Protocol (ARP)
++ Pregunta a que MAC debe mandarse corresponde una IP
+****** Dirección de retorno
+******* Reverse ARP (RARP)
++ Pide una IP a un server remoto (pregunta que IP posee la MAC)
+******* Bootstrap Protocol (BOOTP)
++ Como RARP pero puede salir fuera de redes locales, ya que usa mensajes UDP que sí pueden ser enrutados por los routers entre distintad redes.
+******* Dynamic Host Configuration Protocol (DHCP)
+Como BOOTP pero extendido, permitiendo 3 tipos de asignaciones IP:
+- automática (ip fija asignada)
+- manual (ip fija indicada)
+- dinámica (ip variable asignada)
+
+**** Protocolos de enrutamiento
+Internet se compone de *sistemas autónomos* manejados por una misma organización y usando el mismo protocolo interno de enrutamiento (IGP). Para la comunicación entre estos sistemas se emplean protocolos de enrutamiento externo (EGP).
+- Cada Sistema autónomo se divide en areas, las cuales se comunican por una red dorsal.
+***** Interior Gate Protocol (IGP)
+****** Usando Vector distancia (expirado en 1979)
++ Routing Information Protocol (RIP)
++ IGRP
++ Enhanced IGRP
+****** Usando Estado de Enlace
+******* Open Shortest Path First Protocol (OSPF)
++ Requerimientos para su diseño (1990):
+  - código abierto
+  - métricas de distancia variadas
+  - dinámico
++ Distingue entre routers: (1)internos, (2)de límite de área, (3)de red dorsal y (4)fronterizos del sistema autónomo.
++ Intercambio de información entre enrutadores adyaccentes (unidos a un enrutador designado, para evitar el todos con todos). Los vecinos no adyaccentes no intercambian información entre sí.
++ Soporta: lineas punto a punto y redes multiacceso (hosts acceden a linea común) con difusión y sin ella.
++ Tipos de mensajes:
+  - HELLO: Descubre quienes son sus vecinos
+  - LINK STATE UPDATE: transmite costos emisor-vecinos (por inundación)
+  - LINK STATE ACK: confirma la recepción de LINK STATE UPDATE
+  - LINK STATE REQUEST: Solicita que se le envíe LINK STATE UPDATE
+  - DATABASE DESCRIPTION: anuncia que tan actualizado está (nºsecuencia)
+******* Intermediate System to Intermediate System (IS-IS)
+Similar a OSPF, pero codificado para manejar varios protocolos de red al mismo tiempo (IP, IPX, Appletalk...), bueno para entornos multiprotocolo grandes.
+***** Exterior Gate Protocol (EGP)
+Comunicaciones entre sistemas autónomos, influenciado por política, seguridad, economía (ej: transito que empieza/termina en IBM no debe pasar por Microsoft), confiurado manualmente.
+***** Bridge Gate Protocol (BGP)
+Protocolo de vector de ruta (como vector distancia, pero guarda la ruta en lugar de la distancia)
+** La Capa de Transporte (TPDU -> TSAP, puerto)
+*** Funcionamiento
++ Servicios orientados a conexion
+Se garantiza la entrega de los datos, sin errores, pérdidas ni datos duplicados.
++ Servicios no orientados a conexion
+
+**** Direccionamiento (TSAP, o puerto)
++ _Transport Service Access Point (TSAP):_ Relaciona y especifica el proceso remoto al que se conectará mediante una dirección.
+1024 reservados a servicios estándar (65535 libres).
+
+***** inetd (internet daemon) de UNIX
++ Protocolo inicial de conexion. Es un _Servidor de Procesos_ (SP), actuando como proxy de los servicios que se ofrece.
+  - Suele ser un proceso que se conecta a multiples puertos y crea los procesos servidores convenientes segun las conexiones entrantes, para evitar llenar la memoria.
+  - Suelen ser servicios orientados a conexion (TCP).
+
+**** Establecimiento de conexión
+Un método facil es hacer una TPDU CONNECTION REQUEST (CR) y esperar una CONNECTION ACCEPTED (CA).
+
+Tenemos el problema de los duplicados retrasados (al expirar el tiempo). Soluciones:
++ Usar direcciones de transporte desechables
++ Dar a cada conexion un id (nº secuencia) para desechar duplicados: *Acuerdo de las 3 vías* (una id por cada sentido unidireccional)
+  - 1) A pide a B: CR <x>
+  - 2) B responde: CA <y, ack:x>
+  - 3) A envía a B: DATA <x, ack:y>
+  - Sucesivos envíos de DATA se hacen con el número de secuencia propio.
+
+**** Liberación de la conexión
+***** Cierre asimétrico
+Cuando cualquiera de las dos partes decide cerrar conexión, envía un DISCONNECTION REQUEST (DR) y desecha cualquier paquete posterior, dando por finalizada la conexión.
+
+***** Cierre simétrico
+Cada uno de los lados de la conexión debe cerrar conexión con un DR cuando no vaya a enviar más, pero podrá recibir si el otro aún no la cerró (como si fueran 2 conexiones unidireccionales independientes).
+
++ No llega DR en respuesta a DR (en caso de que se espere cierre simultaneo): tras un timeout, se reintenta
+  - Tras N reintentos se libera la conexión de todos modos.
++ Si no llega el ACK en respuesta al último DR: tras timeout, se libera la conexión de todos modos.
+
+**** Control de flujo y buffer
+En redes no confiables el emisor debe almacenar las TPDU en buffer para hacer los reintentos.
+**** Ejemplo: "Un Protocolo de transporte sencillo"
+***** Primitivas
+- LISTEN(local)
+- CONNECT(local,remoto)
+- SEND / RECEIVE (socket, buffer, bytes)
+- DISCONNECT(socket)
+*** User Datagram Protocol (UDP)
+**** Header: 8B (64b)
+- Puertos origen (16b) y destino (16b)
+- Longitud del mensaje (incl. header) (16b)
+- Suma de verificacion (opcional si IPv4) (16b)
+
+**** Remote Procedure Call (RPC)
+Consiste en un paso de parámetros (por valor, no puede pasar referencias ni usar variables globales) a un procedimiento remoto.
+
+1) El cliente llama al stud del cliente (LocalPC) 
+2) El stud empaca los parámetros (marshaling) y llama al sistema para enviarlo
+3) El sistema (kernel) envia el mensaje al servidor remoto
+4) El sistema remoto (kernel) pasa el mensaje al stud del proceso remoto
+5) El stud remoto desempaca y llama al procedimiento servidor con los parámetros desempacados.
+
+**** Real-time Transport Protocol (RTP)
+- El proceso RTP multiplexa en un único flujo todos los que se le entregan (audio+video+..) y el flujo resultante lo codifica en paquetes RTP (encapsulado dentro de un paquete UDP).
+- Muy genérico, se podría decir que implementado en capa aplicación.
+- Sin control de flujo, errores, ni mecanismo de reintento.
+- Permite sincronizar flujos y asociar marcas de tiempo
+***** Header: 12B (96b) + CSRCs
+- 2b) Ver: versión (la 2)
+- 1b) P: indica relleno del paquete (padding) a multiplo de 4B
+- 1b) X: indica la presencia de encabezado de extensión
+- 4b) CC: número de origenes CSRC (flujos)
+- 1b) M: marca específica de aplicación (inicio de frame o de palabra audio)
+- 7b) Tipo de algoritmo de codifiación (PCM, MP3, etc)
+- 16b) Número de secuencia: para detectar paquetes perdidos
+- 32b) Timestamp: instante de muestreo del primer byte de la carga útil
+- 32b) SSRC: Synchronization source (origen único de la transmisión, o meclador de flujos)
+- 0-15*32B) CSRC: Contributing sources (flujos que han sido mezclados en el paquete, si los hay)
+***** Real-time Transport Control Protocol (RTCP)
+- Permite controlar fluctuación, ancho de banda, congestión y otras propiedades.
+- Además permite identificar origen de cada flujo.
+
+*** Transmission Control Protocol (TCP)
+Pretende proporcionar confiabilidad que IP no proporciona.
+**** Header: 20B (160b) + opciones
++ 2*16b) Puertos de origen y destino
++ 2*32b) Numero de secuencia y de confirmacion de recepcion
++ 4b) Longitud del header
++ 1b) URG: indica datos urgentes (activa "apuntador urgente")
++ 1b) ACK: indica si hay confirmacion de recepcion
++ 1b) PSH: indica que se debe transmitir de inmediato
++ 1b) RST: Reject Segment Transport (rechaza establecimiento de conex.)
++ 1b) SYN: activo en establecimiento de conexion (ack0=CR ack1=CA)
++ 1b) FIN: activo en liberación de conexion
++ 16b) Tamaño de ventana
++ 16b) Suma de verificacion (de header+datos+pseudoencabezado)
++ 16b) apuntador urgente: segmento a partir del cual los datos son urgentes
++ X*32b) opciones
+  - Opción MSS: Maximum Segment Size (tamaño máximo de carga útil)
+  - Opción "escala de ventana" permite desplazar hasta 14 bits a la izquierda el campo de tamaño de ventana (habría hasta 2^30 en lugar de 2^16)
+***** Pseudoencabezado: 12B (92b)
+- 2*32b) direcciones IP de origen y destino
+- 8b) nº de protocolo
+- 8b) longitud de segmento TCP
+
+El pseudoencabezado se incluye en el cálculo del checksum pero no se envía. el receptor del segmento conoce los campos del pseudoencabezado igualmente.
+
+# **** Protocolo de ventana corrediza
+# Cuando un transmisor envia un segmento inicia un temporizador, cuando llega, el receptor devuelve otro (con datos si existen) con un numero de confirmacion igual a lo siguietne qe 
+
+**** Establecimiento de conexion
+acuerdo de tres vias
+
+servidor: listen y accept
+cliente: connect (SYN=1,ACK=0)
++ si hay servicio para el puerto especificado
+servidor: SYN=1,ACK=1
++ si no hay servicio
+servidor: RST=1
+**** Liberacion (cierre) de conexion
+Aunque TCP es duplex total, la conexion puede continuar desde el otro lado si sólo un lado la finaliza, de modo que se peude considerar como un par de conexiones simplex.
+
+Cada parte puede terminar su envio de datos con un FIN=1, y espera confimación (si no la recibe acaba desconectando igualmente tras x tiempo).
+
+**** Control de congestión
++ 2 Problemas: velocidad de red y velocidad de proceso del receptor
+  - 2 Ventanas: de congestión (VC) y del receptor (VR)
+  - 2 Parámetros: MTU (Max. Transfer Unit) y MSS (Max. Segment Size)
+***** Algoritmo de Arranque Lento de Jacobson
+- Emisor asigna a la ventana de congestión el tamaño del MSS y envía.
+- Por cada recibo de confirmación, aumenta la ventana 1 MSS.
+- La ventana crece exponencialmente hasta que una ráfaga expire, tras lo que usa el último tamaño correcto.
+****** En la práctica en internet...
+- Se establece Umbral de 64KB, recalculando en la primera expiración como VC/2 (poniendose la VC a 1 MSS).
+- Luego, al alcanzar VC==Umbral: crecimiento lineal de 1 MSS en lugar de exponencial
+***** Administración de temporizadores
+Si la confirmación de recepción del segmento llega antes de expirar el temporizador, éste se detiene.
+****** Algoritmo dinámico para intervalo de expiración (Jacobson)
+- Se mantiene un valor medio del tiempo de ida y vuelta (TIV), calculado aplicando un factor de amortiguamiento (gral.mente 7/8).
+  + $TIV_{actual}= λ*TIV_{anterior} + (1-λ)*TIV_{medido}$
+- El estimador debe ser mayor que el TIV medio estimado.
+  - Puede multiplicarse TIV por un factor (quizás 2).
+  - Puede fijarse como $TIV + 4*D$, donde D es la desviación media amortiguada:
+    - $D_{actual}= λ*D_{ant.} + (1-λ)|TIV_{act.}-TIV_{medid.}|$
+****** Algoritmo de Karn
+En lugar de actualizar el valor de TIV, se duplica la expiración del temporizador con cada falla hasta que pasen los segmentos a la primera.
+
+***** TCP inalámbrico
+Los enlaces de transmisión inalámbricos son muy poco confiables, y aunque la capa transporte debería ser independiente de la tecnología de red, el control de congestión de TCP se verá afectado negativamente.
+
+Se plantean 2 soluciones:
+****** TCP Indirecto (Bakne y Badrinath)
+- Se divide la conexión TCP en dos conexiones: una para la zona cableada y otra para la zona inalámbrica.
+- viola la semántica del TCP ya que la confirmación de una recepción en el emisor por la estación intermedia no significa que el receptor haya recibido el semento, sólo que la base intermedia lo recibió.
+****** Agente espía (Balakrishnan y cols)
+- Si el agente ve un segmento TCP que sale al host móvil pero no vé el ACK antes que expire su corto temporizador, retransmite el segmento de forma transparente al emisor.
+- Si detecta un hueco en la secuencia recibida desde el host móvil, le envía una solicitud de repetición selectiva.
+**** Remote Procedure Calls (RPC)
+Existen varios Modelos de Objetos Distribuidos.
+***** JavaRMI
+***** Corba
+***** DCOM
+Extiende el modelo de componentes de Microsoft, abandonado en favor de .NET
+***** SOAP (Simple Object Access Protocol)
+- Usa código XML como representación intermedia (legible pero lento)
+- Funciona sobre HTTP. Está homologado por el W3C.
+**** T/TCP (TCP para transacciones)
+- En transacciones pequeñas se puede usar UDP, pero respuestas grandes requieren secuencias o un mecanismos para recuperar pérdidas
+- TCP lo tiene, pero como mínimo serían 9 transimisiones (incluyendo establecimiento y cierre de conexión).
+- T/TCP busca permitir transferencias de datos durante la configuración.
+***** Funcionamiento
+- El primer paquete del cleinte activa tanto el bit SYN como el FIN, e incluye la solicitud ahí mismo.
+- El servidor calcula la respuesta y la envía en un paquete, junto con FIN activado
+- cliente confirma la recepción del paquete y el protocolo termina en 3 mensajes
+
+Nota: Si la respuesta es más de un paquete, el servidor puede optar por no activar FIN y enviar varios antes de cerrar.
+
+**** Aspectos de desempeño
+El desempeño se degrada cuando no hay un equilibrio estructural de recursos (lineas mucho más rápidas que los host y viceversa).
+- Actualmente hay menos tiempo para el procesamiento de paquetes que antes, al haber aumentado mucho la velocidad de red, por ello los protocolos deben hacerse más sencillos.
+***** Protocolos para redes gigabits
+- Diseñar pensando en la velocidad, no en optimizar ancho de banda.
+***** Medición de desempeño
+- Medir tiempo de ACK, cantidad de TPDU perdidas, Bytes procesados por tiempo
+- Estudiar los parámetros para ver que ocurre y cambiar uno de ellos.
++ Tamaño óptimo de la ventana: igual o mayor que C = AnchoBanda * TIV
++ Reglas de Mogul
+***** Procesamiento rápido de las TPDUs
+- Dado que normalmente los encabezados TCP son casi iguales, se copia el encabezado anterior tal cual desde un búfer de trabajo y sólo se recalculan los campos se sabe que van a cambiar (checksum, secuencia..).
+** La Capa de Aplicacion (APDU)
+*** Multimedia
+**** Audio
+***** Audio de flujo continuo
+- Usa un metaarchivo, que apunta a una dirección donde el servidor de audio ofrece la canción a través de un protocolo como RTSP (Real Time Streaming Protocol)
+****** RTSP
+Comandos: DESCRIBE, SETUP, PLAY, RECORD, PAUSE, TEARDOWN
+***** Radio en internet
+- Puede ser generado en vivo o almacenado en disco (parecido a flujo continuo)
++ Debería ser multidifusión, pero por la arquitectura de internet no es posible: se usan servidores HTTP que hablan TCP.
+***** VoIP
+****** H.323
+****** SIP (Sesion Initializacion Protocol)
+- Sólo gestiona establecimiento, manejo y terminación de sesiones.
+- Métodos (ASCII): INVITE, ACK, BYE, OPTIONS, CANCEL, REGISTER
+****** Otros: Skinny, Skype, Jingle...
+**** Video
++ Para reproducción uniforme se requieren 25 frames(tramas)/segundo
++ Cada pixel puede ocupar desde 8b (B&W) hasta 24b (true color)
+  $Mbps = ancho*alto*colordepth*framerate$
++ Además habrá que tener en cuenta el factor de compresión del codec usado
+*** Domain Name System
++ Protocolo DNS: puerto 53
+- Relaciona los dominios de nombres con los registros de recursos.
+- Esquema jerárquico basado en dominios y un sistema de base de datos distribuida
+**** Registro de recurso
+Cada registro de una base de datos DNS contiene 5 tuplas:
++ Nombre de dominio (dominio al que pertenece el registro)
++ Tiempo de vida
++ Clase (para internet es siempre "IN")
++ Tipo: puede ser
+  - SOA: inicio de autoridad (parametros para esta zona)
+  - A: direccion IPv4 (entero de 32 bits)
+  - AAAA: direccion IPv6 (entero de 128 bits)
+  - MX: dominio servidor de correo para ese dominio
+  - NS: servidor de nombres para este dominio
+  - CNAME:  Nombre (canónico, alias) de dominio
+  - PTR: Alias de una direccion IP
+  - HINFO: info del host (CPU, SO)
+  - TXT: texto no interpretado
++ Valor: contenido designado por el tipo
+
+*** E-Mail
+**** MIME (Mail Internet Multipurpose Extension)
++ MIME-Version
++ Content-Description
++ Content-Id
++ Content-Type
+  - Texto: Plano / Enriquecido
+  - Imagen: Gif / Jpeg
+  - Audio
+  - Video
+  - Aplicacion
+  - Mensaje
+  - Multiparte: permite que se contengan diferentes partes delimitadas por "boundaries" establecidos y de Content-Type diferentes (puede llevar adjuntos)
+**** POP3
++ Protocolo para descarga y borrado de mensajes: puerto 110
+***** Comandos
+- USER <usuario>
+- PASS <password>
+- LIST
+- RETR <msj>
+- DELE <msj>
+- QUIT
+**** IMAP
++ Protocolo para gestionar mensajes del servidor desde el cliente: puerto 143
+**** SMTP
++ Protocolo para enviar desde el servidor remitente al del destino: puerto 25
+***** Funcionamiento
+- Si servidor está listo, cliente anuncia campos "From:" y "To:"
+- Si existe el "To:" en el servidor, da permiso para evniar mensaje
+- Cliente envía el mensaje y servidor confirma
+- Liberación de conexión.
+
+*** World Wide Web
+**** Cookies
++ Dominio
++ Ruta (que partes del servidor peuden usar la  cookie)
++ Contenido (nombre=valor)
++ Expira
++ Seguro
+
+**** Protocolos
+***** HTTP
++ Protocolo de hipertexto: puerto 80
+- HTTP 1.1 soporta conexiones persistentes (TCP)
+****** Solicitud (ASCII)
+GET, HEAD, PUT, POST, DELETE, TRACE, CONNECT, OPTIONS
+******* Encabezados
+User-Agent, Accept, Accept-[Charset|Encoding|Language], Host, Authorization, Date
+****** Respuesta (MIME RFC 822)
+1xx (Info), 2xx (Éxito), 3xx (Redirect), 4xx (Error cliente), 5xx (Error servidor)
+******* Encabezados
+Server, Content-[Type|Length|Transfer-Encoding|Language], Last-Modified, Location, Accept-Ranges
+***** FTP
++ Protocolo de Datos: puerto 20
++ Protocolo de Control: puerto 21
+****** Métodos
+user, open, close, put, get, delete, ls, pwd, mkdir, rmdir...
+****** Modos de conexión
++ Activo: Cliente:N --> Server:21 y Cliente:N+1 <-- Server:20
++ Pasivo: Cliente:N --> Server:21 y Cliente:N+1 --> Server:20
+
+(Siendo N un puerto superior a 1024)
+
+El modo activo tiene el riesgo de que el cliente debe mantener un LISTEN en el puerto N+1, con los riesgos que implica (y cortafuegos pueden bloquear).
+
+****** Tipos de acceso
+Usuario, invitado, anónimo
+
+**** Documentos Web
+***** HTML (Hypertext Markup Language)
+***** CSS
+***** XML y XSL
+***** XHTML
+***** Web dinámica
+****** Lado servidor
+****** Lado cliente
+****** AJAX

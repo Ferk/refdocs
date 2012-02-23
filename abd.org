@@ -1,0 +1,505 @@
+# -*- org -*-
+#+Latex_class: refcard
+
+* OODB (Object Oriented) & ODMG
+  
+** Object Model (OM)
+
++ Conceptos:
+ - OID: id
+ - Tipos: clases
+ - Objetos: instancia
+ - Operaciones: metodos (determinan interfaz de entrada/salida)
+ - Estado: valor del conjunto de atributos+relaciones
+
+*** Object Data Management System (ODMS)
+
+**** Clasificación de objetos
++ ADT: *AbstractDataTypes*: directamente instanciables
++ *Atomic\_object*: Definidos por el usuario
++ *Collection\_object*: Generadores de tipos (set, bag, list, array, dictionary)
++ *Structured\_object*:  Tipos sstructurados (date, time, timestamp, interval...)
+  
+**** Literales
+Son constantes (inmutabless, pueden tener estructura compleja)
+No tienen OID, no son objetos ni se pueden referenciar
++ *Atomic\_literal*
++ *Colecciones*
++ *Estructurados*
++ *Nulos*
+
+**** atributos
+Son valores definidos sobre un único tipo de objeto
+No tienen OID, no son objetos
+
+**** relaciones
+Se definen mediante rutas de recorrido entre dos tipos de objeto (son solo binarias)
+No tienen OID, no son objetos
+
+**** operaciones
+
+**** Excepciones
+Son objetos con un OID
+
+**** Módulos
+
+** Object Description Language (ODL)
+Es una ampliación del Interface Definition Language de CORBA
+
+** Object Query Language (OQL)
+- Permite un acceso con sintaxis similar a SQL
+- No permite actualizaciones de forma explicita
+- Puede ser declarativo (consultas que devuelven objetos) o navegacional (acceso a traves de relaciones)
+
+* Objeto-Relacionales
+** Características
+- Extensión de los tipos de datos básicos
+- Objetos complejos
+- Herencia
+*** Ventajas
+- Reutiliza DBMS y conocimiento de los RM
+- Compartición de datos
+*** Desventajas
+- Mayor complejidad
+- incremento de coste
+- discrepancias con OO
+*** Manifiesto del CADF
+- sistema de tipos rico
+- herencia
+- encapsulación
+- Accesible desde multiples Lenguajes de alto nivel
+- SQL es universal
+*** Tipos de datos
+**** LOB
+- BFILE puntero a un fichero binario externo
+- BLOB almacena binarios en la DB de hasta 4Gb
+- CLOB almacena bloques de caracteres de hasta 4Gb
+- NCLOB almacena bloques de NCHAR
+**** Subtipos
+|-------------------------------------------------------------|
+| SUBTYPE subtype\_name IS base\_type[(constraint)] [NOT NULL]; |
+|-------------------------------------------------------------|
+En realidad no es un nuevo tipo sino una restricción del tipo padre
+
+: SUBTYPE INTEGER IS NUMBER(38,0); -- basado en NUMBER
+: SUBTYPE BirthDate IS DATE NOT NULL; -- basado en DATE
+: 
+: TYPE NameList IS TABLE OF VARCHAR2(10);
+: SUBTYPE DutyRoster IS NameList; -- basado en TABLE
+: 
+: TYPE TimeRec IS RECORD (minutes INTEGER, hours INTEGER);
+: SUBTYPE FinishTime IS TimeRec; -- basado en RECORD
+
+**** Colecciones
+Oracle implementa los tipos set, bag, listas,vectores, tablas anidadas y árboles
+Una colección es un conjunto de elementos del mismo tipo
+Aunque las colecciones son unidimensionales, se pueden definir colecciones cuyos elementos sean a su vez colecciones
+**** Nested Tables
+**** Index Tables
+**** Records
+Conjunto de columnas con el objetivo de agrupar información relacionada.
+%ROWTYPE permite declarar un RECORD que representa a una fila de una tabla de la base de datos pero no permite definir tipos para los campos componentes.
+
+
+: TYPE type_name IS RECORD (field_declaration[,field_declaration]...);
+: field_name field_type [[NOT NULL] {:= | DEFAULT} expression]
+
+**** 
+
+** ??
+// Algunos ejemplos de definición de subtipos
+: CREATE TYPE CourseList AS TABLE OF VARCHAR2(10) /
+: -- define un tipo Varchar2
+: CREATE TYPE Student AS OBJECT (
+: -- crea un objeto
+:        id_num INTEGER(4),
+:        name    VARCHAR2(25),
+:        address VARCHAR2(35),
+:        status CHAR(2),
+:        courses CourseList )
+: -- declara una nested table como atributo /
+: 
+: CREATE TYPE Project AS OBJECT( -- crea un objeto
+:         project_no NUMBER(2),
+:         title      VARCHAR2(35),
+:         cost       NUMBER(7,2) ) /
+: CREATE TYPE ProjectList AS VARRAY(50) OF Project /
+: // define un tipo VARRAY
+: CREATE TABLE department (
+: -- crea una tabla en la base de datos
+:         dept_id NUMBER(2),
+:         name     VARCHAR2(15),
+:         budget   NUMBER(11,2),
+:         projects ProjectList )
+: -- declara varray como columna /
+: 
+: // Algunos ejemplos de definición de RECORDS
+: DECLARE
+: TYPE DeptRec IS RECORD (
+:        dept_id   dept.deptno%TYPE,
+:        dept_name VARCHAR2(14),
+:        dept_loc VARCHAR2(13) ); /
+:        EjemploDept DeptRec
+: -– declarando un Record de tipo DeptRec
+: 
+: DECLARE
+: TYPE TimeRec IS RECORD (
+:         seconds SMALLINT,
+:         minutes SMALLINT,
+:         hours    SMALLINT);
+: TYPE FlightRec IS RECORD (
+:         flight_no    INTEGER,
+:         plane_id      VARCHAR2(10),
+:         captain       Employee, -- declara un objeto
+:         passengers    PassengerList, -- declara un varray
+:         depart_time TimeRec, -- declara un nested record
+:         airport_code VARCHAR2(10) ); /
+: 
+: // Ejemplo de definición de objetos.
+:    Parte pública
+: CREATE TYPE Complex AS OBJECT (
+:     rpart REAL, -- atributo
+:     ipart REAL,
+:     MEMBER FUNCTION plus (x Complex) RETURN Complex, -- método
+:     MEMBER FUNCTION less (x Complex) RETURN Complex,
+:     MEMBER FUNCTION times (x Complex) RETURN Complex,
+:     MEMBER FUNCTION divby (x Complex) RETURN Complex
+: );
+: 
+: // Formato General
+: CREATE [OR REPLACE] TYPE type_name
+:    [AUTHID {CURRENT_USER | DEFINER}]
+:    { {IS | AS} OBJECT | UNDER supertype_name }
+: (
+:    attribute_name datatype[, attribute_name datatype]...
+:    [{MAP | ORDER} MEMBER function_spec,]
+:    [{FINAL| NOT FINAL} MEMBER function_spec,]
+:    [{INSTANTIABLE| NOT INSTANTIABLE} MEMBER function_spec,]
+:    [{MEMBER | STATIC} {subprogram_spec | call_spec}
+:    [, {MEMBER | STATIC} {subprogram_spec | call_spec}]...]
+: ) [{FINAL| NOT FINAL}] [ {INSTANTIABLE| NOT INSTANTIABLE}];
+: 
+: 
+: // Ejemplo de definición de objetos.
+:    Parte privada
+: CREATE TYPE BODY Complex AS
+:     MEMBER FUNCTION plus (x Complex) RETURN Complex IS
+:     BEGIN
+:        RETURN Complex(rpart + x.rpart, ipart + x.ipart);
+:     END plus;
+:     MEMBER FUNCTION less (x Complex) RETURN Complex IS
+:     BEGIN
+:        RETURN Complex(rpart - x.rpart, ipart - x.ipart);
+:     END less;
+:  MEMBER FUNCTION times (x Complex) RETURN Complex IS
+:    BEGIN
+:       RETURN Complex(rpart * x.rpart - ipart * x.ipart,
+:                      rpart * x.ipart + ipart * x.rpart);
+:    END times;
+:    MEMBER FUNCTION divby (x Complex) RETURN Complex IS
+:       z REAL := x.rpart**2 + x.ipart**2;
+:    BEGIN
+:      RETURN Complex((rpart * x.rpart + ipart * x.ipart) / z,
+:                     (ipart * x.rpart - rpart * x.ipart) / z);
+:    END divby;
+: END;
+: 
+: // Formato general
+:  [CREATE [OR REPLACE] TYPE BODY type_name {IS | AS}
+:    { {MAP | ORDER} MEMBER function_body;
+:    | {MEMBER | STATIC} {subprogram_body | call_spec};}
+:    [{MEMBER | STATIC} {subprogram_body | call_spec};]...
+: END;]
+: 
+: // Ejemplos de herencia
+: -- Crea un supertipo
+: CREATE TYPE Person_typ AS OBJECT (
+:        ssn NUMBER,
+:        name VARCHAR2(30),
+:        address VARCHAR2(100)) NOT FINAL;
+: -- Deriva un subtipo e incluye atributos nuevos
+: CREATE TYPE Student_typ UNDER Person_typ (
+:        deptid NUMBER,
+:        major VARCHAR2(30)) NOT FINAL;
+: 
+: -- Este subtipo no puede ser derivado
+: -- Por defecto es FINAL
+: CREATE TYPE PartTimeStudent_typ UNDER Student_typ(
+:        numhours NUMBER);
+: CREATE TYPE Employee_typ UNDER Person_typ(
+:        empid NUMBER, mgr VARCHAR2(30));
+: -- Define un objeto que puede ser supertipo
+: -- Las funciones finales no pueden ser
+: -- sobreescritas en los subtipos
+: CREATE TYPE T AS OBJECT (
+:        ...,
+:        MEMBER PROCEDURE Print(), FINAL
+:        MEMBER FUNCTION foo(x NUMBER)...) NOT FINAL;
+: 
+: -- Creando objetos absrtractos no instanciables
+: CREATE TYPE Address_typ AS OBJECT(
+:        ...) NOT INSTANTIABLE NOT FINAL;
+: -- Los subtipos implementan sus procedimientos
+: CREATE TYPE USAddress_typ UNDER Address_typ(...);
+: CREATE TYPE IntlAddress_typ UNDER Address_typ(...);
+: 
+: // Los objetos tablas
+: CREATE TYPE person AS OBJECT (
+:    name         VARCHAR2(30),
+:    phone        VARCHAR2(20) );
+: CREATE TABLE person_table OF person;
+: -- Inserta el objeto como una tabla de dos columnas
+: INSERT INTO person_table VALUES (
+:          "John Smith",
+:          "1-800-555-1212" );
+: -- Usa la función VALUE para recuperar la instancia
+: -- del objeto (toda la fila)
+: SELECT VALUE(p) FROM person_table p
+:           WHERE p.name = "John Smith";
+: 
+: // Asociaciones entre objetos
+: CREATE TYPE Person AS OBJECT (
+:     first_name    VARCHAR2(10),
+:     last_name     VARCHAR2(15),
+:     birthday      DATE,
+:     home_address REF Home,
+: -- la casa es compartida por los familiares
+:     phone_number VARCHAR2(15),
+:     ss_number     INTEGER,
+:     mother     REF Person,
+: -- referencia entre familiares
+:     father    REF Person,
+:     ...
+: );
+
+* AcBD (Active Database)
+Lo que convierte una base de datos de pasiva a activa son los triggers.
+** Modelo ECA (Evento-Condición-Acción)
+Se usa para especificar las reglas (triggers) de las AcBD.
++ _Evento_ (operación de actualización aplicada explícitamente a la base de datos)
++ _Condición_ (declaración que determina si la regla debe o no ejecutarse)
++ _Acción_ (operación realizada al evaluaa afirmativamente la regla)
+** Característias de los disparadores
+_14 características_:
+- Son reglas simples
+- No incluyen conocimiento
+- No existe conocimiento externo de su ejecución
+- No son estándar para diferentes DBMS
+- No son escalables
+- Un número excesivo genera confusión
+- Sobrecargan al gestor de bases de datos
+- Pueden generarse ciclos de ejecución
+- Los eventos están limitados a INSERT, UPDATE y DELETE
+- Se pueden definir a dos niveles: filas y sentencia
+- No soportan la consideración del tiempo
+- Se ejecutan antes, después o en lugar de el evento
+- Sin un orden de evaluación entre ellos
+- Complejidad para diseñar y verificar la consistencia
+** Tipos
++ Auto-Generados por la base de datos (dominios,claves,referencias,alertas...)
++ Generados por el DBA (administrador)
+** Disparadores en Oracle 10g
+
+: drop trigger BOOKSHELF_BEF_UPD_ROW;
+: create or replace trigger BOOKSHELF_BEF_UPD_INS_ROW
+:           before insert or update of Rating on BOOKSHELF
+:           for each row
+: begin
+:           if INSERTING then
+:                     insert into BOOKSHELF_AUDIT
+:                     (Title, Publisher, CategoryName, New_Rating, Audit_Date)
+:                     values
+:                     (:new.Title, :new.Publisher, :new.CategoryName,:new.Rating,
+:                     Sysdate);
+:           else -- if not inserting then we are updating the Rating
+:                     insert into BOOKSHELF_AUDIT
+:                     (Title, Publisher, CategoryName, Old_Rating, New_Rating,
+:                     Audit_Date)
+:                     values
+:                     (:old.Title, :old.Publisher, :old.CategoryName,
+:                     :old.Rating, :new.Rating, Sysdate);
+:           end if;
+: end; /
+
+
+* CSBD (Client-Server DataBase)
+** Definición
+Modelo de computación basado en la distribución de funciones entre dos tipos de componentes independientes y autónomos.
++ Cliente: Solicita servicios
++ Servidor: proporciona los servicios solicitados
+(en la misma o distintas computadores)
+
+** Tipos
+*** Ligeros/Pesados
+(Mainframe tradicional: Server pesado/Cliente ligero)
+*** 2-Capas/3-Capas
+Ubicación de la Lógica de la aplicación
+| Lógica             | 2-Capas | 3-Capas          |
+|--------------------+---------+------------------|
+| Presentacion(GUI)  | Cliente | Cliente          |
+| Procesamiento E/S  | Cliente | Serv.Intermedios |
+| negocio            | Cliente | Serv.Intermedios |
+| Manejo de datos    | Server  | Server           |
+| Manipulacion datos | Server  | Server           | 
+
+** Arquitectura
++ Independiente del soft o hard
++ Permite distribución (acceso abierto y autonomia)
++ Basado en estándares
+
+Frontend --sql--> middleware --sql--> Backend
+Frontend  <-data- middleware <-data-  Backend
+
+*** Middleware
+**** Características
++ 
+**** Tipos
+En función de seguridad,red,aplicación.
++ MOM (message oriented middleware)
++ RPC (remote procedure calls) based
++ OO (object oriented) based
+
+* WebBD (Web Database)
+** Características
++ (1) Seguridad:
+ - Seguridad en acceso a datos corporativos valiosos.
+ - autentificación basada en la sesión y en la aplicación
++ (2) Arquitectura abierta:
+ - Independencia en la selección de SGBD
+ - Independiente del servidor o explorador Web 
++ (3) Escalabilidad y portabilidad economicas
++ (4) Rendimiento aceptable
+ - Soporte para transacciones que abarquen múltiples solicitudes HTTP
++ (5) Un conjunto de herramientas de productividad de alto nivel que permita desarrollar, mantener e implantar las aplicaciones con facilidad
+
+** JDBC
++ Driver =-- DriverManager
++ Conection -- DatabaseMetadata
++ Statement <- PreparedStatement <- CollableStatement
++ ResultSet -- ResultSetMetaData
+** SQLJ
+Permite emplear sentencias SQL como si fueran Java, luego pasan por precompilación (SQLJ translator) a codigo Java que luego se compila 
+- Adecuado para sentencias SQL estáticas (no cambian en tiempo de ejecucion)
+- El resultado tras compilar es más rápido en su ejecucion
+- Pueden combinarse con JDBC en el caso de que deba usarse sentencias dinámicas
+** JSP
+Java server pages: combinan <% Java %> y HTML
+** PHP
+
+: $conn = mysql_connect("localhost","login","mypasswd");
+: mysql_select_db("database", $conn);
+: 
+: if ( $var = mysql_query("SELECT...") ) {
+:   while ( $row = mysql_fetch_array($var) ) echo $row;
+: }
+: else mysql_error();
+
+* MoBD (Mobile DataBase)
+** Bases de datos replicadas
+*** Replicación de Bases de Datos
+Copia y mantenimiento de objetos en múltiples bases de datos que forman un sistema de bases de datos distribuido.
+- Acceso a los datos en todo lugar y en todo momento
+- Diferencia con las BD distribuidas: En la replicación TODOS los datos (los mismos) están en cada ubicación.
+**** Beneficios
++ Disponibilidad
++ Fiabilidad
++ Rendimiento de consulta
++ Reducción de carga
++ Procesamiento offline
++ Soporte multiusuario
++ Aplicaciones avazadas (data mining, OL(ine)T(rans)P(roce), OL(ine)A(nal)P(roce)
+**** Inconvenientes
++ Complejidad (concurrencia, recuperacion)
++ Sobrecarga de actualización
+**** Componentes
++ _Objeto de replicación_: objeto de la BD en multiples servidores
++ _Grupo de replicación_: Colección de objetos para la adminsitracion de estos (no exclusiva).
++ _Sitios de replicación_: 
+    - Maestros: controla un grupo de replicación, enviando las actualizaciones a los esclavos.
+    - Esclavos: continenen una instantanea de un grupo de replicación (o subconjunto).
+
+***** Servidor de replicación
+** Bases de datos móbiles
+Portable y físicamente independiente del servidor corporativo, pero que es capaz de comunicarse con él desde sitios remotos.
+
+*** Funcionalidad
++ Comunicarse con server centralizado
++ Replicar datos    server -- dispos.movil
++ Sincronizar datos server -- dispos.movil
++ Capturar datos            varias fuentes
++ Gestionar datos desde       dispos.movil
++ Analizar datos del          dispos.movil
++ Aplicaciones moviles personalizadas
+
+*** Oracle 10g Lite
+middleware: OC4J y OAS
+**** Tipos de replicación
+**** Grupos de refresco
+DBMS_REFRESH: grupos de refresco para mantener consistencia
++ Tipos de refresco
+ - Completo
+ - Rápido
+ - Forzado
+
+
+* WaBC (Warehouse Database)
+** Data Warehouse
+Colección de datos clasificada por temas, integrada, variable en el tiempo y nunca volátil que se utiliza como ayuda en la toma de decisiones.
+*** Características
+**** Funcionalidad
+
+- Analizar         garantizar coherencia
+- transformacion   datos origen --> almacen de datos
+
+- creacion de      indices y vistas
+- generacion de    perfiles de consulta
+- generacion de    desnormalizaciones (generalizaciones)
+- generacion de    agregaciones
+
+- copia de seguridad y almacenamiento de datos
+
+**** Ventajas
+**** Inconvenientes
+- Complejo de hacer e integrar en la organización
+- Pueden faltar datos (hasta que no se implanta no se sabe que datos se necesitan, y requiere gran cantidad de datos para hacer histórico)
+- Ordenar por temas puede hacer perder propiedades 
+*** Diseño
+1. flujo de entrada --> Datos operacionales (detallados, agregados para agilizar) --> 
+2. Repositorio de datos operacionales -->
+3. Gestor de carga -->
+|-----------------------------------------------------+------------------------------|
+|                                                     | Gestor de almacen de datos,  |
+| Datos detallados -asc-> Resumidos -asc-> Muy resum. | --desc-> copias de seguridad |
+|                                                     | <--metaflujo--> Metadatos    |
+|-----------------------------------------------------+------------------------------|
+--> Gestor de consultas --> flujo salida
+
+**** Modelado Dimensional
+
++ Tabla de hechos
++ Tablas de dimension: poseen clave primaria simple que se corresponde con algún atributo de la tabla de hechos, de tal forma que representen distintas dimensiones de una misma "hipertabla".
+
+Estrella: Las tablas de dimensión no están normalizadas
+Copo de nieve: las tablas de dimensión se normalizan, realizando referencias a otras tablas de dimensión donde se detalle más.
+Copo de nieve: algunas tablas de dimensión se normalizan y otras no.
+
+*** Aplicaciones
+**** Decision Support Systems
+**** Data Marts
+** OLAP
+** Data Mining
+Proceso de extraer información válida, previamente desconocida, comprensiva y útil desde bases de datos de gran tamaño y utilizar dicha información para la toma de decisiones de negocio cruciales
+Se basa en una serei de técnicas:
+***  Modelado predictivo
++ Clasificación
++ Predicción de valores
+***  Segmentación de la base de datos
++ Agrupaciones demográficas
++ Agrupaciones neuronales
+***  Análisis de enlaces
++ Descubrimiento de asociaciones
++ ...
+***  Detección de desviaciones
++ Estadística
++ Visualización
+  

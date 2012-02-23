@@ -1,0 +1,116 @@
+# -*- org -*-
+
+#+Latex_header: \usepackage{savetrees}
+
+
+** Cuestiones Diciembre 2009
+1. Un servicio orientado a conexión:
+   a) Se asemeja al sistema postal
+   b) Se establece una conexión, se usa y después se libera
+   c) encuentra su modelo en el sistema telefónico
+   d) las dos anteriores
+2. La frecuencia fundamental:
+   a) Es una de las características de todas las señales
+   b) Es la máxima frecuencia de una señal periódica
+   c) Es un divisor de todas las frecuencias que componen la señal periódica
+   d) Ninguna de las anteriores
+3. El ruido térmico:
+   a) Se suele evitar con filtros paso de banda
+   b) Es independiente de la temperatura
+   c) Las dos anteriores
+   d) Está uniformemente distribuido en el espectro de frecuencias
+4. Un cable UTP categoría 5:
+   a) No sirve para la transmisión de señales telefónicas
+   b) tiene menor paso de trenzado que el de categoría 3
+   c) Transmite frecuencias de hasta 20MHz
+   d) No puede emplearse para la transmisión de datos
+5. Una modulación BFSK:
+   a) Tiene dos puntos en el patrón de constelación
+   b) Tiene el mismo ancho de banda que una ASK
+   c) Emplea una sola frecuencia
+   d) Ninguna de las anteriores
+6. El esquema ADSL:
+   a) Reserva los 25kHz inferiores para voz
+   b) Utiliza multiplexión FDM o cancelación de eco
+   c) Divide las bandas ascendentes y descendentes en subcanales
+   d) Todas las anteriores
+7. Un protocolo es:
+   a) Un conjunto de reglas que gobiernan la transmisión de datos
+   b) Un acuerdo entre los dispositivos que se comunican
+   c) Las dos anteriores
+   d) Lo contrario de un locotropo
+8. En una jerarquía de protocolos, una entidad de nivel "n" entrega una entidad de nive) n-1:
+   a) Una unidad de datos de protocolo
+   b) Un paquete
+   c) Un datagrama
+   d) Una trama
+9. La atenuación:
+   a) Es una pérdida de energía debida a la distancia
+   b) En medios no guiados, depende exponencialmente de la distancia
+   c) En medios no guiados, es independiente de la distancia
+   d) Ninguna de las anteriores
+10. La distorsión de retardo:
+	a) Se debe a que la velocidad suele ser mayor en los extremos de la banda
+	b) Provoca interferencia entre símbolos
+	c) Se debe a que la velocidad es constante en toda la banda.
+	d) Ninguna de las anteriores
+11. La transmisión a través de fibra óptica:
+	a) Presenta una gran atenuación
+	b) Emplea señales de baja frecuencia
+	c) Se basa en la reflexión total
+	d) Se basa en la refracción total
+12.	Un código NRZ-L:
+    a) Es un tipo de codificación diferencial
+    b) Es un tipo de codificación bipolar
+	c) Presenta componente continua
+	d) Ninguna de las anteriores
+13. En la modulación delta:
+	a) El ruido de sobrecarga en la pendiente aumenta al disminuir el paso de cuantización
+	b) No tiene ruido de cuantización
+	c) El ruido de cuantización depende de los bits de codificación
+	d) Ninguno de las anteriores
+14. El parámetro "a" es:
+	a) El tiempo de propagación normalizado
+	b) El tiempo de transmisión normalizado
+	c) Las dos anteriores
+	d) Ninguna de las anteriores
+15. ALOHA:
+	a) Es un protocolo de asignación estática
+	b) es un protocolo de contención
+	c) A mayor número de colisiones mayor eficiencia
+	d) Su eficiencia máxima es del 100%
+16. El estándar DIX y el estándar 802.3:
+	a) Se diferencian en el tamaño de las direcciones
+	b) Son iguales
+	c) No peuden convivir en la misma red local
+	d) Ninguna de las anteriores
+17. La subcapa MAC de 802.11:
+	a) Tiene dos posibles modos de funcionamiento
+	b) Utiliza CSMA/CD
+	c) El intervalo PIFS es mayor que el intervalo DIFS
+	d) Todas las anteriores
+18. Una red de conmutación de circuitos:
+	a) Funciona mediante circuitos virtuales
+	b) Ofrece una velocidad de transmisión constante
+	c) Funciona mediante circuitos virtuales o datagramas
+	d) Las dos anteriores
+19. Con un número de secuencia de tres bits:
+	a) El tamaño de ventana será 3
+	b) El tamaño de ventana será 6 para rechazo con vuelta atrás N
+	c) El tamaño de ventana será 4 para rechazo selectivo
+	d) El tamaño de ventana será 3 para rechazo selectivo
+20. En BSC, la selección:
+	a) Es iniciada por la estación esclava
+	b) Puede ser iniciada por ambas estaciones
+	c) Es iniciada por la estación maestra
+	d) Comienza con una secuencia de sondeo o escrutinio
+
+** Soluciones
+1d 2c 3d 
+4b (menor paso se trenzado da mas vueltas, calidad datos, pero puede usarse para teléfono)
+5d 6d 7c 8a 9a 10b 11c 12c 13a 14a 15b 16d 
+17a (dos modos: DCF y PCF)
+18d 
+19c 2^(3-1)=4
+20c (no tiene porque empezar con sondeo)
+

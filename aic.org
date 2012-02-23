@@ -1,0 +1,1017 @@
+#+LaTeX_CLASS: refcard
+#+OPTIONS: toc:nil
+
+* Arquitectura de Computadores
+** Rendimiento
+
++ Repertorio Instruc. afecta: NI (num.instruc.)
++ CPU afecta: CPI (ciclos/instruc) y T (periodo reloj)
+
++ Calculo de los ciclos de un programa
+|-----------------------------------------+----------------------------------------------------|
+| C_{cpu} = NI * CPI                      | t_{cpu} = NI * CPI * 1/fr                          |
+| $C_{cpu} = \sum_{i=1}^n{(CPI_i * I_i)}$ | $t_{cpu} = \sum_{i=1}^n{(\frac{CPI_i * I_i}{NI})}$ |
+|-----------------------------------------+----------------------------------------------------|
+
++ Problemas:
+  - Bajar NI (num.instruc.) puede aumentar T (periodo reloj)
+  - Bajar CPI (ciclos/instruc) puede aumentar NI
+  - Aumentar fr (frec.reloj) problemas de tecnología
+  - hay que tener en cuenta la frec. de las instruc.
+
+*** MIPS (Millones de Instrucciones Por Segundo)
+|-------------------------------------------------------------|
+| $MIPS = \frac {NI} {t_{ejec}*10^6} = \frac {fr} {CPI*10^6}$ |
+|-------------------------------------------------------------|
+
++ Problemas
+  - Difícil comparar máquinas con distinto repertorio de instrucciones
+  - Varían entre programas de una misma máquina
+
+|------------------------------------------------------------------|
+| $MIPS_{relativos} = t.referencia/t.obtenido * MIPS_{referencia}$ |
+|------------------------------------------------------------------|
+
++ Problemas
+  - Difícil encontrar maquina de referencia (11/780 de los 80s)
+  - Difícil acoplar computadores modernos a máquinas de referencia
+  - Hay que conocer el tiempo de ejecución, el programa y la entrada
+
+*** MFLOPS (Millones de operaciones de punto Flotante Por Segundo)
+
+|-------------------------------------------------------------------------------------------|
+| $MFLOPS = \frac {nº operaciones.p.flotante} {t_{ejecucion} * 10^6}$                        |
+|-------------------------------------------------------------------------------------------|
+
+*** Tiempos
+
++ Tiempo total de ejecucion
+  | $t_{ej} = \sum_(i=1)^n {t_i}$
++ Tiempo de ejecución ponderado
+  | $t_{ej} = \sum_{i=1}^n {P_i*t_i}$
++ Tiempo de ejecucion normalizado
+  | $t_{medio.ej.normalizado} = \sqrt{ \prod_{i=1}^n {razon.ejecucion(i) } }$
+** Instrucciones: Lenguaje Máquina
+
+1) La simplicidad favorece la regularidad
+2) Lo más pequeño es más rápido
+3) Un buen diseño demanda compromisos
+4) Hacer común el caso rápido
+
++ 32 registros ( $0, $1 ... $31 )  de 32 bits
+  Posiciones rápidas para datos. En MIPS los datos deben estar en registros para realizar la aritmética. $0 siempre es 0, $1 se reserva para las pseudoinstrucciones
+
++ 2^{30} palabras de memoria (Mem(0)..Mem(429..))
+
+|------------------+-------------------+------------------------|
+| Instrucción      | _AL_ $4..$31=a..z | _HLL_                  |
+|------------------+-------------------+------------------------|
+| Sumar            | ADD $0,$1,$2      | a= b + c               |
+| Suma inmediata   | ADDi $4,$5,cte    | a= b + cte             |
+| Suma memoria     | ADDm $4,$5,M($6)  | a= b + &c              |
+| Restar           | SUB $0,$1,$2      | a= b - c               |
+| Multiplicar      | MUL $0,$1,$2      | a= b * c               |
+|------------------+-------------------+------------------------|
+| LoadWord         | LW $0,M($1)       | a= &b                  |
+| StoreWord        | SW $0,M($1)       | *b= a                  |
+| LoadUpperInmedia | LUI $0,cte        | a=cte                  |
+|------------------+-------------------+------------------------|
+| BranchEQual      | BEQ $0,$1,$2      | if(a==b) goto c        |
+| BranchNotEq      | BNE $0,$1,$2      | if(a!=b) goto c        |
+| StoreLessThan    | SLT $0,$1,$2      | if(b<c) a=1 else a=0   |
+| StoreLT Inmediat | SLTI $0,$1,cte    | if(b<cte) a=1 else a=0 |
+|------------------+-------------------+------------------------|
+| Jump to addr     | J   addr          | goto addr              |
+| Jump to Register | JR  $0            | goto a                 |
+|------------------+-------------------+------------------------|
+| JumpAndLink      | JAL addr          | goto addr; $31=return  |
+|------------------+-------------------+------------------------|
+| ShiftLeftLogical | SLL $1,$2,cte     | a= b << cte            |
+| ShiftRighLogical | SRL $1,$2,cte     | a= b >> cte            |
+| AND              | AND $1,$2,$10     | a= b & c               |
+| AND Inmediato    | ANDI $1,$2,cte    | a= b & cte             |
+| OR               | OR $1,$2,$10      | a= b OR c              |
+| OR Inmediato     | ORI $1,$2,cte     | a= b OR cte            |
+|------------------+-------------------+------------------------|
+|                  |                   |                        |
+
+*** Traducción desde alto nivel a ensamblador
+1. Asignación de registros a las variables
+2. Código del cuerpo del procedimiento
+3. Preservar registros en la llamada a procedimiento
+
+** Construcción de una ALU (Arithmetic-Logic Unit)
+
+*** Multiplicación
+**** BOOTH
+
+1) Valor inicial: Prod= Mdor
+2) Comparación Prod-Mcando
+|----+---------|
+| 00 | NOP, >> |
+| 11 | NOP, >> |
+| 10 | SUB, >> |
+| 01 | ADD, >> |
+|----+---------|
+
+*** División
+
+1) Valor inicial: Cociente=0
+2) Comprueba Resto
+ |---+------------|
+ | 0 | <<=1       |
+ | 1 | +Div, <<=0 |
+ |   |            |
+3) Desplaza Divisor >>
+   
+** Caminos de Datos y Control
+*** Entradas de control ALU
+
+| func | Descripción       |
+|------+-------------------|
+|  000 | AND               |
+|  001 | OR                |
+|  010 | ADD               |
+|  110 | SUB               |
+|  111 | Iniciar menor que |
+
+*** Máquina monociclo
+En una máquina monociclo utilizamos un conjunto de tablas de verdad que especifican la inicialización de las señales de control en base al tipo de instrucción.
+**** Esquema monociclo:
+  1. Enviar el contador del programa (PC) a la memoria que contiene el código y cargar la instrucción de memoria.
+  2. Leer uno o dos registros, utilizando para ello los campos de la instrucción específica para seleccionarlos.
+  3. Uso de la ALU
+    a. Las instrucciones de acceso a memoria la utilizan para calcular la dirección.
+    b. Las aritmético-lógicas para calcular la operación
+    c. Las de salto para comparar
+  4. Finalización de la instrucción
+    a. Una instrucción de acceso a memoria accede a ella ya sea para leer o para escribir
+    b. Una instrucción aritmético-lógica escribe lo calculado en la ALU en un registro
+    c. Para una dirección de salto se cambiará el resultado de la última operación a cargar
+
+*** Máquina Multiciclo
+La ejecución de una instrucción se puede dividir en varios pasos, de este modo, la unidad de control debe especificar
+las señales que se van a inicializar en cada paso y el paso siguiente de la secuencia, para ello utilizaremos una
+máquina de estados finitos. Esto implica:
+  - Instrucciones de distinta duración.
+  - Fácil diseño de las Unidades Funcionales de cada paso.
+  - Posibilidad de compartir Unidades Funcionales mientras que se haga en distintos ciclos de reloj.
+
+**** Ventajas/inconvenientes:
+  (+) La implementación multiciclo permite que una U.Funcional sea compartida por diferentes instrucciones siempre que se haga en distintos ciclos de reloj.
+  (-) Se necesitan más multiplexores: diseño algo más complejo.
+
+**** Excepciones en la máquina multiciclo:
+Se desencadenará una excepción en cualquier cambio inesperado en el flujo de control sin distinguir si la causa es interna o externa.
+
++ Ejemplos de excepción son:
+  - Desbordamiento aritmético
+  - Utilización de una instrucción indefinida
+
++ Tratamiento de las excepciones
+Es necesario añadir algunos registros extra y algunas señales de control a nuestra realización básica ampliando ligeramente la máquina de estados finitos:
+  - EPC: registro de 32bits que guarda la dirección de la instrucción afectada
+  - Causas: un registro de 32bits que almacena la causa de la excepción.
+  - Señales:
+    * escrEPC: escribir en el registro EPC
+    * escrCausa: escribir causa
+    * causaInt: seleccionar causa
+
+Las acciones que se producen tras una excepción son:
+ 1. Guardar el contador de programa (PC) en el contador de programa de excepciones (EPC).
+ 2. Transferir el control al S.O. en una dirección dada.
+ 3. Retorno después de la atención a la excepción:
+    - Volver al programa
+    - Abortarlo
+
+** Segmentación (Pipeline)
++ Solapa la ejecución de múltiples instrucciones
+  - Ejecución de etapas diferentes de instrucciones diferentes
++ Idealmente: $NI/t_{segmentada} = \frac{ NI/t } {Nºsegmentos}$
+  - Pero: distinta duración de etapas + tiempo adicional por segmentar
+
+*** Ventajas e inconvenientes:
+Esto conlleva el aumento del rendimiento general disminuyendo el valor de CPI y aumentando la productividad, sin embargo, no disminuye el tiempo de ejecución de una instrucción.
+
+*** Etapas y señales:
++ _Registros de segmentación_: Son aquellos que se colocan entre etapas de segmentación. Se utilizan para conservar el valor de una instrucción individual en sus cuatro etapas restantes.
+
+1. *IF: Instruction Fetch* (búsqueda de instrucción)
+   a. Lectura de memoria
+   b. Escritura en PC 
+2. *ID: Instruction Decoding* (decodificación de instrucción)
+   - Siempre asertada
+3. *EX: Execution* (ejecución)
+    - RegDst
+    - AluOp (2bits)
+    - AluSrc
+4. *MEM: Memory* (acceso a memoria)
+    - Branco (beq)
+    - MemRead (lw)
+    - MemWrite (sw)
+5. *WB: Write Back* (post-escritura)
+    - MemToReg
+    - RegWrite
+
+Cada una de estas etapas de la instrucción, usa en exclusiva un hardware determinado del procesador, de tal forma que la ejecución de cada una de ellas, en principio, no interviene en la ejecución del resto.
+
+*** Etapas por instrucción
+**** Instrucción LW
+
+1. *IF*: Búsqueda de instrucción
+  + Lectura de la memoria de instrucción
+  + Incremento PC+4 (también guardado en IF/ID)
+
+2. *ID*: Decodificación de instrucción y lectura de registros
+  + Suministrar campo inmediato (16 bits)
+  + Suministrar número de los registros a leer (dos)
+  + Se almacenará en el ID/EX: 32b,registros,(PC+4)
+
+3. *EX*: Ejecución y cálculo de dirección efectiva
+  + En EX/MEM suma Reg1 y el valor inmediato
+
+4. *MEM*: Lee el dato de memoria y lo escribe en MEM/WB
+
+5. *WB*: Writeback del dato de MEM/WB en el registro destino
+
+**** Instrucciones de almacenamiento
+
+1. *IF*: Búsqueda de instrucción, y PC+4
+2. *ID*: Suministra registros y 16b campo inmediato.
+3. *EX*: Se coloca la dirección de memoria y el contenido del registro en EX/MEM
+4. *MEM*: El dato de EX/MEM se almacena en la dirección dada
+5. *WB*: no se necesita writeback
+
+
+*** Riesgo de dependencia de datos:
+Se denomina dependencia de datos al hecho de que una instrucción utilice como operando un dato que se va a
+escribir más tarde. Es una característica intrínseca de la segmentación e impide que se diseñe una segmentación de alto rendimiento.
+
+**** Unidad de detección de dependencias:
+_Detecta_ las dependencias basándose en el hecho de que ocurrirá una dependencia de datos si una instrucción trata de leer un registro en su etapa ID mientras que otra instrucción quiere escribirlo en su etapa WB. Bastará con examinar las correspondientes señales en ID y WB.
+
++ Posible acción: _Detención._
+  Detener la instrucción hasta detener el riesgo: introducir *burbujas*: esto ralentiza la ejecución.
+  - No se deben introducir burbujas sin necesidad, para ello:
+    * Comprobar si la primera instrucción escribe ese registro.
+    * Evitar detención debido a escritura y lectura del $0.
+    * Evitar detención si se trata de carga que sólo utiliza Leer Reg. 1.
+
+**** Unidad de Anticipación:
+La detención disminuye el rendimiento, por ello la Unidad de Anticipación intenta tener los datos disponibles, más concretamente, la U. de Anticipación toma las entradas de la ALU desde cualquier registro de segmentación en lugar de esperar que los registros de la instrucción sean escritos.
+
+Qué tipo de circuitos conforman la U. de Anticipación: Circuito combinacional y multiplexores. La lógica
+combinacional tiene como entradas los valores de los registros de segmentación de las distintas etapas.
+
+*** Dependencia de saltos
+¿Cómo predecimos qué se va a ejecutar tras una condición de salto si aún no conocemos el resultado del test?
+
+Si hay no saltos se decide en la etapa MEM. 
+
+Posibles soluciones:
+1. *Detener la tubería* hasta que se complete el salto.
+   - Penalización de varios ciclos de reloj. Si el salto no se produce, se podría haber adelantado trabajo.
+2. Decodificar las siguientes instrucciones pero *descartarlas si ocurre el salto*. 
+   + Nuevas líneas de control para descartar:
+     - *IF.Flush*: pone a cero el campo de instrucción IF/ID.
+     - *ID.Flush*: pone a cero la señal de control para las detenciones.
+     - *Ex.Flush*: pone a cero la línea de control de la etapa definitivamente.
+
+*** ¿Riesgo de dependencia de memoria?
+Este riesgo no existe, ya que al introducir la memoria de anticipación se elimina este riesgo.
+
+** Jerarquía de memoria
+
++ Principio de Localidad:
+   - Temporal: Los más recientemente utilizados son más probables. (bucles, subrutinas)
+   - Espacial: los más cercanos a los utilizados son más probables. (tablas, matrices)
+
++ Acceso a la información:
+  1. El procesador indica la dirección de la información en memoria principal.
+  2. El acceso se intenta en el nivel más rápido (caché)
+     a. Si la información se encuentra, se accede.
+     b. En caso contrario, se busca en el siguiente nivel (memoria principal).
+       a. Si se encuentra, se transfiere al nivel anterior (caché)
+       b. Si no está ahí, se busca en el siguiente nivel.
+     Y así sucesivamente, ascendiendo la información hasta el primer nivel.
+
+El diseño de la organización jerárquica de la memoria implica definir políticas de ubicación, reemplazo, actualización, etc.
+
+*** Memoria Caché
+*Objetivo*: la memoria caché es la memoria más rápida, se encuentra entre la CPU y la M. Principal, por ello su cometido es: conseguir que las referencias en memoria sirvan a una velocidad muy cercana a la del procesador.
+
+**** Tipos de fallos de caché:
+  - *Forzosos*: el primer acceso a un bloque no está en la caché, así que el bloque debe ser traído a la misma. Estos también se denominan fallos de arranque en frío o de primera referencia.
+  - *Capacidad*: si la caché no puede contener todos los bloques necesarios durante la ejecución de un programa, se presentarán fallos de capacidad debido a los bloques que se descartan y luego se recuperan.
+  - *Conflicto*: producidos por la necesidad de ubicar un bloque en un conjunto lleno cuando la MC no está
+completa. Si la estrategia de ubicación es asociativa por conjuntos o de mapeo directo, estos fallos ocurrirán, ya que se puede descartar un bloque y posteriormente recuperarlo si a un conjunto le corresponden
+demasiados bloques.
+
+**** Políticas de ubicación:
+Las políticas de ubicación establecen la correspondencia entre los bloques de MP y MC. Tenemos los siguientes tipos:
+
+  + *Directa*: Correspondencia directa. Un bloque de MP puede ir sólo a un bloque de Caché. Podría decirse que es asociativa por conjuntos de una sola vía.
+Una dirección en MC consta de: etiqueta, no de bloque y posición en el bloque (palabra).
+    - (v) La lectura permite el acceso simultáneo.
+    - (v) Algoritmo de reemplazo trivial.
+    - (i) Incremento de la tasa de fallos de la MC, si dos bloques de MP, que corresponden a un mismo bloque de MC, se utilizan de forma alternativa.
+
+  + *Asociativa*: Cualquier bloque de MP puede ubicarse en cualquiera de los bloques de la caché.
+Una dirección en MC consta de: etiqueta y posición en el bloque (palabra)
+    - (v) Flexibilidad (permite la implantación de gran variedad de algoritmos de reemplazo)
+    - (i) Coste de las comparaciones.
+
+  + *Asociativa por conjuntos*: Consiste en dividir la MC en C conjuntos de B bloques cada uno. Se aplica
+correspondencia directa a nivel de conjunto y correspondencia asociativa a nivel de bloque. De esta forma el
+bloque i de MP le corresponde el conjunto i mod k, dentro de este conjunto se podrá ubicar donde quiera.
+Una dirección consta de: etiqueta, conjunto y posición en el bloque.
+    - (v) Reduce el coste sin rechazar rendimiento.
+
+**** Políticas de escritura:
+
++ *Escritura directa*: la información se escribe en bloques de la caché y en el bloque del nivel más bajo de la jerarquía de memoria (MP). Presenta las siguientes ventajas:
+  - Los fallos de lectura son más baratos porque no necesitan escritura en el nivel más bajo.
+  - La escritura directa es más fácil de implementar que una post-escritura aunque para que sea más práctica en un sistema de alta velocidad sería necesario utilizar un buffer de escritura.
+
++ *Post-escritura*: la información se escribe sólo en el bloque de la caché. El bloque modificado sólo se escribirá en el nivel inferior de la jerarquía solamente cuando este sea sustituido de la memoria caché. La memoria virtual usa post-escritura debido a la gran latencia de escritura en un nivel más bajo. Presenta las siguientes ventajas:
+  - Las palabras individuales pueden ser escritas por el procesador a la velocidad de la caché en lugar de
+a la velocidad que el procesador puede aceptarlas.
+  - Múltiples escrituras en un mismo bloque requieren solamente una escritura en el nivel más bajo de
+la jerarquía.
+  - Cuando se realiza una post-escritura se hace uso del ancho del nivel más bajo, yq que se escribe el
+bloque completo.
+
+*** Memoria Entrelazada
+Incrementa la anchura de banda ensanchando la memoria pero no el bus de interconexión. Para ello divide la
+memoria en bloques. Permite el acceso concurrente a módulos de memoria no demasiado rápida, y por tanto de
+menor coste, multiplicando por M el ancho de banda que se obtendría con un solo módulo, siendo M el número de módulos.
+
+La memoria se organiza en bancos para leer o escribir múltiples palabras en un tiempo de acceso. Cada banco puede escribir independientemente.
+
+- Problema: se necesitan más chips de memoria.
+**** Tipos:
++ Según distribución de direcciones:
+  - Orden Superior
+  - Orden Inferior
++ Según el modo de acceso:
+  - Entrelazado simple o simultaneo
+  - Entrelazado complejo o concurrente
+
+*** Memoria Virtual
+Su objetivo es poder ejecutar programas cuyo tamaño exceda de Memoria Principal, es como si actuase de Caché con respecto a la M.Secundaria.
+
+Habrá tanta como M.Secundaria. Se divide en partes de igual tamaño / página. Lo cual lleva a fallos de páginas. Se utiliza correspondencia totalmente asociativa. El reemplazo de los fallos de caché está controlado por hardware mientras que el reemplazo en memoria virtual se controla por el S.O.
+
+Almacenar algo en memoria virtual significa una penalización, pues involucra el acceso a un dispositivo generalmente lento.
+
++ Tipos:
+  - *Paginada*: bloques fijos
+  - *Segmentada*: bloques variables
+
+**** TLB
+En principio toda referencia a memoria virtual requiere dos accesos a la memoria física: uno para acceder al
+elemento de la TP, y otro para acceder a la memoria física. Por tanto, un esquema de memoria virtual duplicaría el tiempo de acceso a memoria. Para evitar este inconveniente se utiliza una cache especial llamada usualmente TLB.
+
+La TLB es una caché que contiene sólo correspondencia de tablas de páginas. Incrementa la velocidad de traducción de dirección virtual a dirección física.
+
+Así cada entrada de etiqueta del TLB contiene una parte del número de página virtual, y cada entrada de datos del TLB contiene un número de página física. En cada referencia, buscamos el número de página virtual en el TLB, si conseguimos un acierto, el número de página física se utiliza para formar la dirección, y se activa el bit de referencia correspondiente. Si el procesador está realizando una escritura, también se activa el bit de modificación.
+
+Si se presenta un fallo en el TLB debemos determinar si es un fallo de página o únicamente un fallo de TLB.
+Memoria Principal Se divide en trozos del mismo tamaño que la página / bloque.
+
+*** Memoria principal
+Se divide en trozos del mismo tamaño que la página / bloque.
+
+
+* Procesadores superescalares
+** Tareas especificas
+*** 1: Decodificación paralela
+Un procesador escalar decodifica varias instrucciones por ciclo.
+
+Por ello, hay que comprobar que no haya dependencias entre ellas:
+ + ejecutandose actualmente
+ + candidatas a ejecutarse
+ + entrantes
+
+*** 2: Lanzamiento (issue) de instrucciones
+A la salida de la decodificacion tenemos "n" instrucciones ya decodificadas listas para ser lanzadas. Este conjunto conforma la "ventana de lanzamiento".
+
+Las que puedan ejecutarse concurrentemente se envian a las respectivas Unidades de Ejecución (UE)
+
+Se buscan dependencias tras la decodificación y se ve si se debe bloquear el lanzamiento de alguna de las n instrucciones.
+
++ Dependencias
+  - _dep. verdadera de datos_ (ReadAfterWrite)
+    * No pueden resolverse de otra forma salvo mediante bloqueo
+  - _dep. falsa de datos_ (WriteAfterRead y WriteAfterWrite) 
+    * Se puede resolver renombrando registros
+  - _dep. de control_ (condicion de bifurcacion) no resuelta
+    *  Se puede resolver con ejecución especulativa
+
+***** Estaciones de reserva (Shelving)
+Estaciones de reserva almacenan en buffer las instrucciones de la ventana, desacoplando el chequeo de dependencias que se vé desplazado a una etapa posterior (dispatching o expedición).
+
+Cada UE tendra un buffer.
+
+Nota: El renombramiento de registros no puede hacerse en el dispatching, deberá hacerse en la ventana de lanzamiento.
+
+****** Configuraciones
++ *Esfera de aplicación* (scope): 
+  - Total / Parcial (si está restringido a algunas isntrucciones)
++ *Distribución de los bufferes*
+  - "standalone":
+    - Individuales (una pequeña para cada UE)
+    - por grupo (una para cada grupo de UEs del mismo tipo)
+    - central (las sirve a todas)
+  - buffers combinados (realizan shelving+renombramiento+dispatch)
+
+****** Política de búsqueda de operandos
+  - Se buscan en el lanzamiento (issue), requiere buffers de shelving grandes (32b)
+  - Se buscan en la expedicion (dispatch), solo requiere el identificador del registro (5b) pero un puerto de lectura por EU
+
+****** Políticas de expedición o Dispatching de instrucciones
++ Política de dispatching
+  - Regla de selección (especifica cuando las inst. están disponibles para ejecución)
+  - Regla de arbitración (si hay + de 1 inst. ejecutable
+  - Orden de lanzamiento (si una inst. no ejecutable impide a otras lanzarse)
++ Velocidad de lanzamiento
++ _Chequeo de la disponibilidad de operac_
++ Tratamiento de las estaciones de reserva
+
+***** Manejo del bloqueo de emisión
+
++ Si no se usa shelving cualquier dependencia provoca bloqueo
++ Si se usa shelving (ya no bloqueos por dependencias falsas o control pero puede que..):
+  - tener que mantener el orden haga esperar a instrucciones independientes
+  - vengan instrucciones de n en n
+
+****** Lanzamiento de instrucciones alineado
+
+Usa una ventana deslizante
+
+*** 3: Ejecución paralela de instrucciones
+- Instrucción completada
+- Instrucción terminada
+- Instrucción retirada
+*** 4: Mantenimiento de la consistencia secuencial de la ejecución
+**** Modelo de consistencia secuencial
++ Consistencia del procesador (fuerte/debil)
++ Consistencia de la memoria (fuerte/debil)
+**** Renombramiento acceso a memoria
+  - LOAD
+  - ESCORE
+**** Buffer de reordenamiento
+Definición
+Objetivos
+Funcionamiento
+Que resuelve
+*** 5: Mantenimiento de la consistencia secuencial del procesado de excepciones 
+
+
+* Saltos
+
+** Detección del salto
++ Detección en paralelo
++ Detección anticipada
+
++ Detección de la búsqueda de instrucciones y de saltos 
+
+** Manejo de saltos condicionales no resueltos
+*** Bloqueo hasta que se resuelva la condición de salto
+*** Realizar una Especulación
++ Predicción fija
+  - Se toma el salto (taken): más probable pero más costosa de deshacer
+  - No se toma el salto (not taken)
++ Predicción verdadera
+  - Estática
+    a) basado en el código de operación (se usa la estadística)
+    b) basado en desplazamiento (siempre taken en cierre de bucles y saltos hacia atrás)
+    c) dirigido por compilador
+  - Dinámica
+    a) Explicita (usa bits de historia BHT)
+      - 1 bit (1 si taken, 0 si not taken)
+      - 2 bits (maquina estados: strongly_taken, weakly_taken... strongly_nottaken)
+      - 3 bits (cada uno almacena una situación anterior y se decide por mayoría)
+    b) Implicita
+      - Se usan memorias caché: BTIC BTAC
+
+** Acceso al Branch Target Path
+
+Se pretende disminuir la penalización de los saltos taken, que son los más habituales.
+
+4 métodos
+*** Esquema calcular/buscar
+1) Cálculo de la dirección del destino del salto (BTA)
+2) Buscar instruccion (BTI) correspondiente
+3) Continuar procesamiento y incrementar contador
+*** Esquema BTAC
+Reduce el tiempo de búsqueda de instrucción de salto con una caché totalmente asociativa que almacena la dirección que puede provocar el salto BTA y la dirección correspondiente al destino del salto.
+
+De esta forma, cuando se produzca el salto ya se tendrá calculada la dirección a la que saltar.
+*** Esquema BTIC
+Mejora del BTA que almacena, además de la dirección destino del salto, la posición siguiente a esa dirección.
+
+
+* Memoria Virtual
+Es un nivel de jerarquía de memoria que hace posible disponer de un espacio de direcciones mayor que el disponible en memoria principal, haciendo uso del espacio en memoria secundaria (disco).
+
+Se aprovecha la localidad espacial dividiendo la memoria virtual en páginas (bloques grandes).
+
+El SO es el encargado de usar técnicas como la LRU y un bit de validez para escoger que páginas sustituir.
+
+Las escrituras en disco son caras, por lo que se usa un sistema de post-escritura de forma que sólo se actualice la información en disco cuando vaya a ser sustituida.
+
+** Translocation Lookaside Buffer (TLB)
+La memoria virtual se traduce a memoria física en la tabla de páginas.
+LA TLB es una memoria rápida que cachea las últimas entradas usadas de la tabla de páginas para mejorar el reuso (contiene por tanto un subconjunto de la tabla de páginas).
+
+El caso de fallo de TLB (al buscar una dirección virtual, esta no posee una entrada válida en la TLB):
+  a) Si al mirar en la tabla de páginas la dirección virtual se encuentra en memoria primaria (bit validez = 1), se toma la dirección de memoria física y se actualiza la TLB.
+  b) Si la dirección virtual se encuentra en memoria secundaria (en disco, bit=0), se trae a memoria primaria la página ubicada en disco y se actualiza tanto la TLB como la tabla de páginas. Al ser un proceso lento, lo suele realizar el SO y este usa una interrupción, dejando trabajar a otros procesos mientras se hace la lectura en disco. También el SO realiza la sustitución de la página en memoria principal.
+
+
+
+
+* Problemas
+** Rendimiento
+*** 1. ¿Qué máquina es más rápida? (CPI medidos para el mismo programa)
+   - _Máquina A:_ T=10ns CPI=2.0	 
+   - _Máquina B:_ T=20ns CPI=1.2
+**** Solución
+	 $t_{CPU_A}= NI * CPI_A * T_A = NI * 20$
+
+	 $t_{CPU_B}= NI * CPI_B * T_B = NI * 24$
+   
+   $\frac{Rendimiento_A}{Rendimiento_B} = t_{CPU_B}/t_{CPU_A} = 24/20 = 1.12$ = 112%
+   - La Máquina A es 12% más rápida que la B
+
+*** 2. ¿Qué secuencia de código es más rápida? Haya el CPI para cada secuencia
+| Código | NI_A (CPI=1) | NI_B (CPI=2) | NI_C (CPI=3) |
+|--------+--------------+--------------+--------------|
+|      1 |            2 |            1 |            2 |
+|      2 |            4 |            1 |            1 |
+**** Solución
+
+- El código 2 es más rápido
+
+  - $t_{cod_1} = \sum_i(NI_i*CPI_i)T = (2 + 2 + 6)T = 10T$
+  - $t_{cod_2} = (1*4 + 2*1 + 3*1)T = 9T$
+- $CPI = \sum_i Ciclos_i / \sum_i NI_i$
+  - $CPI_1 = \frac {1(2)+2(1)+3(1)} {2+1+2} = \frac{10}{5} = 2.0$
+  - $CPI_2 = \frac {1(4)+2(1)+3(1)} {4+1+1} = \frac{9}{6} = 1.5$
+
+*** 3. Hallar MIPS con distintos compiladores si f=100MHz
+| Compilador | NI_A (CPI=1) | NI_B (CPI=2) | NI_C (CPI=3) |
+|------------+--------------+--------------+--------------|
+|          1 | 5*10^6       | 1*10^6       | 1*10^6       |
+|          2 | 10*10^6      | 1*10^6       | 1*10^6       |
+
+**** Solución
++ El programa compilado por 2 es más rápido que el de 1
+$MIPS= \frac {NI_i} {t_{CPU}*10^6} = \frac {NI_i} {NI_i*CPI_i*T*10^6} = \frac {f} {CPI_i*10^6}$
+ - $CPI_1 = \frac {1(5)+2(1)+3(1)} {5+1+1} = \frac{10}{7}$
+   - $MIPS_1 = \frac{100*10^6}{10/7*10^6} = 70$
+ - $CPI_2 = \frac {1(10)+2(1)+3(1)} {10+1+1} = \frac{15}{12}$
+   - $MIPS_2 = \frac{100*10^6}{15/12*10^6} = 80$
+
+*** 4. Hallar rendimientos pico máximos
+| Máquina      | CPI_A | CPI_B | CPI_C | CPI_D |
+|--------------+-------+-------+-------+-------|
+| M1 (f=50MHz) |     1 |     2 |     3 |     4 |
+| M2 (f=75MHz) |     2 |     2 |     4 |     4 |
+
+**** Solución
+- Se toma el CPI mejor (dará MIPS máximos)
+  - $MIPS_{M1} = f/(CPI*10^6) = 50/1 = 50$
+  - $MIPS_{M2} = f/(CPI*10^6) = 75/2 = 37.5$
+
+*** 5. ¿A qué frecuencia M1 tendría el mismo rendimiento que M2?
+**** Solución
+$t_{M1} = t_{M2}$
+
+$NI*CPI_{M1}*(1/f_{M1}) = NI*CPI_{M2}*(1/f_{M2})$
+
+f_{M1} = CPI_{M1}*f_{M2}/CPI_{M2} = 62.5MHZ
+
+*** 6. Hallar MIPS para máquina de punto flotante (MPF) y otra que usa operaciones enteras para implementarlas (MNPF).
+| Máquina | Prod.PF  | Suma.PF  | Div.PF    | Enteras  |
+|---------+----------+----------+-----------+----------|
+| MPF     | 6 ciclos | 4 ciclos | 20 ciclos | 2 ciclos |
+| MNPF    | 30 ops.  | 20 ops.  | 50 ops.   | 1 operac |
+|---------+----------+----------+-----------+----------|
+| Program | 10%      | 15%      | 05%       | 70%      |
+
+**** Solución
+- Los CPI de la MPF se calculan sobre el 100% del programa.
+  - $CPI_{MPF} = \frac {6(0.1) + 4(0.15) + 20(0.05) + 2(0.7)} {1} = 3.6$
+  - $MIPS = \frac{50*10^6}{3.6*10^6} = 13.89$
+- En el caso de la MNPF los ciclos son todos 2 por cada operación
+  - $CPI_{MNPF} = 2$
+  - $MIPS = \frac{50*10^6}{2*10^6} = 25$
+
+*** 6.b. ¿si MPF realiza 300000 instrucciones, cuantas necesitaría MNPF? Halla tiempo de ejecución y MFLOPS
+**** Solución
+$NI_{MNPF} = 300000( 30(0.1) + 20(0.15) + 50(0.05) + 0.7) = 2760000$
+- Para el tiempo puede haber un compromiso entre NI y CPI
+   - $t_{MPF} = NI_{MPF} * CPI_{MPF} / f = 300000*3.6/(50*10^6) = 0.02165$
+   - $t_{MNPF} = NI_{MNPF} * CPI_{MNPF} / f = 2760000*2/(50*10^6) = 0.1104$
+- MFLOPS son como los MIPS pero sólo se cuentan las isntrucciones PF
+  - $MFLOPS_{MPF} = 300000*0.3 / (t_{MPF} * 10^6) = 4.17$
+  - $MFLOPS_{MNPF} = 0$
+
+*** 7. Hallar MIPS y mejora de rendimiento de las dos máquinas indicadas
+| Máquina       | CPI_A | CPI_B | CPI_C | CPI_D |
+|---------------+-------+-------+-------+-------|
+| Mbase (50MHz) |     2 |     3 |     3 |     5 |
+| Mopt  (60MHz) |     2 |     2 |     3 |     4 |
+|---------------+-------+-------+-------+-------|
+| Programa      |   40% |   25% |   25% |   10% |
+
+**** Solución
++ Cálculo de los MIPS
+  - $CPI_{Mbase} = \frac {2(0.4)+3(0.25)+3(0.25)+5(0.1)} {1} = 2.8$
+	- $MIPS_{Mbase} = f/(CPI_{Mbase}*10^6) = 50/2.8 = 17.86
+  - $CPI_{Mopt} = \frac {2(0.4)+2(0.25)+3(0.25)+4(0.1)} {1} = 2.45$
+	- $MIPS_{Mbopt} = f/(CPI_{Mopt}*10^6) = 60/2.45 = 24.44
++ Rendimiento: Mopt 37% más rápida que Mbase
+  - $\frac {R_{Mopt}} {R_{Mbase}} = \frac {NI*CPI__{Mbase}/f_{Mbase}} {NI*CPI_{Mopt}/f_{Mopt}}$ = 1.37 = 137%
+
+*** 8. Se produce una máquina Mc que reduce el número de instrucciones necesarias respecto de Mbase. Hallar mejora de rendimiento de Mc y de Md (combinación Mopt y Mc).
+
+| Máquina | NI_A | NI_B | NI_C | NI_D |
+|---------+------+------+------+------|
+| Mc      |  90% |  90% |  85% |  95% |
+**** Solución
+- Rendimiento: Mc 12% más rápida que Mbase
+  - $CPI_{Mc} = \frac {2(0.4*0.9)+3(0.25*0.9)+3(0.25*0.85)+5(0.1*0.95)} {0.4*0.9 + 0.25*0.9 + 0.25*0.85 + 0.1*0.95} = 2.81$
+  - $R= \frac {(0.4*0.9 + 0.25*0.9 + 0.25*0.85 + 0.1*0.95)*2.81/f} {(1)*2.8/f} = 1.12$
+- Rendimiento: Md 
+  - $R= \frac {(0.4*0.9 + 0.25*0.9 + 0.25*0.85 + 0.1*0.95)*2.81/f} {(1)*2.8/f} = 1.12$
+
+** Instrucciones
+
+*** 1. Si suponemos que el bucle está a partir de la posición 00018000 (Hex.) y que la dirección Sstart es la 1000 (Hex.) ¿Cual es el código máquina (binario) MIPS para el bucle que se expone a continuación?
+:  Loop:  mul $9, $19, $10
+:         lw  $8, Sstart($9)
+:         bne $8, $21, Exit
+:         j   Loop
+:  Exit:  .....
+**** Solución
+|                  | 0-6 |   7-12 | 13-16 | 17-21 | 22-26 | 27-32 |
+|------------------+-----+--------+-------+-------+-------+-------|
+| _Formato R:_     |  op |     rs |    rt | rd    | shamt | funct |
+| _Formato I:_     |  op |     rs |    rt | addr0 | addr1 | addr2 |
+| _Formato J:_     |  op |        |       | addr0 | addr1 | addr2 |
+|------------------+-----+--------+-------+-------+-------+-------|
+| MUL $9$19$10     |  00 |     19 |    10 | 09    | 00    | 24    |
+| LW $8,Sstart($9) |  35 |     09 |    08 | 1000H |       |       |
+| BNE $8$21,Exit   |  05 |     08 |    21 | 0004  |       |       |
+| J Loop           |   2 | 18000H |       |       |       |       |
+
+*** 2. ¿Cual es el Código ensamblador, estilo Acumulador, estilo Memoria-Memoria y estilo Pila de la sentencia en HLL: A = B + C
+**** Solución
++ Estilo Acumulador
+: LOAD  AddrB
+: ADD   AddrC
+: STORE AddrA
++ Estilo Pila
+: PUSH AddrC
+: PUSH AddrB
+: ADD
+: POP  AddrA
++ Estilo Memoria
+: ADD AddrA, AddrB, AddrC
+
+*** 3. Determinar la secuencia de instrucciones MIPs necesarias para realizar las operaciones que realizarían las siguientes Instrucciones al ejecutarse en la VAX
+**** | decl $5 | "decrementa en uno el contenido del Registro 5" |
+: ADDi $1,$0,1
+: SUB  $5,$5,$1
+
+**** | clrl $5 | "poner a cero el registro 5" |
+: ADD $5,$0,$0
+
+**** | clrl 1000 | "poner a cero la posición de memoria 1000" |
+: SW $0,1000($0)
+
+**** | aoblss $6,$5,L1 | "incrementa el R5 y si R5<R6 ir a L1" |
+: ADDi $5,$5,1
+: SLT  $1,$5,$6
+: BNE  $1,$0,L1
+
+**** | sobgtr $5,L1 | "decrementa R5 y si R5>0 ir a L1" |
+: ADDi $1,$0,1
+: SUB  $5,$5,$1
+: SLT  $1,$0,$5
+: BNE  $1,$0,L1
+
+
+*** 4. Mostrar la secuencia de Instrucciones MIPS para realizar las siguientes operaciones: a = b + 100; x{10} = x{11} + c
+**** Solución
++ a=b+100
+: LW   $5,AddrB($0)
+: ADDi $5,$5,100
+: SW   $5,$0(AddrA)
+
++ x{10}=x{11}+c
+: ADDi $6,$0,AddrX
+: ADDi $5,$6,44 (44=11*4)
+: LW   $5,0($5)
+: LW   $4,AddrC($0)
+: ADD  $5,$5.$4
+: ADDi $7,$6,40 (40=10*4)
+: SW   $5,0($7)
+: ADDi $6,$0,AddrX
+: LW   $5,$6(44)
+: LW   $4,AddrC($0)
+: ADDi $5,$5,$4
+: SW   $5,$6(40)
+
+*** 5. La siguiente rutina copia palabras desde la dirección dada en $4 a la dada en $5. El número de palabras copiadas se almacena en $2. Se detiene la copia cuando encuentra una palabra igual a CERO. La palabra de terminación debe ser copiada pero no contada. Determinar los posibles fallos de la secuencia de Instrucciones siguiente
+: Loop: lw   $3, 0 ($4) "Lee siguiente palabra de fuente"
+:       addi $2, $2, 1 "Incrementa contador palabras copiadas"
+:       sw   $3, 0 ($5) "Escribe un destino"
+:       addi $4, $4, 1 "Avanza puntero a siguiente fuente"
+:       addi $5, $5, 1 "Avanza puntero a siguiente destino"
+:       bne  $3, $0, Loop "Loop si palabra copiada no es cero"
+**** Solución
+En lugar de ~addi $4,$4,1~ habría que usar ~addi $4,$4,4~ ya que el tamaño de palabra es de 32b (4B) y se direcciona por Byte. Además no se debería incrementar el contador si la última palabra es cero.
+: Loop: lw   $3, 0 ($4) "Lee siguiente palabra de fuente"
+:       sw   $3, 0 ($5) "Escribe un destino"
+:       be   $3, $0, Exit "Sale si palabra copiada es cero"
+:       addi $4, $4, 1 "Avanza puntero a siguiente fuente"
+:       addi $5, $5, 1 "Avanza puntero a siguiente destino"
+:       addi $2, $2, 1 "Incrementa contador palabras copiadas"
+:       j    Loop "Salta a la siguiente iteración"
+: Exit: 
+
+*** 6. Suponiendo que la variable i se asigna al Registro 19, y la variable j al Registro 20, mostrar el Código MIPS para las condiciones:
+**** si(i == j ) ir a L1
+: BE $19,$20,L1
+**** si(i ¡= j ) ir a L1
+: BNE $19,$20,L1
+**** si(i<j) ir a L1
+: SLT $1,$19,$20
+: BNE $1,$0,L1
+**** si(i <= j ) ir a L1
+: SLT $1,$20,$19
+: BE  $1,$0,L1
+**** si(i>j) ir a L1
+: SLT $1,$20,$19
+: BNE $1,$0,L1
+**** si(i >= j ) ir a L1
+: SLT $1,$19,$20
+: BE  $1,$0,L1
+
+*** 7. Consideremos el fragmento de Código HLL, siendo a y b vectores que comienzan en las direcciones 1500 y 2000. Escribir el Código MIPS, asignando i al Registro 15 y c al 16. ¿Cuantas Instrucciones se ejecutan al finalizar? ¿Cuantas referencias de datos se realizan?
+: for ( i = 0, i <= 100, i = i+1 )
+:   { a [i] = b [i] + c}
+**** Solución
+- Al finalizar se ejecutan 709 Instrucciones, 202 referencias
+:       ADD  $15,$0,$0     "$15=i"
+:       ADD  $10,$0,$0     "$20=4*i"
+: Loop: LW   $21,2000($20) "$21=b[1]"
+:       ADD  $21,$21,$16   "$21=b[i]+c"
+:       SW   $21,1500($20) "a[i]=b[i]+c"
+:       ADDi $15,$15,1     "incremento i"
+:       ADDi $20,$20,4     "incremento 4 $20"
+:       SLTi $1,$15,101    "compruebo condición"
+:       BNE  $1,$0,Loop    
+
+*** 8. Suponiendo que se han hecho las siguientes medidas de CPI promedio para las siguientes Instrucciones, calcular el CPI efectivo para MIPS, promediando las frecuencias de gcc y spice que se muestran en la figura adjunta
+
+| Tipo Instr. | Ejemplo MIPS | Ejemplo HLL       | gcc | spice | CPI |
+|-------------+--------------+-------------------+-----+-------+-----|
+| Aritmética  | add sub addr | Sentencias asign. | 48% |   50% | 1.0 |
+| Transf.dat. | lw sw lui    | Ref.Estruct.      | 33% |   41% | 1.4 |
+| Salto Cond. | beq bne slt  | If y bucles       | 17% |    8% | 1.7 |
+| Bifurca.    | j jr jal     | Llamadas a Proc.  |  2% |    1% | 1.2 |
+
+**** Solución
+$CPI= \frac { 1.0(0.48+0.5) + 1.4(0.33+0.41) + 1.7(0.17+0.08) + 1.2(0.02+0.01) } {2} = 1.24$
+
+** Aritmética
+*** 1. Dada la combinación binaria 1000 1111 1110 1111 1100 0000 0000 0000, representar su valor suponiendo que se trata de:
+**** Entero en complemento a dos
+1. Complemento: 0111 0000 0001 0000 0011 1111 1111 1111
+2. Incremento: 0111 0000 0001 0000 0100 0000 0000 0000
+3. Valor: -( 2^{30}+2^{29}+2^{28}+2^{20}+2^{14} ) = -1880113152
+**** Entero sin signo
+2414854144
+**** Número en P.F. simple precisión
+1. Signo(1b): 1 (Negativo)
+2. Exponente(8b): 000 1111 1 = 31-127 = -97 (Exceso 127)
+3. Mantisa(23b): 110 1111 1100 0000 0000 0000 = 7323648
+4. Número: -1.7323648*2^{-97}
+**** Una instrucción MIPS
+1. Operación(6b): 35 (LW)
+2. Rs(5b): 31 ($31)
+3. Rt(5b): 15 ($15)
+4. Addr(16b): 49152
+5. Total: ~LW $31,49152($31)~
+*** 2. Dada la combinación binaria 0000 0000 0000 0000 0000 0000 0000 0000, representar su valor suponiendo que se trata de:
+**** Entero en complemento a dos
+0
+**** Entero sin signo
+0
+**** Número en P.F. simple precisión
+1.0*2^{-127} (representa el -\inf)
+**** Una instrucción MIPS
+SLL $0,$0,0 (No hace nada, guarda en 0: $0 << 0b)
+*** 3. Usando la notación IEEE-754, ¿Cuál es el formato de P.F. binario en simple y doble precisión de los números: 10.010 y 0.110
+**** 10.010 en Simple precisión
+1. Signo(1b): 0
+2. Exponente(8b): 130 (3+127)
+3. Mantisa(23b): 25
+**** 10.010 en Doble precisión
+1. Signo(1b): 0
+2. Exponente(11b): 1026
+3. Mantisa(52b): 25
+**** 0.110 en Simple precisión
+1. Signo(1b): 0
+2. Exponente(8b): 123 (-4+127)
+3. Mantisa(23b): 6
+**** 0.110 en Doble precisión
+1. Signo(1b): 0
+2. Exponente(11b): 1019
+3. Mantisa(52b): 6
+*** 4-5. Teniendo en cuenta la tabla de "frecuencia de instrucción MIPS para GCC y SPICE", calcular los ciclos de reloj medios por instrución (CPI) para el programa GCC, siendo CPI medio por categoría de instrucción (incluyendo fallos de cache y otros efectos)
+| Instrucción    |  CPI |
+|----------------+------|
+| Lw, sw         |  1.4 |
+| Beq, bne       |  1.8 |
+| J (bifurc.)    |  1.2 |
+| Mult (ent)     | 10.0 |
+| Div (entero)   | 30.0 |
+| Resto Instr.   |  1.0 |
+| suma, resta PF |  2.0 |
+| prod.PF (SP)   |  4.0 |
+| prod.PF (DP)   |  5.0 |
+| div.PF (SP)    | 12.0 |
+| div.PF (DP)    | 19.0 |
+**** Solución
+- $CPImedio = \sum CPI_i * frec.uso$
+  - $CPImedio_{GCC} = 1.26$
+  - $CPImedio_{SPICE} = 1.972$
+*** 6. Encontrar la secuencia más corta de instrucciones MIPS para determinar el valor absoluto de un entero en complemento a dos.
+:       SLT $1,$2,$0
+:       BEQ $1,$0,Exit
+:       SUB $2,$0,$2
+: Exit: 
+
+*** 7. Encontrar la secuencia más corta de Instrucciones MIPS, para determinar si hay arrastre de salida de la suma de dos Registros ($11 y $12) y colocar 0 o 1 en el Registro $10 si el arrastre de salida es 0 o 1 respectivamente.
+:       SLT  $1,$10,$0
+:       SLT  $2,$12,$0
+:       BNE  $1,$2,Final
+:       ADD  $13,$11,$12
+:       SRL  $13,$13,31
+:       BEQ  $13,$1,Exit
+:       ADDi $10,$0,1
+: Exit:
+*** 8. Secuencia de Instrucciones MIPS para la suma de dos enteros de doble precisión, es decir de 64 bits. Suponer que el primer sumando esta en los registros $12 y $13 y el segundo en el $14 y $15. El resultado en el $10 y $11. Los registros pares tienen la parte más significativa
+
+*** 9. Secuencia de Instrucciones MIPS para el producto de dos enteros (sin signo) de doble precisión, es decir de 64 bits. Suponer que el primer factor está en los registros $12 y $13 y el segundo en el $14 y $15. El resultado en $8. $9, $10 y $11. Los registros pares tienen la parte más significativa de los factores, y el $8 la del producto.
+
+
+*** 10. De acuerdo con la ALU de la figura, probar el resultado de la Instrucción slt sobre los valores -7 y 6. Cómo solucionar el problema.
+*** 11. Instrucciones para trasladar un campo de bits de un registro a los bits menos significativos del otro. Por ejemplo, extraer los bits 7-19 del $16, colocarlos en el $17 (0-12) y el resto a 0.
+*** 12. Suponer que tenemos las instrucciones XOR y NOR. Hallar la secuencia MIPS para realizar el intercambio de los registros sin usar ningún otro registro. Es decir, implementar la operación: ~swap $1, $2 ; $1 = a, $2 = b.~
+: XOR $1,$1,$2
+: XOR $2,$1,$2
+: XOR $1,$2,$1
+: XOR $2,$2,$1
+ó
+: XOR $1,$1,$2
+: XOR $2,$1,$2
+: XOR $1,$1,$2
+*** 13. Secuencia MIPS para calcular el complemento a 1 del contenido de un registro y pasarlo a otro: NOT $1,$2; 1_{$2} $1
+: SUB  $1,$0,$2
+: ADDi $1,$1,-1
+
+** Camino de datos y control
+*** 1. Camino de Datos y señales de Control necesarias para incorporar la Instrucción jal (jump and link) para el Camino de Datos Monociclo (las modificaciones se pueden realizar en la figura siguiente):
+
+1. Añadir a la salida de JUMP del control una puera OR ya que JAL también produce salto
+2. Introducir un multiplexor en la entrada de "Escribir registro", mediante el que cuando JAL=1, introduzca un "31" para escribir en 31.
+3. Introducir multiplexor en la entrada "Escribir dato", de la unidad de registros de forma que cuando JAL=1 se introduzca el dato "PC+4" (en el registro $31, gracias al paso 2).
+
+
+*** 2. Ampliar la tabla de inicialización de las líneas de control para ver los valores que deben de presentar todas las líneas de Control que se añadieron en el ejercicio anterior para la Instrucción jal:
+
+| Instruc | RDst | ALUSrc | MtoR | RWrite | MRead | MWrite | Branch | ALUOp1 | ALUOp0 |
+|---------+------+--------+------+--------+-------+--------+--------+--------+--------|
+| FormatR | 1    |      0 | 0    |      1 |     0 |      0 |      0 |      1 |      0 |
+| LW      | 0    |      1 | 1    |      1 |     1 |      0 |      0 |      0 |      0 |
+| SW      | X    |      1 | X    |      0 |     0 |      1 |      0 |      0 |      0 |
+| BEQ     | X    |      0 | X    |      0 |     0 |      0 |      1 |      0 |      1 | 
+**** Solución
+| Inst. | RD | ALUS | MtoR | RWr | MRd | MWr | Br | ALUOp1 | ALUOp0 | JUMP |
+|-------+----+------+------+-----+-----+-----+----+--------+--------+------|
+| JAL   | X  | X    | X    |   1 |   0 |   0 |  0 |      0 |      0 | 1    |
+  
+
+*** 3. ¿Qué se debe añadir al Camino de Datos y a las Líneas de Control, para que se pueda implementar la Instrucción jal en el Camino de Datos Multiciclo, de forma que minimice el número de ciclos de reloj para su ejecución?
+
+1. En "Escribir registro" se debe añadir al muxer la entrada "31" cuando esté RegDst con valor 2 (10). Con 00 y 01 seguirá entrando Instruccion[20-16] y [15-11].
+2. En "Escribir dato" se debe añadir al muxer la entrada "PC" cuando esté MemtoReg con valor 2 (10). Con 00 y 01 seguirá entrando AluOutput y Mem/Data.
+
+*** 4. Mostrar los pasos en la ejecución de la Instrucción jal, en el Camino de Datos Multiciclo, utilizando la misma descomposición de pasos que se muestra en la figura:
+*** 5. Mostrar lo que se debe añadir a la Máquina de Estados Finitos de la figura, para implementar la Instrucción jal:
+Habría que añadir un estádo que viniese desde el estado 1 y pasase al estado 0. realizando:
+PCWrite, PCSource=10, RegWrite, MemtoReg=10, RegDst=10
+*** 6. Una Máquina Multiciclo, tipo MIPS, podría correr a 750 MHerz. La lentitud de los accesos a la Memoria de datos, con las Instrucciones lw y sw, hace que solo pueda correr a 500 MHerz. Si los ciclos de acceso a Memoria de Datos se descomponen en dos, podría ir a la frecuencia máxima de 750 MHerz. Suponiendo el Programa compilador gcc (usar la tabla de frecuencias de instrucciones vista en "Aritmética para computadores"); ¿Cuántas veces es más rápida la máquina con accesos a Memoria de dos ciclos (750 MHz.) respecto a la otra? Suponer que Saltos y Bifurcaciones necesitan los mismos ciclos y que las Instrucciones de Inicialización y Aritméticas Immediatas se implementan como tipo R.
+- $CPI_{Normal} =  \frac {4(0.49)+5(0.22)+4(0.11)+3(0.18)} {1} = 4.04$
+- $CPI_{2Ciclos} = \frac {4(0.49)+6(0.22)+5(0.11)+3(0.18)} {1} = 4.37$
+  - $\frac {R_{2Ciclos}} {R_{Normal}} = \frac {t_{CPUNormal}} {t_{CPU2Ciclos}} = 
+	\frac {NI*4.04 / 500MHz} {NI*4.37 / 750MHz} = 1.34$ = 134%
+	- La máquina de 2 ciclos es un 34% más rápida
+*** 7. Suponer tres Máquinas tipo MIPS (con el repertorio de Instrucciones dadas) con las siguientes características adicionales. Encontrar la Máquina más rápida, usando los datos del compilador gcc (ver tabla de frecuencias).
+	M1. Camino de Datos Multiciclo con un Reloj de 50 MHz.
+	M2. Igual que M1, solo que las actualizaciones de los Registros se hacen en el mismo ciclo de reloj que las operaciones de la ALU o la lectura de Memoria. En este caso el reloj es de 40 MHz.
+	M3. Como la M2, pero los cálculos de las Direcciones Efectivas se hacen en el mismo ciclo de reloj como un acceso a Memoria. El reloj en este caso es de 25 MHz.
+
+*** 8. Suponer que existiese una Instrucción bcp, que copia un bloque de palabras de Memoria a Memoria. Suponer que la dirección de inicio fuente esta en $1 y la destino en $2, y el número de palabras a copiar en el $3 (>=0). Suponer también que los valores de estos Registros, así como el $4, pueden ser destruidos al ejecutar esta instrucción (para que los registros puedan utilizarse de forma temporal durante la ejecución de la Instrucción) Escribir el programa MIPS para implementar la copia del bloque. Suponiendo la copia de 100 palabras, ¿cuántas instrucciones se ejecutarán? Usando la máquina multiciclo para los CPI, ¿cuántos ciclos son necesarios?
+: Inicio: LW   $4,0($1) --> 5
+:         SW   $4,0($1) --> 4
+:         ADDi $1,$1,4  \
+:         ADDi $2,$2,4   --> 4
+:         ADDi $3,$3,-1 /
+:         BNE  $3,$0,Inicio --> 3
+= 24100 = 2400 Ciclos
+*** 9. Deseamos añadir la Instrucción addiu (suma immediata sin signo) al camino de datos de un solo ciclo. Añadir los caminos de datos y señales de control necesarias a la figura:
+Es parecido a LW. No se activa MemWrite pero sí RegWrite. MemtoReg también debería valer 0. En este caso tendríamos que poner otro multiplexor para, en lugar de extender el signo de isntrucción[15-0], poner 16 ceros. La señal que maneja este multiplexor la llamaremos Unsigned y habrá que activarla en este caso.
+
+** Segmentación
+
+*** 1.- Si el tiempo para una operación de ALU puede reducirse un 25%, ¿afectará a la mejora obtenida por la segmentación? ¿Y si el tiempo de dicha operación aumenta un 25%?
+Si el tiempo se reduce no se obtiene ninguna mejora porque las otras etapas seguirían tardando el 100% y habría que esperar a que acabasen todas las etapas. Sin embargo en el caso de que el tiempo aumente sí que habría un empeoramiento de la operación.
+*** 2.- Supongamos un programa con 106 instrucciones, en el que cada instrucción toma 100 ps. ¿Cuánto tiempo será necesario para ejecutarlo en un procesador no segmentado? Con un procesador con 20 etapas de segmentación, perfectamente segmentado, ¿cuál será la mejora respecto al anterior?
+- En uno no segmentado:
+  - 100ps*10^6 = 100µs
+- En uno de 20 etapas:
+  - 100ps/5 = 5ps $\rightarrow$ 5ps*10^6 = 5µs
+*** 3.- Para cada registro de segmentación de la figura, rotular cada parte del registro de segmentación por el nombre del valor que se carga en el registro. Determinar la longitud de cada campo en bits y la longitud total del registro de segmentación.
+
+*** 4.- Mostrar las anchuras adicionales de los registros de segmentación de la figura.
+
+*** 5.- Utilizando la figura siguiente y las instrucciones que se están ejecutando, determinar el valor de cada campo en los cuatro registros de segmentación en el ciclo que se muestra.
+: lw $10,9($1)
+: sub $11,$2,$3
+: and $12,$4,$5
+: or $13,$6,$7
+: add $14,$8,$9
+Suponer que el estado inicial de la máquina era:
+- PC tenía el valor 500_{diez}, dirección de la instrucción lw.
+- Cada registro tenía el valor inicial 10_{diez} más el número de registro (el registro $8 tenía el valor 18_{diez}).
+- Cada palabra de memoria accedida como dato tenía el valor inicial 1000_{diez} más la dirección del byte de la palabra (Memoria{8} tenía el valor inicial 1008_{diez}).
+**** Solución
+*** 6.- Suponiendo un camino de datos segmentado con unidad de detección de riesgos y unidad de anticipación, determinar qué registros habrán sido leídos y cuáles escritos en el quinto ciclo de reloj de la ejecución de:
+: add $2,$3,$1
+: sub $4,$3,$5
+: add $5,$3,$7
+: add $7,$6,$1
+: add $8,$2,$6
+**** Solución
+*** 7.- Considerando el programa del ejercicio anterior, explicar qué hace la unidad de anticipación durante el quinto ciclo de la ejecución.
+
+*** 8.- Siguiendo con el mismo programa de los ejercicios anteriores, explicar qué hace la unidad de detección de riesgos durante el quinto ciclo.
+
+*** 9.- Tenemos un programa con 1000 instrucciones con la forma “lw, add, lw, add...” La instrucción add depende únicamente de la instrucción lw previa. La instrucción lw depende únicamente de la instrucción add previa. Si el programa se ejecuta en un camino de datos segmentado con unidad de detección de riesgos y unidad de anticipación, ¿cuál sería el actual CPI? ¿Y sin unidad de anticipación?
+
+*** 10.- Consideremos un camino de datos segmentado sin anticipación ni detenciones. Se pueden añadir instrucciones nop. Reescribir el siguiente código insertando el mínimo número de instrucciones nop, teniendo la posibilidad de reordenar las instrucciones:
+: mov $5,$0
+: Sum: lw $10,1000($5)
+: addu $5,$5,$10
+: addiu $20,$20,-4
+: bne $20,$0,Sum
+
+** Jerarquía de memoria
+
+*** 1. A continuación se da una cadena de referencias de direcciones dadas como direcciones de palabra: 2, 3, 11, 16, 21, 13, 64, 48, 19, 11, 3, 22, 4, 27, 6 y 11. Suponiendo una caché de correspondencia directa con 16 bloques de una palabra que está inicialmente vacía, rotular cada referencia en la lista como un acierto o fallo (indicando si es forzoso, de conflicto o de capacidad) y mostrar el contenido final de la caché. (Nótese que se trata de direcciones de palabra y no de byte, como se emplean en MIPS).
+
+*** 2. Utilizando la cadena de referencia del ejercicio anterior, mostrar los aciertos y fallos y contenido final de la caché para una caché de correspondencia directa con bloques de cuatro palabras y tamaño total de 16 palabras.
+
+*** 3. La caché C1 es de correspondencia directa con 16 bloques de una palabra. La caché C2 es de correspondencia directa con 4 bloques de cuatro palabras. Suponer que la penalización de fallos para C1 es de 8 ciclos de reloj y para C2 de 11 ciclos de reloj. Suponiendo que las cachés están inicialmente vacías, encontrar una cadena de referencia para que C2 tenga una tasa de fallos más baja pero emplee más ciclos en los fallos de caché que C1. Utilizar direcciones de palabras.
+
+*** 4. Considerar un sistema de memoria virtual con las siguientes propiedades: Dirección virtual de 40 bits; Páginas de 16 KB; Dirección física de 36 bits. ¿Cuál es el tamaño total de la tabla de páginas, suponiendo que los bits de validez, protección, ocupación y uso necesitan un total de 4 bits y que se utilizan todas las páginas virtuales? Suponer que las direcciones del disco no se almacenan en la tabla de páginas.
+
+*** 5. Encontrar un método para eliminar la puerta AND del bit de validez en la figura:
+
+*** 6. Considerar las tres máquinas dadas con diferentes configuraciones de caché y  Determinar qué máquina emplea más ciclos en los fallos de la caché. Caché 1: correspondencia directa con bloques de una palabra. Caché 2: correspondencia directa con bloques de cuatro palabras. Caché 3: asociativa por conjuntos de dos vías con bloques de cuatro palabras.
+Se han realizado las siguientes medidas de tasa de fallos:
+- Caché 1: tasa de fallos de instrucción: 4%; tasa de fallos de datos: 8%.
+- Caché 2: tasa de fallos de instrucción: 2%; tasa de fallos de datos: 5%.
+- Caché 3: tasa de fallos de instrucción: 2%; tasa de fallos de datos: 4%.
+
+Para estas máquinas, la mitad de las instrucciones contienen una referencia de datos. Suponer que la penalización de fallos de la caché es 6 + tamaño de bloque en palabras. El CPI para esta carga de trabajo se midió sobre una máquina con caché 1 y se encontró que era 2,0.
+
+**** Solución
+
+*** 7. Las frecuencias de reloj para las máquinas del ejercicio anterior son 420 ps para la primera y la segunda y 310 ps para la tercera. Determinar qué máquina es la más rápida y cuál la más lenta.
+- CPI_1 = 2 $\righarrow$ CPI_{ideal} = 1.44
+  - $t_{CPU1} = NI*2*420$
+- CPI_2 = 1.44 + 0.45 = 1.89
+  - $t_{CPU2} = NI*1.89*420$
+- CPI_3 = 1.44 + 0.40 = 1.84
+  - $t_{CPU3} = NI*1.84*310$
+*** 8. Considerar una jerarquía de memoria utilizando una de las tres organizaciones para memoria principal mostradas en la figura. Suponer que el tamaño de bloque de caché es de 16 palabras, que la anchura de la organización (b) es de cuatro palabras, y que el número de bancos de la organización (c) es cuatro. Si la latencia de memoria principal para un nuevo acceso es de 10 ciclos y el tiempo de transferencia es de un ciclo, ¿cuáles son las penalizaciones de fallos para cada una de estas organizaciones?
+

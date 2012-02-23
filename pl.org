@@ -1,0 +1,57 @@
+
+* Introducción
+** Transformador
+*** Traductor
+- Un *programa fuente* (alto nivel) es convertido en *código ejecutable* (bajo nivel) que puede ser ejecutado independientemente.
+- El traductor genera los errores de traducción.
+- El código ejecutable recibe los datos de entrada y genera los resultados y errores de ejecución.
+*** Interpretador
+1. _Análisis_ del *código fuente* para determinar la sentencia a ejecutar.
+2. _Generación_ del código a ejecutar
+3. _Ejecución_ del código generado
+*** Diferencias
+|--------------------------+------------------------------------|
+| Traducción               | Interpretación                     |
+|--------------------------+------------------------------------|
+| *Independencia*          | *Dependencia al interprete*        |
+| *Necesidades de memoria* | *Sin necesidad de memoria*         |
+| *Eficiencia*             | *Menos eficiencia*                 |
+| *Global*                 | *Local*                            |
+| *No interactividad*      | *Interactividad*                   |
+| *Código estático*        | *Inclusión de código en ejecución* |
+|                          |                                    |
+** Tipos de traductores
+*** Preprocesador
+*** Compilador
+*** Ensamblador (Es un Compilador, epro de código ensamblador)
+*** Enlazador ("linker")
+*** Cargador ("loader")
+** Programas relacionados con la traducción
+*** Editor con resaltado
+*** Depurador
+*** Generador de
+*** Perfilador
+*** IDE (Integrated Development Environment)
+** _Fases y Pasos_
+
+* Análisis sintáctico descendente
+
+
+p(L)<p(S)
+p(R)<p(R)
+
+s(S)<s(R)
+s(R)<s(S)
+s(L)<s(R)
+s(R)<s(L)
+
+|   | primero | sigte  |
+|---+---------+--------|
+| S | *, id   | $,     |
+| L | * id    | $, '=' |
+| R | *, id   | $, '=' |
+
+
+* Análisis sintáctico ascendente
+
+
