@@ -1,0 +1,794 @@
+# -*- org -*-
+# Fernando Carmona Varo (q22cavaf@uco.es)
+#+Latex_class: refcard
+#+Latex_options: toc:nil
+#+LANGUAGE:spanish
+# μđ ∆∫∂ΣΩη γ ξν
+
+Apuntes de Termodinámica
+
+* T01: Principio cero de la termodinámica
+** Definiciones:
+
++ *Sistema*: Materia/espacio que el observador quiere estudiar, abstraido de todo lo demás, lo cual se convierte entonces en el *medio o entorno*. Esta distinción es arbitraria.
++ *Universo*: conformado por todo el conjunto de sistema y entorno
++ *Frontera ó límite*: envoltura imaginaria que separa el sistema del medio
+  - *adiabático*: no permite el intercambio de calor entre sistema y medio.
+  - *diatérmico*: permite el flujo de calor a través de él.
+  - *permeable*: permite el intercambio de materia.
+  - *rígidas/móbiles*: imposibilita/permite la variación de volúmen.
++ Según la naturaleza del sistema:
+  - Homogeneo: una sola fase. (fase: parte diferenciada separada de las demás por límites bien definidos)
+  - Heterogeneo: varias fases.
++ *Formas alotrópicas*: variedades de una sustancia que presentan disferente estructura molécular o propiedades físicas. Pueden darse tanto en estados sólidos como líquidos, si bien sólo existe una forma gaseosa definida.
+
++ *Proceso isotérmico*: La temperatura es la misma en el estado inicial y en el final (no necesariamente en los estados intermedios)
+
+*** Funciones de estado y funciones de trayectoria
+
+Al contrario de lo que ocurre con las funciones de estado, las funciones de la trayectoria sólo aparecen cuando el sistema sufre una transformación, no teniendo un valor determinado en cada estado del sistema, sino un valor asociado a la transformación ocurrida. Consecuentemente, las funciones de la trayectoria no cumplen las propiedades de las funciones de estado.
+
+Las diferenciales de las funciones de estado son diferenciales exactas y, por tanto, tienen las propiedades de éstas. Por el contrario, las diferenciales de las funciones de trayectoria no son exactas, y no cumplen las propiedades de éstas. Como consecuencia de ello las diferenciales de las funciones de trayectoria se escriben usando el símbolo đ, como por ejemplo, đq y đw. 
+
+
+** Principio cero de la termodinámica
+Si un sistema A está en equilibrio térmico con un sistema B, y si B está en equilibrio térmico con C, entonces C también está en equilibrio con A, cualquiera que sea la composición de los sistemas.
+
+Implica la existencia de una propiedad independiente de la composición del sistema y que supone la existencia de una condición de equilibrio térmico --> *La temperatura*
+
+** ¿Cuando está el estado de un sistema definido?
+
+El estado de un sistema está definido cuando todas sus variables termodinámicas tienen valores fijos. Las variables termodinámicas son, por tanto, funciones de estado y mientras su valor permanece inalterado, el estado del sistema es el mismo. Por el contrario, cuando el valor de alguna de ellas varía con el tiempo, el estado del sistema cambia y, por tanto, el sistema se transforma. Las variables termodinámicas de un sistema sólo están definidas cuando éste se encuentra en equilibrio. La situación de equilibrio termodinámico implica que se den simultáneamente tres situaciones: situación de equilibrio químico (la composición del sistema no varía con el tiempo), de equilibrio térmico (la temperatura no varía con el tiempo) y de equilibrio mecánico (no hay movimientos macroscópicos de partes interiores del sistema ni de la superficie que lo separa del medio).
+
+La presión atmosférica varía con la altura y, por tanto, también lo hace la composición de la atmósfera ya que composición y presión están relacionadas. No obstante, dicha composición es independiente del tiempo y a una altura determinada es constante, por lo que el sistema está en equilibrio.
+
+Dentro de los equilibrios hay que distinguir entre los estables, o verdaderos equilibrios, y los metaestables, o falsos equilibrios, en los cuales la velocidad de cambio del sistema es tan lenta que sus variables permanecen aparentemente inalteradas con el tiempo.
+
+* T02: El Sistema Gaseoso
+_Sistema simple_: Aquel cuyos estados de equilibrio se describen mediante tres variables termodinámicas, una de las cuales es la temperatura. Una mezcla de gases puede ser un sistema simple siempre y cuando su composición no varíe.
+
+En un sistema simple las coordenadas, P, V y T, no son independientes, pues fijadas dos de ellas la tercera queda determinada por el sistema. Por tanto, sólo dos de las tres variables son independientes, lo que implica que existe una ecuación de equilibrio que relaciona las coordenadas termodinámicas y que impide la independencia de una de ellas. Esta ecuación se denomina ecuación de estado.
+
+** Ecuación de los gases ideales
++ Ley de Boyle: cuando T=cte --> P*V = cte
++ La Ley de Charles y Gay-Lussac: cuando P=cte --> V/T = cte
++ PV = nRT
+
+*** Factor de compresibilidad (en realidad no relacionado con la compresión!)
++ Z = V_{gasReal}/V_{gasIdeal} = V_{gasReal}*P/(nRT)
+Mide la desviación del comportamiento ideal
+
++ Los gases se comportan como ideales a *bajas presiones* (moléculas más alejadas) y a *altas temperaturas* (moléculas más veloces), cuando se posee menor efecto de las fuerzas intermoleculares.
+
++ _Temperatura de Boyle_: Temperatura a la cual un gas se comporta idealmente (se compensan las fuerzas atractivas y las repulsivas) para un mayor rango de presiones.
+  $T_B = a/(bR)$
+
+
+
+** Ecuación de los gases de Van der Waals
+
++ *b (covolumen)*: representa el volumen molar que ocuparía la molécula en el cero absoluto (si fuese ideal no ocuparía volumen, lo cual es absurdo).
++ *a/V_m^2 (presión interna)*: representa la acción de las fuerzas intermoleculares sobre la presión, siendo estas inversamente proporcionales al volumen (cuanto mayor separación entre moléculas, menos poder tienen las fuerzas).
+
++ P = nRT/(V-nb) -a(n/V)^2
+  + P = RT/(V_m-b) -a/V_m^2
+
++ Puede comprobarse que a bajas presiones la ecuación de Van der Waals se aproxima a la de los gases ideales al ser V_m muy grande (se desprecian "b" y "a/V_m^2").
+
+** Ley de los estados correspondientes (propiedades reducidas)
+
++ _Punto crítico:_ valor de P, V y T a partir del cual las fases de la sustancia pueden coexistir y se empiezan a confundir, poseyendo la misma densidad tanto líquido como vapor (al subir por encima de este punto se obtienen fluidos supercríticos, con propiedades híbridas entre líquido y gas).
+  + _Temperatura crítica:_ Valor de T en el punto crítico, a esta temperatura no podrá nunca llegar a licuarse un gas por mucho que se aumente la presión (lo que se obtendrá es un fluido supercrítico al salir del punto crítico).
+  + La ecuación de van der Waals predice este comportamiento y ubicación del pto crítico. Es gracias a esto que se pueden calcular los valores "a" y "b" (hallando experimentalmente T_r, P_r y V_r).
+
+
++ _Ley de los estados correspondientes:_ *Todos los gases a una P_r y V_r ocupan un mismo V_r con independencia de sus propiedades.*
+  - Se cumple bastante bien en un gran rango de presiones y temperaturas para muchos gases (pero no para todos), concretamente para los gases constituidos por moléculas esféricas, y deja de cumplirse para los gases constituidos por moléculas polares no esféricas. 
+  - Permite la comparación entre gases de diferentes propiedades.
+
++ Ecuación reducida de Van der Waals: $P_r = (8 T_r) / (3 V_r -1) - 3/V_r^2$
+
+** Compresibilidad y dilatación
+
++ _Coeficiente de dilatación térmica:_ *Aumento* de V al subir T con P=cte (por unidad de volumen)
+  - Es siempre positivo en gases y sólidos
+  - En algunos intervalos de T es negativo para algunos líquidos (agua, elastómeros) que al bajar T aumentan V para acomodar enlaces intermoleculares.
+
++ _Coeficiente de compresibilidad isotérmica_ *Disminución* de V al subir P con T=cte (por unidad de volumen)
+  - Siempre es positivo (siempre disminuye V al aumentar P)
+
+** Teoría cinética del movimiento y la presión de un gas
+
++ /Las direcciones y magnitudes de las velocidades de las partículas de un gas se distribuyen al azar/.
+
++ Energía *translacional*: suma de la translación de cada dimensión (3 dimensiones)
+  - toda molécula 3 dimensiones: $E_{cin,tr} = (1/2)mv^2 =  (1/2)mv_x^2 +  (1/2)mv_y^2  (1/2)mv_z^2$
+	- $E_{cin,tr} = (1/2)kT + (1/2)kT + (1/2)kT = (3/2)kT$
+
++ Energía *rotacional*: (1/2)kT por cada grado de libertad
+  - Átomo: 0
+  - Molécula lineal: $E_{cin,tr} = (1/2)kT + (1/2)kT = kT$
+  - Molécula no lineal: $E_{cin,tr} = (1/2)kT + (1/2)kT + (1/2)kT = (3/2)kT$
+
++ Energía *vibracional*: kT por libertad de cada átomo independiente (no los que repercutan en toda la molécula)
+  - Átomo: 0
+  - Molécula lineal: $E_{cin,tr} = (3N-5)*kT$ (3 por átomo, menos 5 de toda la molécula)
+  - Molécula no lineal: $E_{cin,tr} = (3N-6)*kT$ (3 por átomo, menos 6 de toda la molécula)
+
++ Conocida E en función de T podemos conocer la capacidad calorífica $C_{V,m} = dE/dT$
+
+* T03: 1er principio de la Termodinámica
+/Cuando la energía total de un sistema cerrado varía, esta sólo se puede y se ha de transformar en trabajo y calor/
+** Calor y Trabajo
+ Son los dos único métodos de *transferir energía*. 
++ *Trabajo w*: Fuerza ejercida moviendo una distancia (F∆x). En termodinámica química se considera positivo el trabajo realizado sobre el sistema (el medio le aporta trabajo), y negativo cuando es el sistema el que cede trabajo al medio.
++ *Calor q*: Flujo de energía producido por una diferencia térmica. Positivo cuando el sistema lo recibe y negativo cuando lo produce. No tiene sentido hablar de calor almacenado, ni de "∆q", y sería redundante hablar de "transferencia de calor", intrínsecamente "q" es ya una pérdida o ganancia de energía que es transferida a lo largo de un proceso.
+
++ Ambos son *funciones de trayectoria*: Dependen del camino seguido, al contrario de las funciones de estado (T, P, V...)
+
+** Transformaciones reversibles e irreversibles
+Se dice que un proceso es *irreversible* cuando no es posible volver al estado inicial tanto del sistema como del medio.
+En cambio, en un proceso *reversible* podríamos decir que existen infinitos estados intermedios de equilibrio que se diferencian muy poco, infinitesimalmente, y al no haber desequilibrio en ninguno de ellos que conduzca al sistema en un sentido u otro, pueden recorrerse los estados en sentido contrario y regresar a las mismas condiciones.
+
+En la naturaleza, las transformaciones son consecuencia de algún desequilibrio finito y transcurren a una velocidad finita (aunque a veces pueda ser muy lenta) por lo que todas las transformaciones naturales son irreversibles.
+
+** Función energía interna
+Representa: cinética + potencial + interacciones + enlaces + nuclear
+
++ ∆U = q + w ; dU = đq + đw
+
+** Entalpía
+
++ ¿Cómo medimos las variaciones de U experimentalmente?
+  - En laboratorio podemos medir calores transferidos a P=cte
+
++ q = ∆U - w =  ∆U + P*∆V
+  - Al ser P=cte --> P∆V = ∆(PV)
+	+ q = ∆(U + PV) = ∆H
+
++ Definimos Entalpía: H = U + PV
+  - Es función de estado (al ser combinación de funciones de estado)
+
+** Experimento de Joule
+_La energía interna de un gas sólo es función de la temperatura_ (sólo si es ideal)
+
+Joule hizo pasar un gas desde un recipiente a otro previamente en vacío, y comprobó que no había variado temperatura (q=0), y dado que no se ha realizado trabajo (al estar en vacío no hay fuerza externa), la energía interna permanece constante con independencia de la variación de volumen.
+
+Esto se demostró falso más adelante y se vió que sí que variaba la temperatura (Joule usó un recipiente con agua que tiene alta capacidad calorífica y la variación fue minúscula). No obstante, esto es sólo consecuencia de la energía potencial de las fuerzas de atracción, que para gases ideales no tiene sentido. Por ello, en gases ideales se sigue considerando válida la conclusión de Joule.
+
+En gas ideal: dU = C_V dT
+
++ Hacer un trabajo sobre un gas ideal adiabático aumentará su temperatura, ya que se transfiere energía
+  - $dU = C_V dT = -P_{ex} dV$
+  - Cuanto mayor $P_{ex}$, mayor ∆T
+	- En expansión reversible, ∆T máximo (para expansión irreversible $P_{ex}<P$)
+	- En compresión reversible, ∆T mínimo (para compresión irreversible $P_{ex}>P$)
+
+** Experimento de Keyes y Sears
+
++ Se expande un gas contra el vacío (w=0) en recipiente adiabático (q=0).
+  - Experimentalmente se mide un  ∆T que corresponde a un ∆V sabiendo que tenemos U constante.
+
++ Coef. Joule μ_J = (dT/dV)_U < 0
+  - En gas ideal μ_J=0, T no varia. (dU/dV)_T = 0
+  - En gas real, μ_J<0, T baja al subir V. (dU/dV)_T > 0
+
+|----------------------------|
+| $dU = C_V dT - C_V μ_J dV$ |
+|----------------------------|
+
+** Experimento de Joule-Thomson
+http://en.wikipedia.org/wiki/Joule%E2%80%93Thomson_effect
+
++ Se hace trabajo de compresión/expansión (w>0) entre paredes adiabáticas (q=0).
+  + Al ser q=0, ∆U = w
+  + *Proceso isoentálpico*, ya que U2-U1 = P1V1 - P2V2 --> U+PV=cte
+
+Se mide la variación de T al variar P, con H constante
+
++ Coef. Joule-Thomson $μ_{JT} = (dT/dP)_H$
+  - En gas ideal, $μ_{JT} = 0$, T no varia. (dH/dP)_T = 0
+  - En gas reales, a $(P,T)_{inversión}<P,T$, $μ_{JT} > 0$, T sube con P (salvo H_2, He)
+  - En gas reales, a $(P,T)_{inversión}>P,T$, $μ_{JT} < 0$, T baja con P
+
+|-------------------------------|
+| $dH = C_P dT - C_P μ_{JT} dP$ |
+|-------------------------------|
+
+  - En sólidos y líquidos: (dH/dP)_T = V
+
+Esta es la base para el procedimiento de licuar gases.
+
+** Capacidades caloríficas
+
++ si V=cte: dU = đq_V = C_V dT
++ si P=cte: dH = đq_P = C_P dT
+
++ Diferencia entre C_V y C_P
+  - dq = dU + PdV
+  - Sustituyendo dU = C_V dT + (dU/dV)_T dV
+    - dq = C_V dT + ((dU/dV)_T + P)dV
+  - Sabiendo que C_P = dq/dT
+    - C_P = C_V + ((dU/dV)_T + P)(dV/dT)_P
+
++ De aquí se deduce que C_P > C_V ya que es todo positivo.
++ En el caso de un gas ideal (dU/dV)_T = 0
+  - C_P = C_V + P(dV/dT)_P
+  - C_P = C_V + nR
+
++ Relación de Mayer: $C_{P,m} - C_{V,m} = R$
+  - Siendo γ = C_P/C_V
+  - $C_{V,m} = R/(γ-1)$
+
+* T04: 2do principio de la Termodinámica
+
+** Máquinas térmicas
+
++ Transformación de calor en trabajo
+  1) Expansión isotérmica (∆U_1=0; q_1 = -w_1 = > 0)
+  2) Expansión adiabática  (q_2=0 ; w_2 < 0)
+  3) Compresión isotérmica (∆U_3=0; q_3 = -w_3 < 0 )
+  4) Compresión adiabática ( q_4=0 ; w_4 > 0)
+
++ Rendimiento: $η = w_{cedido} / q_{absorvido}$
+
++ *2do ppio*: /No es posible contruir una máquina térmica que funcione con una única fuente de calor/.
+  - Todo motor que opera entre dos fuentes tiene un rendimiento menor que uno reversible.
+	- De lo contrario, invirtiendo el reversible se podría contrarestar el flujo de calor del irreversible y sobraría trabajo (equivalente a máquina de un sólo foco).
+  - Todos los motores reversibles entre las mismas fuentes tienen mismo rendimiento
+	- De lo contrario se podría invertir el de mayor rendimiento para contrarestar el flujo de calor de los focos y sobraría trabajo.
+  - Un motor reversible con mayor diferencia de temperatura entre focos que otro que comparta foco caliente tendrá mayor rendimiento
+	- De lo contrario, se podría poner otro entre los dos focos frios y obtener como resultado una máquina reversible de mayor rendimiento que la otra
+
++ Todo motor reversible tendrá el rendimiento η = (T_c - T_f)/T_c
+
+** Entropía
+
++ _Desigualdad de Clausius:_ En todo ciclo del sistema, la integral ciclica de *q/T* nunca será negativa.
+
++ η = (q_1+q_2)/q_1 ≤ (T_1-T_2)/T_1
+ - Simplificando: q_2/q_1 ≤ -T_2/T_1
+ - Operando: q_1/T_1 + q_2/T_2 ≤ 0
+
+Se puede deducir que Σq_i/T_i ≤ 0
+
+* T05: 3er principio de la Termodinámica
++ _Nerst_: Toda transformación de sustancias *químicamente puras y de densidad finítas* se hace a *entalpía constante* *en el cero absoluto*.
++ _Plank_: Si además es *perfectamente cristalina*, se cumplirá que S=0 si T=0K, y S>0 si T>0K
+** Consecuencias
+Si tenemos en cuenta que $(∂S/∂T)_{V} = C_{V}/T$ (y que C_P=f(C_V))
+1) las capacidades caloríficas tienden a cero cuando la temperatura tiende a cero
+2) para una sustancia pura perfectamente cristalina y de densidad finita: $C_{P,V}= k*T^{n}$
+   - Donde n > 1
+   - Esto confirma la ley de Debye: $C_{V}=k*T^{3}$ que se cumple a T<15K
+3) Es imposible alcanzar en cero absoluto en un número finíto de intercambios (harían falta infinitos intercambios, ya que cada vez costará más absorver calor)
+4) Se puede establecer un origen absoluto de entropía sobre el que tabular valores de entropía para cada sustancia.
+   - $S_{solido,T} = ∫_{0}^{T} C_{P,solido}/T dT$
+   - $S_{liquido,T} = S_{solido,Tfus} + ∆H_{fus}/T + ∫_{0}^{T} C_{P,liquido}/T dT$
+   - $S_{gas,T} = S_{gas,Tvap} + ∆H_{vap}/T + ∫_{0}^{T} C_{P,gas}/T dT$
+** Condiciones de equilibrio y espontaneidad
++ Si equilibrio (reversible): dS = đq/T
++ Si espontáneo (no revers.): dS > đq/T
+
+Podemos desarrollar $đq = dU -đw$ -> *Condición de equilibrio*
+|------------------|
+| dU -đw -TdS <= 0 |
+|------------------|
+*** En un sistema aislado (dU=0, dw=0)
+La condición de equilibrio será entonces: \deltaS <= 0
+*** Transformación isotérmica (T=cte) --> TdS = d(TS)
++ $dU -đw -d(TS) <= 0$ --> $d(U-TS) <= dw$
+¡¡Definimos la energía Helmholtz o función trabajo!!
+|----------|
+| A = U-TS |
+|----------|
+La condición de equilibrio será entonces: \deltaA <= dw
+ 
+**** Si isotérmico (T=cte) --> $TdS = d(TS)$ y isocórico (V=cte) --> $dw=0$
+La condición de equilibrio será entonces: \deltaA <= 0
+**** Si isotérmico (T=cte) --> $TdS = d(TS)$ y isobárico (P=cte) --> $PdV = d(PV)$
+
+Dado que đw = -PdV + đw_{noHidrostático}
+
++ $dU +(d(PV) -đw_{noHidrostático}) -d(TS) <= 0$ --> $d(U+PV-TS) <= đw_{noHidrostático}$
+¡¡Definimos la energía Gibbs o energía libre!!
+|--------------------|
+| G = U+PV-TS = H-TS |
+|--------------------|
+La condición de equilibrio será entonces: \deltaG <= đw_{noHidrostático}
+***** Si todo el trabajo es hidrostático (đw_{noHidrostático} = 0) --> \deltaG <= 0
+** Ecuaciones termodinámicas de estado
+Si se conocen las funciones de estado en función de sus variables naturales, todas las propiedades termodinámicas se pueden calcular por simple diferenciación.
+|----+--------------+---------------|
+| dU | \= đq + dw   | \= TdS -PdV   |
+| dH | \= d(U + PV) | \= TdS + VdP  |
+| dA | \= d(U - TS) | \= -SdT -PdV  |
+| dG | \= d(H - TS) | \= -SdT + VdP |
+|----+--------------+---------------|
+*** Ecuaciones de Maxwell
++ Si $df(x,y) = Mdx+Ndy$ entonces $(dM/dy)_{x} = (dN/dx)_{y}$
+Aplicando esta regla en cada ecuación de estado podemos obtener equivalencias entre variaciones de las propiedades.
+*** Relaciones de la energía Gibbs
+**** Energía Gibbs (G) y energía Hemlholtz (A)
++ Dado que ambas energías varían con la temperatura según "-S", que siempre será negativo (ya que la entropía siempre es positiva), ambas disminuyen al aumentar T.
++ Se puede sustituir en cualquiera de las dos ecuaciones el "-S" por el "(∂/∂T)" del otro.
+**** Energía Gibbs (G) y entalpía (H)
++ Sustituyendo el "-S" en la propia ecuación de Gibbs: $G = H + T (∂G/∂T)_{P}$
++ De donde se puede obtener: $(∂(G/T)/∂T)_{P} = - H/T^{2}$
++ O también: $(∂(∆G/T)/∂(1/T))_{P} = - ∆H$
+
+** Observaciones
++ La energía Gibbs es muy interesante, ya que en laboratorio normalmente trabajamos a presiones constantes y volumen variable (recipiente abierto a la atmósfera). Si conocemos G(T,P) en todo el intervalo T y P, se pueden calcular todas las demás propiedades gracias a las ecuaciones de estado vistas anteriormente.
+
++ Se cumplirá que dA = dG cuando dU = dH, lo cuál se conseguirá si d(PV)=0 (ya que H=U+PV). Esto ocurre en gases ideales cuando T=cte (PV=nRT=cte).
+
++ Que se cumpla ∆G<0 no es condición suficiente para poder decir que la transformación sea espontánea, ya que podría ser que T≠0 o P≠0, con lo que la variación negativa de G podría deberse a un aumento de temperatura y/o un decremento de presión, y no a un aumento de entropía.
+
++ Aunque una reacción sea exotérmica (∆H<0), isotérmica (dT=0) e isobárica (podemos usar G=H-TS), eso no significa que ∆G<0, ya que puede ser que un ∆S muy negativo elevase el valor de ∆G.
+
++ Cuando se utiliza la entropía como criterio de espontaneidad, es necesario recurrir a la entropía del Universo: $∆S_{Univ} = ∆S + ∆S_{medio} > 0$ ; mientras que cuando se utiliza la energía Gibbs, sólo es necesario saber si ∆G<0 en el sistema, a T y P constantes. Esto es debido a que bajo estas condiciones se tiene que ∆S_{medio}=∆H/T y por tanto $∆G = ∆H + ∆(TS) = T*∆S_{medio} + T*∆S$ que efectivamente considera tanto la entropía del medio como la del sistema.
+* T06: Termodinámica estadística
+** Primer postulado de la mecánica estadísica del equilibrio
++ _Celda_: Pequeña división o partícula de un cuerpo la cual forma en sí misma un subsistema.
+   - Cada celda se caracterís por su posición en el espacio (q_i(t)) y su momento lineal (p_i(t)) en cada instante de tiempo t.
+	 El par (q_i,p_i) conforman el estado de la celda.
+
++ Hipótesis: /Dado un tiempo lo suficientemente grande, cada celda pasará por *todos* los estados *posibles*./
+  - Sistema en equilibrio sin preferencia por ningún microestado de los disponibles para ese equilibrio. 
+  - Si Ω es el número de microestados disponibles para una cierta energía, entonces la probabilidad de encontrar el sistema en uno cualquiera de esos microestados es p = 1/Ω;
+  - necesario para poder afirmar que, dado un sistema en equilibrio, el estado termodinámico (macroestado) que está asociado a un mayor número de microestados es el macroestado más probable del sistema. 
+
++ La _función de distribución_ ρ(q,p) es aqUella que permite obtener el estado de cualquiera de las celdas.
+  - Es una cuestión central en mecánica estadística el ser capaz de hallar está función.
+
+** Segundo postulado de la mecánica estadísica del equilibrio
+
++ _Elemento de probabilidad dw:_ probabilidad que el subsistema se encuentre en el estado dqidpi
+  + dw = ρ(q,p)dqdp
+ 
++ Se toma ρ como ρ = δ(E – E_0) siendo δ una constante
+  - Sistema caracterizado por energía E, volumen V y número de partículas N 
+  - Se denomina *colectivo microcanónico*
+  - Corresponde a subdividir el sistema en un conjunto finito de subsistemas
+
+
+** Probabilidad termodinámica 
+Prob. termodinámica Ω: número de formas distintas en que se pueden distribuir las bolas en las celdas.
+
+La energía de la termodinámica clásica se corresponderçia con la cantidad de movimiento, mientras que la entropía se relacionaría con el número de microestados.
+
+Durante una transformación, el estado final será siempre el estado estadísticamente más probable. Dado que este estado será también el de mayor entropía debe existir alguna relación entre la entropía y Ω (probabilidad de un estado determinado).
+
++ S=f(Ω)
+  + Si lo dividimos en dos subsistemas arbitrariamente, tendremos:
+    + S = f(Ω_1*Ω_2) = S_1 + S_2 = f(Ω_1) + f(Ω_2)
+  + Derivando, se puede deducir:
+	+ Ω_1f'(Ω_1) = Ω_2f'(Ω_2) = Ω_1Ω_2f'(Ω_1,Ω_2) = cte = k
+  + Despejando f'(Ω) e integrando tenemos la *relación de Planck*
+	+ S = f(Ω) = ∫k/Ω = k ln Ω
+
+
+** Tercer ppio
+
+S = k * ln Ω
+
+Lo que confirma que en un cristal perfecto y ordenado S=0 (3er ppio)
+
+** Segundo ppio de la termodinámica
+
++ Derivando la expresión: dS= -kΣdpr·ln pr -kΣpr·dln pr
+  + dS = -kΣdpr·ln pr -kΣpr(dp_r/pr)
+  + dS = -kΣdpr·ln pr
+
++ Por otro lado, tratamos de obtener el resultado de ΣE_r dp_r teniendo en cuenta: $p_r = exp(-β*E_r)/Z$
+  + Despejando E_r: $E_r = -(1/β) (ln Z + ln p_r)$
+  + Por lo tanto, como sumatorio y multiplicando por dp_r tendremos...
+    + ΣE_r dp_r = −(1/β) Σ(ln Z + ln p r )dp_r
+  + ΣE_r dp_r = -(1/β) ln ZΣdp r − Σ ln p_r ·dp_r
+  + ΣE_r dp_r = -(1/β) Σ ln p_r ·dp-r
+
++ Sustituyendo un resultado en el otro:
+  - ΣE_r dp_r = 1/(βk) dS = T dS
+
+Esto significa que el cambio de energía debido a la variación de probabilidad (calor) se relaciona con la variación de S del sistema.
+
+Si ahora nos vamos al otro miembro que contribuye a la variación de enería dE
+
++ Σp_rdE_r =  Σp_r(dE_r/dV)*dV =  Σp_r(-P_r)*dV = P*dV
+
+Esto significa que el cambio de energía debido a la variación de la enería de cada microestado depende de la variación de V, con una pendiente P.
+
+Reuniendo las dos expresiones para dE
+
+dE =  ΣE_rdp_r + Σp_rdE_r = TdS + PdV
+
+Que es la ecuación fundamental de la termodinámica.
+
+** Primer ppio (calor y trabajo)
+
+Derivando la expresión: E = ΣE_rp_r 
++ dE = Σp_rdE_r + ΣE_rdp_r = đw_{rev} + đq_{rev}
+  - Variación del niveles energéticos (trabajo đw_{rev}): Σp_rdE_r
+  - Variación de probabilidades de cada microestado (calor đq_{rev}):  ΣE_rdp_r
+
+** Gas ideal clásico
+
+La enería de cada uno de los q microestados estará compuesta por el sumatorio de energías de cada una de las moléculas del gas (N).
+
++ E_r = Σεk
+
+
+La energís de cada molécula posee una contribución traslacional y otra correspondiente a los movimientos internos (rotación, vibración y excitación electrónica)
+εk = εk,tr + εk,in
+
+
+Como la energía interna se puede expresar como la suma de diferentes contribuciones,lo mismo ocurrirá para la capacidad calorífica
+
++ $C_V = C_{V,tr} + C_{V,in}$
+  + $C_{V,tr}$ Independiente de la temperatura (3Nk/2)
+  + $C_{V,in}$ depende de la temperatura
+
+*** 
+
+* T07: Potencial químico en sistemas de 1 componente
+A P y T ctes, siempre que todas las situaciones químicas posibles posean el mismo valor de G_m, coexistirán. Si una de las situaciones poseyese un valor de G_m menor que las demás, el sistema tendería a estabilizarse pasando espontaneamente a esta situación (análogo a una carga entre potenciales eléctricos).
+** Comportamiento de G_m 
+
+En una transición de fase sabemos que ocurre una variación brusca de las propiedades: V_m, S_m, H_m y $C_{P,m}$
+
+El factor que determinará la transición de una fase a otra será la diferencia de energía Gibbs molar que exista entre las dos fases en las condiciones dadas de: P y T
+
+Por ello es importante analizar la variación de la energía Gibbs respecto a estas dos magnitudes.
+
++ a P=cte: (∂G_m/∂T)_P = -S_m < 0
+
+- G disminuirá al aumentar T, y esta disminución será mayor en gases > líquidos > sólidos. Además la disminución será cada vez mayor (S aumenta con T).
+- Esto significa que será cada vez más estable la fase gaseosa cuanto más aumente la temperatura.
+
++ a T=cte: (∂G_m/∂P)_T = V_m > 0
+
+- G aumentará al aumentar P, y este aumento será mayor en gases > líquidos > sólidos.
+- Lo cual significa que será menos estable la fase gaseosa (y más estable la sólida) cuanto más aumente la presión.
+
+** Transiciones de fase de primer orden.
++ Cambio de fase I-->II: dG_m(I) = dG_m(II)
+  - Descomponiendo G: V(I)dP-S_m(I)dT = V(II)dP-S_m(II)dT
+  - Reagrupando en incrementos: $∆_{trans}S dT = ∆_{trans}V_m dP$
+  - Tenemos en cuenta que $∆_{trans}S_m = q_{rev}/T = ∆_{trans}H_m/T$
+Ecuación de Clapeyron: $dT/dP = ( T ∆_{trans}V_m )/( ∆_{trans}H_m )$
+
+*** Sólido <--> Líquido
++ V_m(l) normalmente mayor que  V_m(s) [excepto H_2O]
++ $T_{fus}$ normalmente aumenta al aumentar P
++ $∆_{fus}H_m$ positivo (absorve calor)
+
+Nota: Gracias a que en el agua la pendiente P/T es negativa, se puede patinar sobre hielo aplicando presión con las cuchillas del patín (Se vuelve agua). O sacar algo del hielo sin romperlo.
+
+*** Líquido <--> Gas
++ Si ideal: $∆_{trans}V_m ≈ V_m(g) = RT_{vap}/P$
+  - Nota: aunque no sea ideal, también es aceptable en gases reales a P no muy alta
+  - Sustituyendo en Ec. de Clapeidon tenemos:
+Ec. de Clausius-Clapeiron: $dP/P = ∆_{vap}H/R * dT/T_{vap}^2$
+
+Si ∆T pequeño, se supone ∆_{vap}H independiente de T:
+$ln(P_2/P_1) = ∆_{vap}H_m/R * (1/T_1 - 1/T_2)$
+
+Regla de Trouton (cumplida en muchos líquidos):
+ $∆_{vap}S_m = 87.8 J/molmol$ ; $∆_{vap}H_m= 87.8 T_{vap} J/mol$
+
+Nota: No es lo mismo T de vaporización que T de ebullición. La T de ebullición se considera normalmente como la T de vaporación en condiciones de presión normales (1 atm).
+
+*** Sólido <--> Gas
+
+*** Presión de vapor (efecto de P sobre ella)
+
+Todo líquido experimenta variaciones infinitesimales V_m(l)<-->V_m(g) en el vacío, algunas partículas escapan y otras se zambullen de vuelta. Siempre existirá cierta cantidad de vapor en el ambiente, pero este vapor siempre a una presión por debajo de la presión de vapor de la sustancia, si fuese a una presión mayor condensaría (esta es la causa del vaho).
+
+En los diagramas de estado P/T, las lineas que separan el estado gas con el líquido y sólido (los sólidos tb tienen presión de vapor, por eso huelen), muestran las presiones de vapor a cada valor de temperatura.
+
+Si en lugar del vacío ocurre en presencia de un gas inerte que provoque una presión P, ocurre una variación dP_v
+
++ dG_m(l)=dG_m(g) (a T=cte) 
+  - Resolviendo G: $V_m(l)*dP = V_m(g)*dP_v$
+  - V_m(g) = RT/P_v
+  - dP_v = (P_vV_m(l))/(RT) * dP
+
++ ln P_v = ln P_0 + V_m(l)/(RT) (P-P_0)
+  - Hay un ligero aumento de la presión de vapor al aumentar P.
+  - No obstante, al ser V_m(l) pequeño la variación de presión de vapor se puede despreciar en la mayor parte de los casos.
+
+** Transiciones de fase de orden superior
+
+Aparentemente no se perciben a simple vista, pero algunas de sus propiedades físicas pueden sufrir cambios bruscos, si bien la separación de las dos fases no es evidente. Esto ocurre con los líquidos superfluidos o los metales superconductores, que son fases en sí mismas pero de orden superior.
+
+Para estas transiciones deben realizarse las segundas derivadas de G. La ecuación de Clapeyron sólo representa la primera derivada de una transición de fase.
+
+
+* T08: Sistemas Multicomponentes
+** Magnitudes molares parciales
+Representan la variación de la magnitud extensiva que se trate cuando se añade un mol de sustancia en una mezcla manteniendo constante el número de moles de los demás componentes así como P y T.
+
+La magnitud molar parcial es siempre intensiva (ya que es molar) y no depende de la cantidad de sustancia.
+
+Para algunas magnitudes, la magnitud molares parciales es igual a la magnitud molar.
+
+*** Cálculo de una magnitud molar parcial
+
+En una gráfica, se pone el valor de la magnitud en función de la tantidad de moles de la sustancia, manteniendo siempre T, P y el número de moles de las otras sustancias constantes.
+
+La pendiente de dicha gráfica para un valor concreto de moles será el valor de la magnitud molar parcial _para esa concentración_ (existe un valor distinto para cada concentración).
+
+*** Relaciones entre propiedades molares parciales
+
+|------------------------+------------------------------------------------------|
+| G = H-TS               | μ_i = ¨H_i - T ¨S_i                                  |
+| (∂H/∂T)_{P} = C_P      | (∂^2H/∂Tn_i)_{T,P,n_j} = (∂¨H/∂T)_{P,n_j} = ¨C_{P,i} |
+| G= VdP -SdT            | dμ = ¨V_i dP - ¨S_i dT                               |
+| (∂(G/T)/∂T)_P = -H/T^2 | (∂(μ_i/T)/∂T)_{P,n_i} = -¨H_i / T^2                  |
+|------------------------+------------------------------------------------------|
+
+*** Ecuación de Gibbs-Duhem
+
++ Para cualquier magnitud extensiva X:
+
+|-----------------|
+| Σ n_i d¨X_i = 0 |
+|-----------------|
+
++ Diferenciando   X = \sum^C n_i ¨X_i
+  + tenemos: dX = \sum ¨X_i dn_i + \sum n_i d¨X_i
++ Que comparado con dX = \sum ¨X_i dn_i
+  + Se deduce que Σn_id¨X_i=0
+
+
+** Mezcla de gases ideales
+
++ Para un gas ideal puro a T=cte:
+  dG_m = V_m dP = (RT/P)dP
+  dμ = dG_m = RT d(lnP)
+  μ = μº + RTlnP
+
++ Para un gas ideal en una mezcla: P_i= P*y_i
+  μ = μº + RTlnP_i = μº + RTlnP +RTlny_i = μ^* + RTlny_i
+
+** Mezcla de gases reales
+A Lewis se le ocurrió mantener la expresión logarítmica de los gases ideales para gases reales, para ello definió la constante fugacidad.
++ dμ(real) = RT dlnf
+
+De integrar esto tenemos: μ(real) = μº(real) + RT dln(f/fº)
+
+En una situación de P-->0, tendríamos comportamiendo ideal
+                μ(real) = μ(ideal)
+μº(real) + RT ln(f/fº) = μº(ideal) + RT ln(P/Pº)
+μº(real) - μº(ideal) = RT ln(fº/Pº) = f(T)
+
+Al ser una ecuación que solo depende de T, es independiente de P, y puede usarse en la expresión anterior para sustituir μº(real), obteniendo:
+
+μ(real) = μº(ideal) + RT dln(f/Pº)
+
+
++ _Regla de Lewis y Randall:_ Para un gas real en una mezcla de gases reales, su fugacidad f es la proporción en su fracción molar, de la fugacidad que tendría el gas puro: $f_i =f_i^* y_i$
+
+  μ = μº + RTlnf_i = μº + RTlnf +RTlny_i = μ^* + RTlny_i
+
+
+*** Cálculo de la fugacidad f en función de la presión P
+
+Un gas real puro en condiciones isotermas: dG_m = V_m dP
+
+Igualando con $dμ = RT dlnf$ y despejando "f" tenemos:
+
+dlnf = V_m/(RT) dP
+
+que derivando es
+
+ln f/P =∫(Z-1)/P dP
+
+
+** Mezclas de sólidos y líquidos
+** Criterios de equilibrio en una mezcla
+
+Para cada componente, en cada una de las F fases en las que este participe, debe cumplirse la condición de equilibrio: μ_i(I) = μ_i(II) = ... = μ_i(F)
+
+** La regla de las fases
+
+|------------|
+| L = C+2 -F |
+|------------|
+
+
+* T09: Disoluciones Ideales
+Disolución: mezcla homogenea (todos sus puntos tienen los mismos componentes).
+Toda mezcla en líquido (o sólido) tiene una fase gaseosa cuya composición depende de la volatilidad de las sustancias mezcladas en la fase de la mezcla.
+
+** Disolución ideal. Ley de Raoult
+En una disolución ideal se consideran las fuerzas intermoleculares iguales.
+La presión parcial del componente en la fase gaseosa (p_i) es proporcional la presión de vapor del componente puro (P_i^*), y a la concentración en la mezcla (x_i).
+
+p_i = P_i^* x_i
+
+Esto permite relacionar la presión parcial del gas con su concentración en la mezcla líquida.
+
+*** Regla de la palanca
++ /(xº_2 - x_2)/: diferencia de moles de soluto antes de mezclar con los de la mezcla líquida.
++ /(y_2 - xº_2)/: diferencia de moles de soluto antes de mezclar con los de la fase gaseosa.
++ /n(l)/: moles totales en la mezcla líquida
++ /n(g)/: moles totales en la fase gaseosa
+
+|-------------------------------------------|
+| n(l) * (xº_2 - x_2) = n(g) * (y_2 - xº_2) |
+|-------------------------------------------|
+
+*** Solubilidad ideal de sólidos
+**** en líquidos
+
+1) μ_2(sol) - μº(l) = RT ln( x_2 (sol) )
+   + despejamos ln(x_2 (sat)) teniendo en cuenta que al saturarse μ_2(sol) = μ_2^*(s)
+2) ln(x_2) = ( μ_2^*(s) - μ_2^*(l) ) / RT = -∆_{fus}G_{m,s} / RT
+   + derivamos respecto a T (teniendo en cuenta: ∂(∆G/T)/∂T = -∆H/T^2)
+3) dln(x_2) = ∆_{fus}H_{m,2}/R * dT/T^2
+
+|----------------------------------------------|
+| ln(x_s) = ∆_{fus}H_{m,s}/R (1/T_{fus} - 1/T) |
+|----------------------------------------------|
+
++ Ojo! no es la ∆_{fus}H_{m,s} a la Tª de fusión sino a la de la disolución.
++ La solubilidad es la misma con independencia del disolvente (sólo en ideales). ya que no hay variables deptes de disolvente.
+**** en gases
+
+|--------------------------------------------|
+| ln(x_s) = ∆_{vap}H_{m,s}/R (1/T - 1/T_{b}) |
+|--------------------------------------------|
+
++ Ojo! no es la ∆_{fus}H_{m,s} a la Tª de fusión sino a la de la disolución.
++ La solubilidad es la misma con independencia del disolvente (sólo en ideales). ya que no hay variables deptes de disolvente.
+
+** Disolución diluida ideal. Ley de Henry
+Mientras que la Ley de Raoult se cumple cuando x_s tiende a 1, cuandl x_s tiende a 0, se cumple la de Henry.
+
+|-----------------|
+| p_i = P_i^* x_i |
+|-----------------|
+
++ μ_2(sol) =  RT ln(k_{H,i}) = f(T)
+
+μ = μº + RTlnP
+Disolución diluida ideal: soluto cumple Henry, disolvente cumple Raoult
+
+
+** Propiedades coligativas (ecuaciones de Van't Hof)
+Son aquellas propiedades que varían con la concentración de soluto pero de manera independiente de la naturaleza de este.
+*** Descenso crioscópico
+*** Aumento ebulloscópico
+*** Presión osmótica
+Si usamos una membrana semipermeable para separar un disolvente puro de una disolución con el mismo disolvente, si bien en principio no debería existir equilibrio ya que μ_i < μ*_i (al ser ln(x_i) negativo), esto sólo sería válido a P=cte. Sin embargo existe una presión osmótica que provoca el equilibrio entre el líquido puro y la solución.
+
++ Desarrollando: μ_1(sol,P+O) = μ*_1(l,P)
+  + μ*_1(sol,P+O) + RTlnx_1 = μ*_1(l,P)
+  + μ*_1(sol,P) - μ*_1(l,P+O) = RTlnx_1
+
++ Si en cambio calculamos el valor de la diferencia mediante integración, teniendo en cuenta que dμ = Vm*dP
+  + μ*_1(sol,P) - μ*_1(l,P+O) = - O*Vm_1
+
++ Igualando y despejando: O = - RTlnx_1 / Vm_1
+  + Si además aproximamos en una solución diluida ln(1-x_2) = -x_2
+  + Y tenemos en cuenta que C_2 = n_2/V = (x_2/n_1)/(n_1*Vm_1)
+
+|-------------|
+| O = C_2 R T |
+|-------------|
+
+* T10: Disoluciones no-ideales
+
+** Coeficientes de actividad
+
+|----------------------------|
+| μº(l) = μº(l) + RT ln(a_i) |
+|----------------------------|
+
+a_i: actividad (concentración teórica ideal efectiva de la concentración real dada)
+γ_i: coeficiente de actividad
+
+|-----------------|
+| a_i = γ_i * x_i |
+|-----------------|
+
+
++ ¿Cuando es γ_i=1 (estado ideal)?: Depende del sistema de referencia (¿Raoult o Henry?)
++ _Sistema de referencia Simétrico_
+  - Se aplica la Ley de Raoult en ambos componentes (γ_i -> 1 si x_i -> 1).
+  - Aplicable si es posible mezclarlos en cualquier proporción (no se satura).
++ _Sistema de referencia Asimétrico_
+  - Se aplica la Ley de Raoult en el disolvente (γ_i -> 1 si x_i -> 1).
+  - Se aplica la Ley de Henry en el soluto (γ_i -> 1 si x_i -> 0).
+
+*** Determinación del valor del coeficiente de actividad
+En el equilibrio de la fase gaseosa y la mezcla líquida tenemos:
++ 
+*** Actividad en otras escalas de concentración
+
+Ej: Cuando trabajamos con cambios de tª interesa usar molalidades, al emplear Kg de disolvente en lugar de volumen.
+
+Dado que todas las escalas están relacionadas no es necesario recalcular el coef. de actividad.
+|-----------------------------------------------------------|
+| γ_{C,2}*C_2/C^*_1 = γ_{m,2}*m_2/m^*_1 = γ_{x,2}*x_2/x^*_1 |
+|-----------------------------------------------------------|
+
+** Influencia de la temperatura en la actividad ( a P=cte )
+** Influencia de la presión en la actividad ( a T=cte )
+** Determinación experimental de actividad del disolvente
+*** Métodos absolutos (determinación directa)
+**** Presiones (si sólo el disolvente es volátil)
++ μ_1(dis) = μº(l) + RT ln(a_1)
++ μ_1(g) = μº(g) + RT ln(f_1)  = μ*(g) + RT ln(f*_1) + RT ln(f_1)
++ Al ser el disolvente volatil: μ_1(dis) = μ_1(g)
+  - a_1 = f_1/f*_1
+**** Crioscopía/Ebulloscopía
+Se emplean las ecuaciones de Van't Hof
+*** Métodos relativos (empleo de patrones de variación de a_i conocida respecto a x_i)
+**** Método isopiéstico (si sólo el disolvente es volátil)
++ Dentro de un sistema hermético se ponen dos recipientes abiertos: el del patrón y el de la mezcla
+  - Se volatilizan ambos, estableciendose equilibrio μ_1(disol1) = μ_1(g) = μ_1(disol2)
+    - Conocida la a_i del patrón (disol1) se calcula la de la mezcla (disol2).
+**** Método de reparto
+Se emplea la constante de reparto R_f = x_1/x_2 = a_1/a_2
+** Calcular actividad del soluto a partir de la del disolvente
++ Ecuación de Bids-Duhem: x_1*dμ_1 + x_2*dμ_2 = 0
+
++ x_1*dln(a_1) + x_2*dln(a_2) = 0
+  + dln(a_1) = x_2/x_1 * dln(a_2)
+  + dln(γ_1) = x_2/x_1 * dln(γ_2)
+
+* T11: Equilibrios de fases en sistemas multicomponente
+** Equilibrio líquido-vapor
++ Cuando las fuerzas A-B son más débiles que A-A o B-B:
+  - produce desviación positiva de la ley de Raoult (negativa si más fuerte)
+  - la vaporización se favorece (o se dificulta si A-B más fuertes)
+  - el proceso de mezcla es endotérmico (o exotérmico si más fuertes)
+
+_Primera ley de Konovalov:_ para una disolución en equilibri por su vapor, el vapor se encuentra enriquecido de aquel componente que hace aumentar la presión de vapor del sistema al ser añadido.
+
+** Azeotropos
+
++ _Punto azeotrópico:_ Desviación grande de la idealidad (correspondiente a un máximo o mínimo en la curva P-x) en la cual la curva de vaporización y la de condensación coinciden
+
++ La destilación fraccionada no permite obtener el componente en estado puro si existe un estado azeotrópico intermedio.
+
++ Una mezcla es _hipoazeotrópica_ si la concentración en componente más volátil es menor que la del punto azeotrópico, y _hiperazeotrópica_ si es mayor.
+
+** Líquidos parcialmente miscibles
+** Líquidos totalmente inmiscibles
+** Equilibrio líquido-líquido
+* T12: Disoluciones de electrolitos
+** Potencial químico y actividad de electrolitos
+** Teoría de Debye-Hückel
+** Determinación experimental de coeficientes de actividad ionicos medios
+* T13: El equilibrio químico
++ Considerando una variación infinitesimal de la reacción:
+  + dG= μ_A dn_A + μ_B dn_B +... = Σ( μ_i dn_i )
++ Definimos avance de reacción: dn_i = ν_i dξ
+  + dG=Σ( μ_i ν_i dξ )
+
++ _Avance de reacción ξ_: Aumenta en una unidad cuando reaccionan ν_i moles de cada reactivo "i" (cantidades estequiométricas).
+  El valor numérico de ξ depende de como esté escrita la reacción.
+
+- Ojo!: los coef. estequimétricos se consideran negativos para los reactivos y positivos para los productos.
+
+** Variación de K con T. Ecuación de Van't Hoff.
+** Principio de Le Châtelier
+La modificación de las variables que afectan al equilibrio tiene como consecuencia que dicho equilibrio evolucione tendiendo a minimizar el efecto del cambio de dichas variables.
+
++ $d(∆_rG)= (-∆_rS) dT + (∆_rV) dP + (G") dξ$
+  + Sabiendo que en el equilibrio d(∆_rG)=0 y ∆_rS=∆_rH/T despejamos dξ
+  + $dξ = ∆_rH/(G"T) dT + (-∆_rV/G") dP$
+    - Si ∆_rH>0: aumentar T sube ξ (desp derecha)
+    - Si ∆_rH<0: aumentar T baja ξ (desp izquierda)
+    - Si ∆_rV>0: aumentar P sube ξ (desp derecha)
+    - Si ∆_rV<0: aumentar P baja ξ (desp izquierda)
+
+* T14: Tensión superficial
+** Ecuación de Nerst
++ dw_e = E dV = E nF
++ Recordemos que en el equilibrio G = trabajo no hidraurico
+  - G = -nFE
++ Aplicando a 
