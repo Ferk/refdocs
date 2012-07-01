@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><meta:creation-date>2012-05-02T15:19:14</meta:creation-date><dc:date>2012-06-20T15:33:45</dc:date><meta:editing-duration>PT4H14M6S</meta:editing-duration><meta:editing-cycles>34</meta:editing-cycles><meta:generator>LibreOffice/3.5$Linux_x86 LibreOffice_project/350m1$Build-2</meta:generator><meta:document-statistic meta:character-count="8351" meta:image-count="0" meta:non-whitespace-character-count="7322" meta:object-count="0" meta:page-count="2" meta:paragraph-count="434" meta:table-count="12" meta:word-count="1496"/></office:meta>
+ <office:meta><meta:creation-date>2012-05-02T15:19:14</meta:creation-date><dc:date>2012-07-01T13:35:22</dc:date><meta:editing-duration>PT5H37M5S</meta:editing-duration><meta:editing-cycles>39</meta:editing-cycles><meta:generator>LibreOffice/3.5$Linux_x86 LibreOffice_project/350m1$Build-2</meta:generator><meta:document-statistic meta:table-count="11" meta:image-count="0" meta:object-count="0" meta:page-count="2" meta:paragraph-count="433" meta:word-count="1507" meta:character-count="8519" meta:non-whitespace-character-count="7478"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="ViewAreaTop" config:type="int">0</config:config-item>
+   <config:config-item config:name="ViewAreaTop" config:type="int">8467</config:config-item>
    <config:config-item config:name="ViewAreaLeft" config:type="int">0</config:config-item>
    <config:config-item config:name="ViewAreaWidth" config:type="int">25852</config:config-item>
-   <config:config-item config:name="ViewAreaHeight" config:type="int">11749</config:config-item>
+   <config:config-item config:name="ViewAreaHeight" config:type="int">11035</config:config-item>
    <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
    <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-     <config:config-item config:name="ViewLeft" config:type="int">1201</config:config-item>
-     <config:config-item config:name="ViewTop" config:type="int">1452</config:config-item>
+     <config:config-item config:name="ViewLeft" config:type="int">2471</config:config-item>
+     <config:config-item config:name="ViewTop" config:type="int">15436</config:config-item>
      <config:config-item config:name="VisibleLeft" config:type="int">0</config:config-item>
-     <config:config-item config:name="VisibleTop" config:type="int">0</config:config-item>
+     <config:config-item config:name="VisibleTop" config:type="int">8467</config:config-item>
      <config:config-item config:name="VisibleRight" config:type="int">25850</config:config-item>
-     <config:config-item config:name="VisibleBottom" config:type="int">11748</config:config-item>
+     <config:config-item config:name="VisibleBottom" config:type="int">19500</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -99,7 +99,9 @@
  </office:settings>
  <office:scripts>
   <office:script script:language="ooo:Basic">
-   <ooo:libraries xmlns:ooo="http://openoffice.org/2004/office" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+   <ooo:libraries xmlns:ooo="http://openoffice.org/2004/office" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ooo:library-embedded ooo:name="Standard"/>
+   </ooo:libraries>
   </office:script>
  </office:scripts>
  <office:font-face-decls>
@@ -436,7 +438,19 @@
    <style:table-properties style:width="9.634cm" table:align="margins"/>
   </style:style>
   <style:style style:name="Tabelle2.A" style:family="table-column">
-   <style:table-column-properties style:column-width="1.926cm" style:rel-column-width="13107*"/>
+   <style:table-column-properties style:column-width="0.921cm" style:rel-column-width="522*"/>
+  </style:style>
+  <style:style style:name="Tabelle2.B" style:family="table-column">
+   <style:table-column-properties style:column-width="2.307cm" style:rel-column-width="1308*"/>
+  </style:style>
+  <style:style style:name="Tabelle2.C" style:family="table-column">
+   <style:table-column-properties style:column-width="1.852cm" style:rel-column-width="1050*"/>
+  </style:style>
+  <style:style style:name="Tabelle2.D" style:family="table-column">
+   <style:table-column-properties style:column-width="2.484cm" style:rel-column-width="1408*"/>
+  </style:style>
+  <style:style style:name="Tabelle2.E" style:family="table-column">
+   <style:table-column-properties style:column-width="2.071cm" style:rel-column-width="1174*"/>
   </style:style>
   <style:style style:name="Tabelle2.A1" style:family="table-cell">
    <style:table-cell-properties style:vertical-align="middle" fo:background-color="#e6e6e6" fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="0.05pt solid #000000" fo:border-bottom="0.05pt solid #000000">
@@ -500,75 +514,6 @@
   </style:style>
   <style:style style:name="Tabelle2.E5" style:family="table-cell">
    <style:table-cell-properties style:vertical-align="middle" fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3" style:family="table">
-   <style:table-properties style:width="9.634cm" table:align="margins"/>
-  </style:style>
-  <style:style style:name="Tabelle3.A" style:family="table-column">
-   <style:table-column-properties style:column-width="1.926cm" style:rel-column-width="13107*"/>
-  </style:style>
-  <style:style style:name="Tabelle3.A1" style:family="table-cell">
-   <style:table-cell-properties fo:background-color="#e6e6e6" fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="0.05pt solid #000000" fo:border-bottom="0.05pt solid #000000">
-    <style:background-image/>
-   </style:table-cell-properties>
-  </style:style>
-  <style:style style:name="Tabelle3.E1" style:family="table-cell">
-   <style:table-cell-properties fo:background-color="#e6e6e6" fo:padding="0.097cm" fo:border="0.05pt solid #000000">
-    <style:background-image/>
-   </style:table-cell-properties>
-  </style:style>
-  <style:style style:name="Tabelle3.A2" style:family="table-cell">
-   <style:table-cell-properties fo:background-color="#e6e6e6" fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000">
-    <style:background-image/>
-   </style:table-cell-properties>
-  </style:style>
-  <style:style style:name="Tabelle3.B2" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.C2" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.D2" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.E2" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.B3" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.C3" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.D3" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.E3" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.B4" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.C4" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.D4" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.E4" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.B5" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.C5" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.D5" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
-  </style:style>
-  <style:style style:name="Tabelle3.E5" style:family="table-cell">
-   <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
   </style:style>
   <style:style style:name="Tabelle4" style:family="table">
    <style:table-properties style:width="9.634cm" table:align="margins"/>
@@ -1089,36 +1034,39 @@
   <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Text_20_body">
    <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Table_20_Contents">
-   <style:text-properties fo:font-style="italic"/>
-  </style:style>
-  <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+  <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Text_20_body">
    <style:text-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
   </style:style>
+  <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+   <style:text-properties fo:font-style="italic"/>
+  </style:style>
   <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+   <style:text-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
+  </style:style>
+  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Table_20_Contents">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
   </style:style>
-  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Text_20_body" style:master-page-name="">
+  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Text_20_body" style:master-page-name="">
    <style:paragraph-properties style:page-number="auto">
     <style:tab-stops>
      <style:tab-stop style:position="0.891cm" style:leader-style="dotted" style:leader-text="."/>
     </style:tab-stops>
    </style:paragraph-properties>
   </style:style>
-  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Text_20_body" style:master-page-name="">
+  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Text_20_body" style:master-page-name="">
    <style:paragraph-properties fo:text-align="justify" style:justify-single-word="false" style:page-number="auto">
     <style:tab-stops>
      <style:tab-stop style:position="1.058cm"/>
     </style:tab-stops>
    </style:paragraph-properties>
   </style:style>
-  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1"/>
-  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2"/>
-  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
+  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1"/>
+  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2"/>
+  <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
    <style:text-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
   </style:style>
-  <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
   </style:style>
   <style:style style:name="T1" style:family="text">
    <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
@@ -1567,9 +1515,13 @@
      </table:table-cell>
     </table:table-row>
    </table:table>
-   <text:h text:style-name="Heading_20_2" text:outline-level="2">Article Declesions</text:h>
+   <text:h text:style-name="Heading_20_2" text:outline-level="2">Deklination der Artikel, Adjektive</text:h>
    <table:table table:name="Tabelle2" table:style-name="Tabelle2">
-    <table:table-column table:style-name="Tabelle2.A" table:number-columns-repeated="5"/>
+    <table:table-column table:style-name="Tabelle2.A"/>
+    <table:table-column table:style-name="Tabelle2.B"/>
+    <table:table-column table:style-name="Tabelle2.C"/>
+    <table:table-column table:style-name="Tabelle2.D"/>
+    <table:table-column table:style-name="Tabelle2.E"/>
     <table:table-row>
      <table:table-cell table:style-name="Tabelle2.A1" office:value-type="string">
       <text:p text:style-name="Table_20_Heading"/>
@@ -1591,183 +1543,119 @@
      <table:table-cell table:style-name="Tabelle2.A2" office:value-type="string">
       <text:p text:style-name="Table_20_Heading">Nom</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.D5" office:value-type="string">
-      <text:p text:style-name="P9">der, ein (-er)<text:span text:style-name="T6">1</text:span></text:p>
+     <table:table-cell table:style-name="Tabelle2.B5" office:value-type="string">
+      <text:p text:style-name="P10">der alte Tisch</text:p>
+      <text:p text:style-name="P10">ein alter Tisch</text:p>
+      <text:p text:style-name="P10">alter Tisch</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.C3" table:number-rows-spanned="2" office:value-type="string">
-      <text:p text:style-name="P9">die, eine</text:p>
+     <table:table-cell table:style-name="Tabelle2.C2" table:number-rows-spanned="2" office:value-type="string">
+      <text:p text:style-name="P10">die alte Bar</text:p>
+      <text:p text:style-name="P10">eine alte Bar</text:p>
+      <text:p text:style-name="P10">alte Bar</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle2.D3" table:number-rows-spanned="2" office:value-type="string">
-      <text:p text:style-name="P9">das, ein (-es)<text:span text:style-name="T6">1</text:span></text:p>
+      <text:p text:style-name="P10">das alte Zimmer</text:p>
+      <text:p text:style-name="P10">ein altes Zimme</text:p>
+      <text:p text:style-name="P10">altes Zimmer</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.E3" table:number-rows-spanned="2" office:value-type="string">
-      <text:p text:style-name="P9">die, (keine)</text:p>
+     <table:table-cell table:style-name="Tabelle2.E2" table:number-rows-spanned="2" office:value-type="string">
+      <text:p text:style-name="P10">die alten Bücher</text:p>
+      <text:p text:style-name="P10">keine alten Bücher</text:p>
+      <text:p text:style-name="P10">alte Bücher</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
      <table:table-cell table:style-name="Tabelle2.A2" office:value-type="string">
       <text:p text:style-name="Table_20_Heading">Acc</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.D5" office:value-type="string">
-      <text:p text:style-name="P9">den, einem</text:p>
+     <table:table-cell table:style-name="Tabelle2.B5" office:value-type="string">
+      <text:p text:style-name="P10">den alten Tisch</text:p>
+      <text:p text:style-name="P10">einen alten Tisch</text:p>
+      <text:p text:style-name="P10">alten Tisch</text:p>
      </table:table-cell>
      <table:covered-table-cell/>
      <table:covered-table-cell/>
      <table:covered-table-cell/>
-    </table:table-row>
-    <table:table-row>
-     <table:table-cell table:style-name="Tabelle2.A2" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Gen</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.D5" office:value-type="string">
-      <text:p text:style-name="P9">des<text:span text:style-name="T6">2</text:span>, eines<text:span text:style-name="T6">2</text:span></text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.C5" table:number-rows-spanned="2" office:value-type="string">
-      <text:p text:style-name="P9">der, einer</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.D5" office:value-type="string">
-      <text:p text:style-name="P9">des<text:span text:style-name="T6">2</text:span>, eines<text:span text:style-name="T6">2</text:span></text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle2.E5" office:value-type="string">
-      <text:p text:style-name="P9">der, (keiner)</text:p>
-     </table:table-cell>
     </table:table-row>
     <table:table-row>
      <table:table-cell table:style-name="Tabelle2.A2" office:value-type="string">
       <text:p text:style-name="Table_20_Heading">Dat</text:p>
      </table:table-cell>
+     <table:table-cell table:style-name="Tabelle2.B5" office:value-type="string">
+      <text:p text:style-name="P10">dem alten Tisch</text:p>
+      <text:p text:style-name="P10">einem alten Tisch</text:p>
+      <text:p text:style-name="P10">altem Tisch</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="Tabelle2.C4" table:number-rows-spanned="2" office:value-type="string">
+      <text:p text:style-name="P10">der alten Bar</text:p>
+      <text:p text:style-name="P10">einer alten Bar</text:p>
+      <text:p text:style-name="P10">alter Bar</text:p>
+     </table:table-cell>
      <table:table-cell table:style-name="Tabelle2.D5" office:value-type="string">
-      <text:p text:style-name="P9">dem, einem</text:p>
+      <text:p text:style-name="P10">dem alten Zimmer</text:p>
+      <text:p text:style-name="P10">einem alten Zimmer</text:p>
+      <text:p text:style-name="P10">altem Zimmer</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="Tabelle2.E4" office:value-type="string">
+      <text:p text:style-name="P10">den alten Büchern</text:p>
+      <text:p text:style-name="P10">keinen alten Büchern</text:p>
+      <text:p text:style-name="P10">alten Büchern</text:p>
+     </table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell table:style-name="Tabelle2.A2" office:value-type="string">
+      <text:p text:style-name="Table_20_Heading"/>
+      <text:p text:style-name="Table_20_Heading">Gen</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="Tabelle2.B5" office:value-type="string">
+      <text:p text:style-name="P10">des alten Tisches</text:p>
+      <text:p text:style-name="P10">eines alten Tisches</text:p>
+      <text:p text:style-name="P10">alten Tisches</text:p>
      </table:table-cell>
      <table:covered-table-cell/>
      <table:table-cell table:style-name="Tabelle2.D5" office:value-type="string">
-      <text:p text:style-name="P9">dem, einem</text:p>
+      <text:p text:style-name="P10">des alten Zimmers</text:p>
+      <text:p text:style-name="P10">eines alten Zimmers</text:p>
+      <text:p text:style-name="P10">alten Zimmers</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle2.E5" office:value-type="string">
-      <text:p text:style-name="P9">den<text:span text:style-name="T6">3</text:span>, (keinen)<text:span text:style-name="T6">3</text:span></text:p>
+      <text:p text:style-name="P10">der alten Bücher</text:p>
+      <text:p text:style-name="P10">keiner alten Bücher</text:p>
+      <text:p text:style-name="P10">alter Bücher</text:p>
      </table:table-cell>
     </table:table-row>
    </table:table>
-   <text:list xml:id="list1616176881" text:style-name="L1">
+   <text:list xml:id="list1332776466" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P12">For declesion of dies-, jen- and posesive pronouns.</text:p>
+     <text:p text:style-name="P13">For declesion of dies-, jen- and posesive pronouns.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P12">Add -s or -es to the noun</text:p>
+     <text:p text:style-name="P13">Add -s or -es to the noun</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P12">Add -n to the plural or the noun, if there isn&apos;t one already</text:p>
+     <text:p text:style-name="P13">Add -n to the plural or the noun, if there isn&apos;t one already</text:p>
     </text:list-item>
    </text:list>
    <text:p text:style-name="Text_20_body">Weak nouns, including <text:span text:style-name="T2">Elefant</text:span>, <text:span text:style-name="T2">Student</text:span>, <text:span text:style-name="T2">Präsident</text:span>, <text:span text:style-name="T2">Soldat</text:span>, add <text:span text:style-name="T2">en</text:span> in all cases except the nominative singular. All weak nouns are masculine. <text:span text:style-name="T2">Herr</text:span> adds <text:span text:style-name="T2">n</text:span> in all singular cases except nominative. The genitive of <text:span text:style-name="T2">das Herz</text:span> is <text:span text:style-name="T2">des Herzens</text:span>. </text:p>
-   <text:h text:style-name="Heading_20_2" text:outline-level="2">Article Declesions: weak, mixed, strong</text:h>
-   <table:table table:name="Tabelle3" table:style-name="Tabelle3">
-    <table:table-column table:style-name="Tabelle3.A" table:number-columns-repeated="5"/>
-    <table:table-row>
-     <table:table-cell table:style-name="Tabelle3.A1" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading"/>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.A1" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Masculine</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.A1" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Feminine</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.A1" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Neuter</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.E1" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Plural</text:p>
-     </table:table-cell>
-    </table:table-row>
-    <table:table-row>
-     <table:table-cell table:style-name="Tabelle3.A2" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Nom</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">e, er, er</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">e, e, e</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">e, es, es</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.E5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, e</text:p>
-     </table:table-cell>
-    </table:table-row>
-    <table:table-row>
-     <table:table-cell table:style-name="Tabelle3.A2" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Acc</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, en</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">e, e, e</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">e, es, es</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.E5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, e</text:p>
-     </table:table-cell>
-    </table:table-row>
-    <table:table-row>
-     <table:table-cell table:style-name="Tabelle3.A2" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Gen</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, en</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, er</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, en</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.E5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, er</text:p>
-     </table:table-cell>
-    </table:table-row>
-    <table:table-row>
-     <table:table-cell table:style-name="Tabelle3.A2" office:value-type="string">
-      <text:p text:style-name="Table_20_Heading">Dat</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, em</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, er</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.D5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, em</text:p>
-     </table:table-cell>
-     <table:table-cell table:style-name="Tabelle3.E5" office:value-type="string">
-      <text:p text:style-name="Table_20_Contents">en, en, en</text:p>
-     </table:table-cell>
-    </table:table-row>
-   </table:table>
-   <text:list xml:id="list1316992371" text:style-name="L2">
+   <text:list xml:id="list661857101" text:style-name="L2">
     <text:list-item>
-     <text:p text:style-name="P13">The weak declension is used for adjectives preceded by the definite article, dies-, jen-. </text:p>
+     <text:p text:style-name="P14">The weak declension is used for adjectives preceded by the definite article, dies-, jen-. </text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P13">The mixed declension is used for adjectives preceded by ein-, kein- or a possessive adjective. </text:p>
+     <text:p text:style-name="P14">The mixed declension is used for adjectives preceded by ein-, kein- or a possessive adjective. </text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P13">The strong declension is used when there is no determiner, i.e. nothing that shows the gender/number/case. </text:p>
+     <text:p text:style-name="P14">The strong declension is used when there is no determiner, i.e. nothing that shows the gender/number/case. </text:p>
     </text:list-item>
    </text:list>
    <text:h text:style-name="Heading_20_2" text:outline-level="2">Relative Pronouns</text:h>
    <text:p text:style-name="Text_20_body">The relative pronouns are the same as the definite articles, except in the genitive, for which the relative pronouns are dessen for masculine/neuter and deren for feminine/plural; and the dative plural, for which it is denen. </text:p>
-   <text:list xml:id="list714091542" text:style-name="L3">
+   <text:list xml:id="list1548279738" text:style-name="L3">
     <text:list-item>
-     <text:p text:style-name="P14">Das ist der Mann, dessen Buch auf Spanisch veröffentlicht ist. </text:p>
+     <text:p text:style-name="P15">Das ist der Mann, dessen Buch auf Spanisch veröffentlicht ist. </text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P14">Sehen Sie die Bäume, hinter denen viele Leute heimlich versteckt sind. </text:p>
+     <text:p text:style-name="P15">Sehen Sie die Bäume, hinter denen viele Leute heimlich versteckt sind. </text:p>
     </text:list-item>
    </text:list>
    <text:h text:style-name="Heading_20_2" text:outline-level="2">Interrogative Words</text:h>
@@ -1788,7 +1676,7 @@
    <text:h text:style-name="Heading_20_2" text:outline-level="2">Regular Noun Endings</text:h>
    <text:section text:style-name="Sect2" text:name="Section_endings">
     <text:h text:style-name="Heading_20_3" text:outline-level="3">Masculine</text:h>
-    <text:p text:style-name="P10">-a<text:span text:style-name="T5">nt<text:tab/>-en, -en </text:span></text:p>
+    <text:p text:style-name="P11">-a<text:span text:style-name="T5">nt<text:tab/>-en, -en </text:span></text:p>
     <text:p text:style-name="P1">-ar<text:tab/>-(e)s, -e</text:p>
     <text:p text:style-name="P1">-ent<text:tab/>-en, -en</text:p>
     <text:p text:style-name="P1">-eur<text:tab/>-s, -e </text:p>
@@ -1915,13 +1803,13 @@
       <text:p text:style-name="Table_20_Heading">ich</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-e</text:p>
+      <text:p text:style-name="P10">-e</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-e</text:p>
+      <text:p text:style-name="P10">-e</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.D7" office:value-type="string">
-      <text:p text:style-name="P9">-e</text:p>
+      <text:p text:style-name="P10">-e</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -1929,13 +1817,13 @@
       <text:p text:style-name="Table_20_Heading">du</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-st</text:p>
+      <text:p text:style-name="P10">-st</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-st</text:p>
+      <text:p text:style-name="P10">-st</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.D7" office:value-type="string">
-      <text:p text:style-name="P9">-est</text:p>
+      <text:p text:style-name="P10">-est</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -1943,13 +1831,13 @@
       <text:p text:style-name="Table_20_Heading">er/sie/es</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-t</text:p>
+      <text:p text:style-name="P10">-t</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-</text:p>
+      <text:p text:style-name="P10">-</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.D7" office:value-type="string">
-      <text:p text:style-name="P9">-e</text:p>
+      <text:p text:style-name="P10">-e</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -1957,13 +1845,13 @@
       <text:p text:style-name="Table_20_Heading">wir</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-en</text:p>
+      <text:p text:style-name="P10">-en</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-en</text:p>
+      <text:p text:style-name="P10">-en</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.D7" office:value-type="string">
-      <text:p text:style-name="P9">-en</text:p>
+      <text:p text:style-name="P10">-en</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -1971,13 +1859,13 @@
       <text:p text:style-name="Table_20_Heading">ihr</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-t</text:p>
+      <text:p text:style-name="P10">-t</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-t</text:p>
+      <text:p text:style-name="P10">-t</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.D7" office:value-type="string">
-      <text:p text:style-name="P9">-t</text:p>
+      <text:p text:style-name="P10">-t</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -1985,13 +1873,13 @@
       <text:p text:style-name="Table_20_Heading">sie/Sie</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-en</text:p>
+      <text:p text:style-name="P10">-en</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.C7" office:value-type="string">
-      <text:p text:style-name="P9">-en</text:p>
+      <text:p text:style-name="P10">-en</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle5.D7" office:value-type="string">
-      <text:p text:style-name="P9">-en</text:p>
+      <text:p text:style-name="P10">-en</text:p>
      </table:table-cell>
     </table:table-row>
    </table:table>
@@ -2013,10 +1901,10 @@
       <text:p text:style-name="Table_20_Heading">Present indicative</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.B2" office:value-type="string">
-      <text:p text:style-name="P9">stem + i</text:p>
+      <text:p text:style-name="P10">stem + i</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.C2" office:value-type="string">
-      <text:p text:style-name="P9">possibly altered stem + i</text:p>
+      <text:p text:style-name="P10">possibly altered stem + i</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2024,10 +1912,10 @@
       <text:p text:style-name="Table_20_Heading">Present subjunctive</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.B2" office:value-type="string">
-      <text:p text:style-name="P9">stem + iii</text:p>
+      <text:p text:style-name="P10">stem + iii</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.C2" office:value-type="string">
-      <text:p text:style-name="P9">stem + iii</text:p>
+      <text:p text:style-name="P10">stem + iii</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2035,10 +1923,10 @@
       <text:p text:style-name="Table_20_Heading">Past indicative</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.B2" table:number-rows-spanned="2" office:value-type="string">
-      <text:p text:style-name="P9">stem + t + iii</text:p>
+      <text:p text:style-name="P10">stem + t + iii</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.C2" office:value-type="string">
-      <text:p text:style-name="P9">altered stem + ii</text:p>
+      <text:p text:style-name="P10">altered stem + ii</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2047,7 +1935,7 @@
      </table:table-cell>
      <table:covered-table-cell/>
      <table:table-cell table:style-name="Tabelle6.C2" office:value-type="string">
-      <text:p text:style-name="P9">altered stem + iii</text:p>
+      <text:p text:style-name="P10">altered stem + iii</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2055,10 +1943,10 @@
       <text:p text:style-name="Table_20_Heading">Past participle</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.B2" office:value-type="string">
-      <text:p text:style-name="P9">ge + stem + t</text:p>
+      <text:p text:style-name="P10">ge + stem + t</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.C2" table:number-rows-spanned="2" office:value-type="string">
-      <text:p text:style-name="P9">ge + different stem + en</text:p>
+      <text:p text:style-name="P10">ge + different stem + en</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2066,7 +1954,7 @@
       <text:p text:style-name="Table_20_Heading">Present participle</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle6.B2" office:value-type="string">
-      <text:p text:style-name="P9">infinitive + d</text:p>
+      <text:p text:style-name="P10">infinitive + d</text:p>
      </table:table-cell>
      <table:covered-table-cell/>
     </table:table-row>
@@ -2243,7 +2131,7 @@
       <text:p text:style-name="Table_20_Contents">Present werden + infinitive</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">sie wird ins Geschäft gehen </text:p>
+      <text:p text:style-name="P9">sie wird ins Geschäft gehen </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2254,7 +2142,7 @@
       <text:p text:style-name="Table_20_Contents">Past subjunctive werden + infinitive</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">er würde den Anzug tragen, nur wenn er ihn möchte </text:p>
+      <text:p text:style-name="P9">er würde den Anzug tragen, nur wenn er ihn möchte </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2265,7 +2153,7 @@
       <text:p text:style-name="Table_20_Contents">Present haben/sein + past participle</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">er ist schon abgefahren </text:p>
+      <text:p text:style-name="P9">er ist schon abgefahren </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2277,7 +2165,7 @@
       <text:p text:style-name="Table_20_Contents">participle </text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">sie war nicht gereist; sie hatte gelesen </text:p>
+      <text:p text:style-name="P9">sie war nicht gereist; sie hatte gelesen </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2289,7 +2177,7 @@
       <text:p text:style-name="Table_20_Contents">participle + haben/sein </text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">wir werden es nicht gesehen haben </text:p>
+      <text:p text:style-name="P9">wir werden es nicht gesehen haben </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2300,7 +2188,7 @@
       <text:p text:style-name="Table_20_Contents">past subjunctive werden + past participle + haben/sein</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">wir würden es nicht gesehen haben</text:p>
+      <text:p text:style-name="P9">wir würden es nicht gesehen haben</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2311,7 +2199,7 @@
       <text:p text:style-name="Table_20_Contents">werden + past participle </text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">die Landschaft wird zerstört; das Buch wurde kritiziert </text:p>
+      <text:p text:style-name="P9">die Landschaft wird zerstört; das Buch wurde kritiziert </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2323,7 +2211,7 @@
       <text:p text:style-name="Table_20_Contents">worden </text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">Es ist gemacht worden </text:p>
+      <text:p text:style-name="P9">Es ist gemacht worden </text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2334,7 +2222,7 @@
       <text:p text:style-name="Table_20_Contents">Werden + past participle + worden + sein</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle10.C10" office:value-type="string">
-      <text:p text:style-name="P8">ihr würde der Brief nie geschickt worden sein </text:p>
+      <text:p text:style-name="P9">ihr würde der Brief nie geschickt worden sein </text:p>
      </table:table-cell>
     </table:table-row>
    </table:table>
@@ -2493,7 +2381,7 @@
    <text:p text:style-name="P3"><text:span text:style-name="T1">Declarative</text:span>: &lt;wer&gt; &lt;<text:span text:style-name="T7">VERB]</text:span>&gt; [objects] [adverb.modifiers] [<text:span text:style-name="T7">verb.complement</text:span>]</text:p>
    <text:p text:style-name="P4"><text:tab/>[objects] → (pronouns: [<text:span text:style-name="T9">acc</text:span>] [<text:span text:style-name="T10">dat</text:span>]) (nouns: [<text:span text:style-name="T10">dat</text:span>] [<text:span text:style-name="T9">acc</text:span>]) (mix: [pronoun] [noun])</text:p>
    <text:p text:style-name="P4"><text:span text:style-name="T2"><text:tab/>[adverb.modifiers] → </text:span>[wann] [wie] [wo]</text:p>
-   <text:p text:style-name="P11"><text:tab/>[wann] → bald, immer, manchmal, nie, oft, schon, wieder, „ab und zu“ ; anfangs, damals, neulich, einst, vor kurzem, zuerst, zunächst ; auf einmal, [bald/kurz] darauf, bis dahin, da, dann, danach, immer noch, inzwischen, mittlerweile, nachher, plötzlich, später, unterdessen, vorher ; am Ende, endlich, schliesslich, zum Schluss, seitdem, seither, zuletzt, </text:p>
+   <text:p text:style-name="P12"><text:tab/>[wann] → bald, immer, manchmal, nie, oft, schon, wieder, „ab und zu“ ; anfangs, damals, neulich, einst, vor kurzem, zuerst, zunächst ; auf einmal, [bald/kurz] darauf, bis dahin, da, dann, danach, immer noch, inzwischen, mittlerweile, nachher, plötzlich, später, unterdessen, vorher ; am Ende, endlich, schliesslich, zum Schluss, seitdem, seither, zuletzt, </text:p>
    <text:p text:style-name="P5"><text:tab/>[wie] → [adv.]</text:p>
    <text:p text:style-name="P5"><text:tab/>[wo] → aussen, innen, da, da drüben, dort, hier, hinten, unten, vorn, oben, links, rechts, <text:s/>irgendwo, nirgendwo, nirgends, überall, </text:p>
    <text:p text:style-name="P4"><text:tab/><text:span text:style-name="T2">[v.complement] →</text:span> [trennbare prefix]|[participle]|[inf.]|[element]</text:p>
@@ -2529,7 +2417,7 @@
       <text:p text:style-name="Table_20_Contents">Wir <text:span text:style-name="T7">haben</text:span> <text:span text:style-name="T10">der Frau</text:span> <text:span text:style-name="T9">ihr Buch</text:span> am Montag <text:span text:style-name="T7">zurückgegeben</text:span></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle11.B2" office:value-type="string">
-      <text:p text:style-name="P7">We gave the woman her book back on Monday</text:p>
+      <text:p text:style-name="P8">We gave the woman her book back on Monday</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row>
@@ -2537,7 +2425,7 @@
       <text:p text:style-name="Table_20_Contents">Wir <text:span text:style-name="T7">haben</text:span> <text:span text:style-name="T9">es</text:span> <text:span text:style-name="T10">ihr</text:span> am Montag <text:span text:style-name="T7">zurückgegeben</text:span></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabelle11.B2" office:value-type="string">
-      <text:p text:style-name="P7">We gave it back to her on Monday</text:p>
+      <text:p text:style-name="P8">We gave it back to her on Monday</text:p>
      </table:table-cell>
     </table:table-row>
    </table:table>
